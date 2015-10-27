@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5b32171d1f8034247bf7bb644b598975
+timeCreated: 1445027354
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - Mesh_Renderer: {instanceID: 0}
+  - WaterHexPrefab: {fileID: 11481066, guid: bc3fce2ee47b2a04cafc06bce1c98b00, type: 2}
+  - LandHexPrefab: {fileID: 11400460, guid: 174af165f3ff7f244802c91930a5786c, type: 2}
+  - PortHexPrefab: {fileID: 11478358, guid: 74efe2f2b2d2c89438543161b4941863, type: 2}
+  - FortHexPrefab: {fileID: 11492042, guid: cce5abdc195cdba4ebebebd4e4d6e2a0, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
