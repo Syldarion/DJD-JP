@@ -72,7 +72,7 @@ namespace ShipClass
             set { mShipUpgrades = value; }
         }
 
-        private string mShipName
+        public string mShipName
         {
             get { return mShipName; }
             set { mShipName = value; }
