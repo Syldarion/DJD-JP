@@ -8,6 +8,7 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     public InputField PlayerNameText;
     public Image PlayerNationalityFlag;
     public Dropdown PlayerNationalitySelection;
+    public InputField ChatMessageInput;
 
     [SyncVar(hook = "OnNameChange")]
     public string PlayerName = "";
@@ -49,6 +50,11 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
         PlayerNationalitySelection.onValueChanged.RemoveAllListeners();
         PlayerNationalitySelection.onValueChanged.AddListener(OnNationalityChange);
+
+        ChatMessageInput = GameObject.Find("LobbyChatInput").GetComponent<InputField>();
+
+        ChatMessageInput.onEndEdit.RemoveAllListeners();
+        ChatMessageInput.onEndEdit.AddListener(SendChatMessage);
     }
 
     public void OnNameChange(string name)
@@ -73,6 +79,11 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
         CmdNationalityChanged(index);
     }
 
+    public void SendChatMessage(string message)
+    {
+        CmdSendChatMessage(message);
+    }
+
     [Command]
     public void CmdNameChanged(string name)
     {
@@ -83,5 +94,11 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     public void CmdNationalityChanged(int nation_index)
     {
         NationalityIndex = nation_index;
+    }
+
+    [Command]
+    public void CmdSendChatMessage(string message)
+    {
+        GameObject.Find("ChatManager").GetComponent<ChatManager>().SendChatMessage(PlayerName, message);
     }
 }

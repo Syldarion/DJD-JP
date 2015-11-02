@@ -7,6 +7,8 @@ public class CustomLobbyManager : NetworkLobbyManager
 {
     public string ServerPassword;
 
+    public GameObject ChatMessagePrefab;
+
 	void Start()
     {
         //StartHost();
