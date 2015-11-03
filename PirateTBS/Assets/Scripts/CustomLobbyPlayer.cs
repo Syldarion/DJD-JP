@@ -81,7 +81,8 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
     public void SendChatMessage(string message)
     {
-        CmdSendChatMessage(message);
+        if (message != string.Empty)
+            CmdSendChatMessage(message);
     }
 
     [Command]

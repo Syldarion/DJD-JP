@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
+    <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\ChatMessageScript.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
@@ -84,6 +85,10 @@
     <Compile Include="Assets\Scripts\RevealMenuItem.cs" />
     <Compile Include="Assets\Scripts\RevealMenuPanel.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\PirateFilterList.txt" />
+    <None Include="Assets\ProfFilterList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
