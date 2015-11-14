@@ -7,6 +7,7 @@ using CrewClass;
 using UpgradeClass;
 using CargoClass;
 
+// Mocked classes
 namespace CrewClass
 {
     public class Crew
@@ -55,43 +56,54 @@ namespace ShipClass
 {
     public class BaseShip
     {
-        public int mHullHealth
-        {
-            get { return mHullHealth; }
-            set { mHullHealth = value; }
-        }
-        public int mSailHealth
-        {
-            get { return mSailHealth; }
-            set { mSailHealth = value; }
-        }
+        // Private data members
+        private int mHullHealth;
+        private int mSailHealth;
+        private int mCargoSpace;
+        private double mCrewMorale;
+        private string mShipName;
+
+        // Public data members
+        public Cargo mShipCargo;
         public List< Crew > mShipCrew
         {
             get { return mShipCrew; }
             set { mShipCrew = value; }
-        }
-        public double mCrewMorale
-        {
-            get { return mCrewMorale; }
-            set { mCrewMorale = value; }
-        }
-        public int mCargoSpace
-        {
-            get { return mCargoSpace; }
-            set { mCargoSpace = value; }
         }
         public List< Upgrade > mShipUpgrades
         {
             get { return mShipUpgrades; }
             set { mShipUpgrades = value; }
         }
-        public string mShipName
+
+        // Properties for private data members
+        public int HullHealth
+        {
+            get { return mHullHealth; }
+            set { mHullHealth = value; }
+        }
+        public int SailHealth
+        {
+            get { return mSailHealth; }
+            set { mSailHealth = value; }
+        }
+        public int CargoSpace
+        {
+            get { return mCargoSpace; }
+            set { mCargoSpace = value; }
+        }
+        public double CrewMorale
+        {
+            get { return mCrewMorale; }
+            set { mCrewMorale = value; }
+        }
+        public string ShipName
         {
             get { return mShipName; }
             set { mShipName = value; }
         }
-        public Cargo mShipCargo;
 
+        // Functions
         bool CheckCargoSpace(  )
         {
             bool canHoldMore = false;
