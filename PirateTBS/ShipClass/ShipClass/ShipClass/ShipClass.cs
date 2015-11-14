@@ -11,7 +11,7 @@ namespace CrewClass
 {
     public class Crew
     {
-        
+        int mCrew;
     }
 }
 namespace UpgradeClass
@@ -25,7 +25,29 @@ namespace CargoClass
 {
     public class Cargo
     {
+        private int mFood;
+        private int mGold;
 
+        public int Food
+        {
+            get { return mFood; }
+            set { mFood = value; }
+        }
+        public int Gold
+        {
+            get { return mGold; }
+            set { mGold = value; }
+        }
+
+        public float PackFood(  )
+        {
+            return mFood / 100.0F;
+        }
+
+        public float PackGold(  )
+        {
+            return mGold / 1000.0F;
+        }
     }
 }
 
@@ -68,62 +90,93 @@ namespace ShipClass
             get { return mShipName; }
             set { mShipName = value; }
         }
-        public List< Cargo > mShipCargo;
+        public Cargo mShipCargo;
 
         bool CheckCargoSpace(  )
         {
             bool canHoldMore = false;
+            float totalCargo = mShipCargo.PackGold(  ) + mShipCargo.PackFood(  );
 
-            if( mShipCargo.Count() < mCargoSpace )
+            if( totalCargo < mCargoSpace )  //  Is there any more cargo space available?
+            {
+            // If there is more space, return true.
                 canHoldMore = true;
+            }
+            // If there isn't more space, do nothing and return false
             
             return canHoldMore;
-        }
-        bool CheckCargo( Cargo toCheck )
-        {
-            return mShipCargo.Contains( toCheck );
         }
         bool AddCargo( Cargo toStore )
         {
             bool cargoWasStored = false;
+            float amountOfCargoToStore = toStore.PackGold(  ) + toStore.PackFood(  );
+            float amountofCargoStored = mShipCargo.PackGold(  ) + mShipCargo.PackFood(  );
 
-            if( CheckCargoSpace( ) )
+            if( CheckCargoSpace(  ) )  // Can the ship hold more?
             {
-                this.mShipCargo.Add( toStore );
-                this.mShipCargo.Sort( );
-                cargoWasStored = true;
+            // If it can...
+                if( ( amountofCargoStored + amountOfCargoToStore ) < mCargoSpace )  // Will the new cargo fit?
+                {
+                // If it does fit, put it in and the function returns true.
+                    mShipCargo.Food += toStore.Food;
+                    mShipCargo.Gold += toStore.Gold;
+                    cargoWasStored = true;
+                }
+                // If it doesn't fit, don't do anything and the function returns false
             }
+            // If it can't, don't do anything and the function returns false
 
             return cargoWasStored;
         }
         bool RemoveCargo( Cargo toRemove )
         {
-            bool cargoWasRemoved = false;
-
-            if( mShipCargo.Contains( toRemove ) )
+            bool goldWasRemoved = false;
+            bool foodWasRemoved = false;
+            
+            if( toRemove.Gold <= mShipCargo.Gold ) // Does the ship have the gold to remove?
             {
-                mShipCargo.Remove( toRemove );
-                mShipCargo.Sort(  );
-                cargoWasRemoved = true;
+            // If it does, remove it.
+                mShipCargo.Gold -= toRemove.Gold;
+                goldWasRemoved = true;
             }
+            // If it doesn't, do nothing.
 
-            return cargoWasRemoved;
+            if( toRemove.Food < mShipCargo.Food ) // Does the ship have the food to remove?
+            {
+            // If it does, remove it.
+                mShipCargo.Food -= toRemove.Food;
+                foodWasRemoved = true;
+            }
+            // If it doesn't, do nothing.
+
+            // If both removals succeeded, the function returns true.
+            return goldWasRemoved && foodWasRemoved;
         }
         bool TradeCargo( Cargo toTrade, BaseShip from )
         {
             bool tradeSucceeded = false;
+            float amountOfCargoToTrade = toTrade.PackGold(  ) + toTrade.PackFood(  );
+            float amountOfCargoStored = mShipCargo.PackGold(  ) + mShipCargo.PackFood(  );
 
-            if( this.CheckCargoSpace(  ) )
+            if( this.CheckCargoSpace(  ) )  // Does the receiving ship have enough room?
             {
-                if( from.CheckCargo( toTrade ) )
+            // If it does...
+                if( amountOfCargoToTrade + amountOfCargoStored < mCargoSpace )  // Will the incoming cargo fit?
                 {
-                    this.AddCargo( toTrade );
-                    this.mShipCargo.Sort(  );
-                    from.RemoveCargo( toTrade );
-                    from.mShipCargo.Sort(  );
-                    tradeSucceeded = true;
+                // If it will...
+                    if( toTrade.Gold < from.mShipCargo.Gold &&
+                        toTrade.Food < from.mShipCargo.Food )  // Does the other ship have enough resources to make the trade?
+                    {
+                    // If it does, trade the resources and show the trade was sucessful.
+                        this.AddCargo( toTrade );
+                        from.RemoveCargo( toTrade );
+                        tradeSucceeded = true;
+                    }
+                    // If it doesn't, do nothing and return false.
                 }
+                // If it won't, do nothing and return false.
             }
+            // If it doesn't, do nothing and return false.
 
             return tradeSucceeded;
         }
