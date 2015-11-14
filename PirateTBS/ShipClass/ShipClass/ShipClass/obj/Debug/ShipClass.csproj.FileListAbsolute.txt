@@ -1,0 +1,5 @@
+D:\School\JP\DJD-JP\PirateTBS\ShipClass\ShipClass\ShipClass\bin\Debug\ShipClass.dll
+D:\School\JP\DJD-JP\PirateTBS\ShipClass\ShipClass\ShipClass\bin\Debug\ShipClass.pdb
+D:\School\JP\DJD-JP\PirateTBS\ShipClass\ShipClass\ShipClass\obj\Debug\ShipClass.csprojResolveAssemblyReference.cache
+D:\School\JP\DJD-JP\PirateTBS\ShipClass\ShipClass\ShipClass\obj\Debug\ShipClass.dll
+D:\School\JP\DJD-JP\PirateTBS\ShipClass\ShipClass\ShipClass\obj\Debug\ShipClass.pdb
