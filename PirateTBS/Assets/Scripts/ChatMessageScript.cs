@@ -23,8 +23,7 @@ public class ChatMessageScript : NetworkBehaviour
 
         if (chatParent.transform.childCount > 20)
             Destroy(chatParent.transform.GetChild(0).gameObject);
-
-        Message = Filter.ProfanityFilter(Message);
+        
         Message = Filter.PirateFilter(Message);
 
         UpdateMessage();

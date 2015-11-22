@@ -29,32 +29,27 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
         transform.SetParent(GameObject.Find("LobbyPlayerPanel").transform, false);
 
-        if (isLocalPlayer)
-        {
-            PlayerNameText.interactable = true;
-            PlayerNationalitySelection.interactable = true;
-        }
-        else
-        {
-            //PlayerNameText.interactable = false;
-            //PlayerNationalitySelection.interactable = false;
-        }
-
         OnNameChange(PlayerName);
+        OnNationalityChange(NationalityIndex);
     }
 
     public override void OnStartLocalPlayer()
     {
+        CmdNameChanged("Player " + this.netId.ToString());
+
         PlayerNameText.onEndEdit.RemoveAllListeners();
         PlayerNameText.onEndEdit.AddListener(OnNameTextChange);
 
         PlayerNationalitySelection.onValueChanged.RemoveAllListeners();
-        PlayerNationalitySelection.onValueChanged.AddListener(OnNationalityChange);
+        PlayerNationalitySelection.onValueChanged.AddListener(OnNationSelectionChange);
 
         ChatMessageInput = GameObject.Find("LobbyChatInput").GetComponent<InputField>();
 
         ChatMessageInput.onEndEdit.RemoveAllListeners();
         ChatMessageInput.onEndEdit.AddListener(SendChatMessage);
+
+        PlayerNameText.interactable = true;
+        PlayerNationalitySelection.interactable = true;
     }
 
     public void OnNameChange(string name)

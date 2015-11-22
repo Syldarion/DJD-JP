@@ -15,101 +15,21 @@ Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.041 seconds
-desktop: 1920x1080 60Hz; virtual: 4920x1920 at 0,-403
-<RI> Initializing input.
-<RI> Input initialized.
-<RI> Initialized touch support.
-Initialize engine version: 5.2.2f1 (3757309da7e7)
-GfxDevice: creating device client; threaded=1
-Direct3D:
-    Version:  Direct3D 11.0 [level 11.0]
-    Renderer: NVIDIA GeForce GTX 970 (ID=0x13c2)
-    Vendor:   NVIDIA
-    VRAM:     3072 MB
-Begin MonoManager ReloadAssembly
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.045 seconds
+- Completed reload, in  0.103 seconds
 desktop: 1920x1080 60Hz; virtual: 4920x1920 at 0,-403
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\System.dll (this message is harmless)
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 4260 -> priority: 1 
-Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBSMenuAndLobby_Data\Managed\System.dll (this message is harmless)
-Setting up 1 worker threads for Enlighten.
-  Thread -> id: 371c -> priority: 1 
+  Thread -> id: 4200 -> priority: 1 
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.997112 ms
+UnloadTime: 3.743453 ms
 
-Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 337.
-Total: 0.427447 ms (FindLiveObjects: 0.032768 ms CreateObjectMapping: 0.020480 ms MarkObjects: 0.364544 ms  DeleteObjects: 0.009069 ms)
-
-Made it
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Got the manager
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 347.
+Total: 0.455826 ms (FindLiveObjects: 0.021942 ms CreateObjectMapping: 0.012288 ms MarkObjects: 0.411063 ms  DeleteObjects: 0.009947 ms)
 
 NetworkLobbyManager no GamePlayer prefab is registered. Please add a GamePlayer prefab.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.840001 ms
-
-Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 337.
-Total: 0.427154 ms (FindLiveObjects: 0.021357 ms CreateObjectMapping: 0.014628 ms MarkObjects: 0.381513 ms  DeleteObjects: 0.009069 ms)
-
-Made it
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Got the manager
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-NetworkLobbyManager no GamePlayer prefab is registered. Please add a GamePlayer prefab.
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Trying to send command for object without authority.
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Trying to send command for object without authority.
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Trying to send command for object without authority.
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Log: connection {2} has been disconnected by timeout; address {::ffff:127.0.0.1:49414}
-Log: connection {2} has been disconnected by timeout; address {::ffff:127.0.0.1:59050}
-Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:7777}
-UNet Client Disconnect Error: Timeout
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.499127 ms
-Multiple NetworkManagers detected in the scene. Only one NetworkManager can exist at a time. The duplicate NetworkManager will not be used.
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
-
-
-Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 364.
-Total: 0.627858 ms (FindLiveObjects: 0.009069 ms CreateObjectMapping: 0.011995 ms MarkObjects: 0.600649 ms  DeleteObjects: 0.005851 ms)
 

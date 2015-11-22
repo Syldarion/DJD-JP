@@ -72,9 +72,7 @@ public class NetworkInfoManager : MonoBehaviour
     {
         while (!GameObject.Find("NetworkManager"))
             yield return new WaitForSeconds(0.1f);
-        Debug.Log("Made it");
         LManager = GameObject.Find("NetworkManager").GetComponent<CustomLobbyManager>();
-        Debug.Log("Got the manager");
         ConnectToServer();
     }
 }

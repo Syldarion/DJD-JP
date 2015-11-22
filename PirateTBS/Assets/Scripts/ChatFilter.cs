@@ -3,16 +3,7 @@ using System.Text.RegularExpressions;
 
 public class ChatFilter : MonoBehaviour
 {
-    public TextAsset ProfFilterList;
     public TextAsset PirateFilterList;
-
-	public string ProfanityFilter(string s)
-    {
-        foreach (string word in ProfFilterList.text.Split(','))
-            s = Regex.Replace(s, word, "****", RegexOptions.IgnoreCase);
-
-        return s;
-    }
 
     public string PirateFilter(string s)
     {
