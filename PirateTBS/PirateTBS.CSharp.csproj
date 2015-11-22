@@ -51,17 +51,11 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -75,18 +69,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
+    <Compile Include="Assets\Scripts\ChatFilter.cs" />
+    <Compile Include="Assets\Scripts\ChatManager.cs" />
+    <Compile Include="Assets\Scripts\ChatMessageScript.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
+    <Compile Include="Assets\Scripts\FleetScript.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\HostPanelScript.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
     <Compile Include="Assets\Scripts\MainMenuCanvasController.cs" />
+    <Compile Include="Assets\Scripts\Nation.cs" />
+    <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
+    <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\RevealMenuItem.cs" />
     <Compile Include="Assets\Scripts\RevealMenuPanel.cs" />
+    <Compile Include="Assets\Scripts\ShipScript.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\PirateFilterList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
