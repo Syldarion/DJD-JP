@@ -20,12 +20,12 @@ public class HexGrid : MonoBehaviour
     {
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
-        gridWidth = 128;
-        gridHeight = 80;
+        gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
+        gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
 
         tiles = new List<HexTile>();
 
-        //min 25x25, max 150x150
+        Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
         GenerateGrid(gridWidth, gridHeight, 64);
 	}
 	
@@ -71,7 +71,7 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        CreatePorts(20);
+        CreatePorts(gridWidth / 4);
     }
     //i = x + width * y
     void CreatePorts(int number_of_ports)
