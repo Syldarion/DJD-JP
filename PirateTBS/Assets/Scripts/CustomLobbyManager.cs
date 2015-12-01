@@ -5,10 +5,6 @@ using System.Collections;
 
 public class CustomLobbyManager : NetworkLobbyManager
 {
-    public string ServerPassword;
-
-    public GameObject ChatMessagePrefab;
-
 	void Start()
     {
         //StartHost();
@@ -24,8 +20,19 @@ public class CustomLobbyManager : NetworkLobbyManager
         //return base.OnLobbyServerCreateLobbyPlayer(conn, playerControllerId);
 
         GameObject new_obj = Instantiate(this.lobbyPlayerPrefab.gameObject);
-        
+
+        new_obj.transform.SetParent(GameObject.Find("LobbyPlayerPanel").transform, false);
 
         return new_obj;
+    }
+
+    public void HostServer()
+    {
+        StartHost();
+    }
+
+    public void JoinServer()
+    {
+        StartClient();
     }
 }

@@ -1,1 +1,0 @@
- hello : Ahoy , hey : Ahoy , hi : Ahoy , yes : Aye , treasure : booty , gold : doubloons , drink : grog , beverage : grog , flag : jack , woman : lass , girl : lass , friend : matey , pal : matey , buddy : matey , my : me , there : thar , haha : yohoho , lol : yohoho ,! : arrr! 
