@@ -38,7 +38,7 @@ public enum ShipClass
     Frigate
 }
 
-public class ShipScript : NetworkBehaviour
+public class ShipScript : MonoBehaviour
 {
     public int HullHealth { get; private set; }
     public int SailHealth { get; private set; }
@@ -54,10 +54,7 @@ public class ShipScript : NetworkBehaviour
 
     public ShipClass Class { get { return Class; } set { SetClass(value); } }
     public Cargo Cargo { get; private set; }
-<<<<<<< HEAD
     public PlayerScript Owner { get; private set; }
-=======
->>>>>>> origin/master
 
 	void Start()
     {
@@ -194,7 +191,6 @@ public class ShipScript : NetworkBehaviour
     {
         Destroy(gameObject);
     }
-<<<<<<< HEAD
 
     public void ModifyMorale(int modifier)
     {
@@ -205,6 +201,4 @@ public class ShipScript : NetworkBehaviour
             Owner = null;
         }
     }
-=======
->>>>>>> origin/master
 }

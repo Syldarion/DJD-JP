@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using BeardedManStudios.Network;
 
-public class ChatMessageScript : NetworkBehaviour
+public class ChatMessageScript : NetworkedMonoBehavior
 {
     public ChatFilter Filter;
-
-    [SyncVar]
     public string Sender;
-
-    [SyncVar]
     public string Message;
+
+    void Awake()
+    {
+        AddNetworkVariable(() => Sender, x => Sender = (string)x);
+        AddNetworkVariable(() => Message, x => Message = (string)x);
+    }
 
 	void Start()
     {
-<<<<<<< HEAD
         //Filter = GameObject.Find("ChatFilter").GetComponent<ChatFilter>();
-=======
-        Filter = GameObject.Find("ChatFilter").GetComponent<ChatFilter>();
->>>>>>> origin/master
 
         GameObject chatParent = GameObject.Find("LobbyChat/Messages");
 
@@ -27,12 +26,7 @@ public class ChatMessageScript : NetworkBehaviour
 
         if (chatParent.transform.childCount > 20)
             Destroy(chatParent.transform.GetChild(0).gameObject);
-        
-<<<<<<< HEAD
         //Message = Filter.PirateFilter(Message);
-=======
-        Message = Filter.PirateFilter(Message);
->>>>>>> origin/master
 
         UpdateMessage();
     }

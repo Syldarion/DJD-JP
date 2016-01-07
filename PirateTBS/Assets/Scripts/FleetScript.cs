@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-<<<<<<< HEAD
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class FleetScript : NetworkBehaviour
+public class FleetScript : MonoBehaviour
 {
     public ShipScript Flagship { get; private set; }
     public List<ShipScript> Ships { get; private set; }
@@ -12,22 +11,12 @@ public class FleetScript : NetworkBehaviour
 	void Start()
     {
         Ships = new List<ShipScript>();
-=======
-using System.Collections;
-
-public class FleetScript : MonoBehaviour
-{
-	void Start()
-    {
-        	
->>>>>>> origin/master
 	}
 
 	void Update()
     {
 
 	}
-<<<<<<< HEAD
 
     public void SetFlagship(ShipScript ship)
     {
@@ -46,6 +35,4 @@ public class FleetScript : MonoBehaviour
         if (!Ships.Contains(ship))
             Ships.Add(ship);
     }
-=======
->>>>>>> origin/master
 }

@@ -26,6 +26,7 @@ public class HexGrid : MonoBehaviour
         tiles = new List<HexTile>();
 
         Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
+
         GenerateGrid(gridWidth, gridHeight, 64);
 	}
 	

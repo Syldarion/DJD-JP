@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Network;
 
-public class PlayerScript : NetworkBehaviour
+public class PlayerScript : NetworkedMonoBehavior
 {
-<<<<<<< HEAD
-    public string Name { get; set; }
-=======
-    public string Name { get; private set; }
->>>>>>> origin/master
+    public string Name;
     public Nation Nationality { get; private set; }
     public int TotalGold { get; private set; }
     public int TotalShips { get; private set; }

@@ -16,7 +16,7 @@
     <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
-    <UnityVersion>5.2.3f1</UnityVersion>
+    <UnityVersion>5.3.1f1</UnityVersion>
     <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -26,7 +26,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_2_3;UNITY_5_2;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_REFLECTION_BUFFERS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_1;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -36,7 +36,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_2_3;UNITY_5_2;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_REFLECTION_BUFFERS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+    <DefineConstants>TRACE;UNITY_5_3_1;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -66,8 +66,95 @@
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeController.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerBody.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerFloats.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\ClientTimeout\Scripts\ForgeExample_TimeoutDisconnect.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Error Handling\Scripts\ForgeExample_ErrorHandling.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Hello Cube\Scripts\ForgeExample_MakePlayer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Hello Cube\Scripts\ForgeExample_Move.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Pure RPC\Scripts\ForgeExample_PureRPC.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Spawn Players\Scripts\ForgeExample_SpawnPlayers.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Transport Object\Scripts\ForgeExample_DoObjectTransport.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Transport Object\Scripts\ForgeExample_ObjectToTransport.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Write Custom\Scripts\ForgeExample_WriteCustom.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Write Raw\Scripts\ForgeExample_WriteRaw.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgePlayer_Zombie.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombie.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombieBullet.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombiePowerup.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombieSpawner.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Unit\UnitRPC\UnitRPC.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\ForgeUtilities\Chat\Scripts\ForgeChat.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\ArbiterServer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothAdapterWrapper.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothDeviceWrapper.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothServerSocketWrapper.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothSocketWrapper.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\BMSByte.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\BeardedMath.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\CrossPlatformUDP.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\HostInfo.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\INetworkingSerialized.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\MessageInfo.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetRef.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetWorker.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkException.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkSerialized.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\Networking.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingPlayer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingSerialized.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingStream.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingStreamRPC.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\ObjectMapper.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\Task.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\WriteCustomMapping.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\DataStore\Cache.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\CachedUdpClient.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\DefaultClientTCP.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\DefaultServerTCP.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\SocketPolicyServer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\TCPProcess.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\UnityHandle.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileClient.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileServer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileWorker.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Enums\NetworkCallers.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Enums\NetworkReceivers.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\API.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\ArbiterAPI.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\Encryptor.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\HTTP.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\ServerAPI.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\MasterServer\ForgeMasterServer.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\MasterServer\ForgeMasterServerPing.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Security\IBRPCIntercept.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\TransportObject\ForgeTransportObject.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\MainThreadManager.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetWorkerKiller.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkedMonoBehavior.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\UnityEventObject.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\Autostart.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\StartHeadlessLinux.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\Logo\PoweredByForge.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickServerBrowser\ServerListItem.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickServerBrowser\ServerListManager.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\ForgeClickToRegister.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\StartGame.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\SimpleJSON.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
@@ -79,6 +166,7 @@
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\HostPanelScript.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
+    <Compile Include="Assets\Scripts\LobbyPlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\MainMenuCanvasController.cs" />
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
@@ -87,14 +175,14 @@
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\RevealMenuItem.cs" />
     <Compile Include="Assets\Scripts\RevealMenuPanel.cs" />
-<<<<<<< HEAD
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
-=======
->>>>>>> origin/master
     <Compile Include="Assets\Scripts\ShipScript.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Changelog.txt" />
+    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\NMB.txt" />
+    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\SNMB.txt" />
     <None Include="Assets\PirateFilterList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

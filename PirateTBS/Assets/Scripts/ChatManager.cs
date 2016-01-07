@@ -2,8 +2,9 @@
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
+using BeardedManStudios.Network;
 
-public class ChatManager : NetworkBehaviour
+public class ChatManager : NetworkedMonoBehavior
 {
     public GameObject ChatMessagePrefab;
 
@@ -24,6 +25,6 @@ public class ChatManager : NetworkBehaviour
         newChatMessage.Sender = sender;
         newChatMessage.Message = message;
 
-        NetworkServer.Spawn(newChatMessage.gameObject);
+        Networking.Instantiate(newChatMessage.gameObject);
     }
 }

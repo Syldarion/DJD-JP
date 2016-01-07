@@ -1,20 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using BeardedManStudios.Network;
 
 public class NetworkInfoManager : MonoBehaviour
 {
-    CustomLobbyManager LManager;
+    public GameObject LobbyPlayer;
+
     bool IsHosting;
     string ServerIP;
     int ServerPort;
     string Password;
     int MaxPlayers;
 
+    NetWorker Socket;
+
 	void Start()
     {
         DontDestroyOnLoad(this);
-	}
+    }
 
 	void Update()
     {
@@ -25,54 +30,59 @@ public class NetworkInfoManager : MonoBehaviour
     {
         IsHosting = hosting;
 
-        if (hosting)
+        if (ServerIP != string.Empty)
         {
-            ServerIP = "localhost";
-            ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-            Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
-            MaxPlayers = (int)GameObject.Find("PlayerCountSlider").GetComponent<Slider>().value;
-        }
-        else
-        {
-            ServerIP = GameObject.Find("ServerIPInput").GetComponent<InputField>().text;
-            ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-            Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
-        }
+            if (hosting)
+            {
+                ServerIP = "127.0.0.1";
+                ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
+                Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
+                MaxPlayers = (int)GameObject.Find("PlayerCountSlider").GetComponent<Slider>().value;
 
-        if (ServerIP != "")
-        {
-            Application.LoadLevel("lobby");
-            StartCoroutine(WaitForManager());
-        }
-    }
+                Socket = Networking.Host((ushort)ServerPort, Networking.TransportationProtocolType.UDP, MaxPlayers);
+            }
+            else
+            {
+                ServerIP = GameObject.Find("ServerIPInput").GetComponent<InputField>().text;
+                if (ServerIP == "localhost")
+                    ServerIP = "127.0.0.1";
+                ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
+                Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
 
-    public void ConnectToServer()
-    {
-        LManager.networkAddress = ServerIP;
-        LManager.networkPort = ServerPort;
+                Socket = Networking.Connect(ServerIP, (ushort)ServerPort, Networking.TransportationProtocolType.UDP);
+            }
 
-        if (IsHosting)
-        {
-            LManager.ServerPassword = Password;
-            LManager.maxPlayers = MaxPlayers;
-            LManager.StartHost();
-            Destroy(this.gameObject);
-        }
-        else if ((LManager.ServerPassword == "" || Password == LManager.ServerPassword)
-            && LManager.numPlayers < LManager.maxPlayers)
-        {
-            LManager.StartClient();
-            Destroy(this.gameObject);
-        }
-        else
-            Application.LoadLevel("menu");
-    }
+            Networking.SetPrimarySocket(Socket);
 
-    public IEnumerator WaitForManager()
-    {
-        while (!GameObject.Find("NetworkManager"))
-            yield return new WaitForSeconds(0.1f);
-        LManager = GameObject.Find("NetworkManager").GetComponent<CustomLobbyManager>();
-        ConnectToServer();
+            //Networking.Sockets[(ushort)ServerPort].connected += delegate
+            Socket.connected += delegate
+            {
+                if (SceneManager.GetSceneByName("lobby").IsValid())
+                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("lobby"));
+                else
+                    SceneManager.LoadScene("lobby");
+                if (Socket.IsServer)
+                    Networking.ChangeClientScene(Socket, "lobby");
+            };
+            //Networking.Sockets[(ushort)ServerPort].disconnected += delegate
+            Socket.disconnected += delegate
+            {
+                if (SceneManager.GetSceneByName("menu").IsValid())
+                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
+                else
+                    SceneManager.LoadScene("menu");
+                if (Socket.IsServer)
+                    Networking.ChangeClientScene(Socket, "menu");
+            };
+            Socket.serverDisconnected += delegate
+            {
+                if (SceneManager.GetSceneByName("menu").IsValid())
+                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
+                else
+                    SceneManager.LoadScene("menu");
+                if (Socket.IsServer)
+                    Networking.ChangeClientScene(Socket, "menu");
+            };
+        }
     }
 }

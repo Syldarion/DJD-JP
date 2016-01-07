@@ -1,45 +1,38 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
+using BeardedManStudios.Network;
 
-public class SettingsManager : NetworkBehaviour
+public class SettingsManager : NetworkedMonoBehavior
 {
     public Dropdown MapTypeSelection;
     public Dropdown MapSizeSelection;
     public Dropdown GamePaceSelection;
-
-    [SyncVar(hook = "OnMapTypeChange")]
+    
     public int MapTypeIndex = 0;
-    [SyncVar(hook = "OnMapSizeChange")]
     public int MapSizeIndex = 0;
-    [SyncVar(hook = "OnGamePaceChange")]
     public int GamePaceIndex = 0;
-
-    [SyncVar]
     public int MapSeed;
     public int MapWidth = 40;
     public int MapHeight = 24;
 
+    void Awake()
+    {
+        AddNetworkVariable(() => MapTypeIndex, x => OnMapTypeChange((int)x));
+        AddNetworkVariable(() => MapSizeIndex, x => OnMapSizeChange((int)x));
+        AddNetworkVariable(() => GamePaceIndex, x => OnGamePaceChange((int)x));
+        AddNetworkVariable(() => MapSeed, x => MapSeed = (int)x);
+    }
+
     void Start()
     {
         SetMapSeed();
-        DontDestroyOnLoad(this.gameObject);
     }
-
-    [Server]
+    
     void SetMapSeed()
     {
         MapSeed = Random.Range(0, 1000000);
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-
-        OnMapTypeChange(MapTypeIndex);
-        OnMapSizeChange(MapSizeIndex);
-        OnGamePaceChange(GamePaceIndex);
     }
 
     public void OnMapTypeChange(int map_type_index)
@@ -88,36 +81,12 @@ public class SettingsManager : NetworkBehaviour
         GamePaceSelection.value = GamePaceIndex;
     }
 
-    public void OnTypeChange(int index)
+    public void StartGame()
     {
-        CmdMapTypeChanged(index);
-    }
-
-    public void OnSizeChange(int index)
-    {
-        CmdMapSizeChanged(index);
-    }
-
-    public void OnPaceChange(int index)
-    {
-        CmdGamePaceChanged(index);
-    }
-
-    [Command]
-    public void CmdMapTypeChanged(int map_type_index)
-    {
-        MapTypeIndex = map_type_index;
-    }
-
-    [Command]
-    public void CmdMapSizeChanged(int map_size_index)
-    {
-        MapSizeIndex = map_size_index;
-    }
-
-    [Command]
-    public void CmdGamePaceChanged(int game_pace_index)
-    {
-        GamePaceIndex = game_pace_index;
+        if (SceneManager.GetSceneByName("main").IsValid())
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("main"));
+        else
+            SceneManager.LoadScene("main");
+        Networking.ChangeClientScene(Networking.PrimarySocket.Port, "main");
     }
 }
