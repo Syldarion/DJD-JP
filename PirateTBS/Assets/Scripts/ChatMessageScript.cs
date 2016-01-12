@@ -1,19 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using BeardedManStudios.Network;
 
-public class ChatMessageScript : NetworkedMonoBehavior
+public class ChatMessageScript : MonoBehaviour
 {
     public ChatFilter Filter;
     public string Sender;
     public string Message;
-
-    void Awake()
-    {
-        AddNetworkVariable(() => Sender, x => Sender = (string)x);
-        AddNetworkVariable(() => Message, x => Message = (string)x);
-    }
 
 	void Start()
     {
@@ -30,11 +23,6 @@ public class ChatMessageScript : NetworkedMonoBehavior
 
         UpdateMessage();
     }
-	
-	void Update()
-    {
-
-	}
 
     public void UpdateMessage()
     {
