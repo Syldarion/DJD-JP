@@ -1,9 +1,9 @@
 ﻿#if !NETFX_CORE && !UNITY_IPHONE && !UNITY_ANDROID
 
-using System;
-using UnityEngine;
 using BeardedManStudios.Threading;
+using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace BeardedManStudios.Network.Unit
 {

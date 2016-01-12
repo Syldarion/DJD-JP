@@ -1,30 +1,44 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using BeardedManStudios.Network;
 
 public class LobbyPlayerSpawner : NetworkedMonoBehavior
 {
     public GameObject LobbyPlayer;
-
+    
 	void Start()
     {
-        	
-	}
-	
-	void Update()
+        if (Networking.PrimarySocket.Connected)
+            RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
+        else
+        {
+            Networking.PrimarySocket.connected += SpawnPlayer;
+        }
+        Networking.PrimarySocket.disconnected += delegate
+        {
+            RPC("DestroyPanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
+        };
+    }
+    
+    void SpawnPlayer()
     {
-
-	}
-
-    protected override void NetworkStart()
-    {
-        base.NetworkStart();
-
-        Networking.Instantiate(LobbyPlayer, NetworkReceivers.All, callback: OnLobbyPlayerCreated);
+        Networking.PrimarySocket.connected -= SpawnPlayer;
+        RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
     }
 
-    void OnLobbyPlayerCreated(GameObject new_lobby_player)
+    [BRPC]
+    void CreatePanel(string player_name)
     {
-        new_lobby_player.transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
+        GameObject new_panel = Instantiate(LobbyPlayer);
+        new_panel.name = string.Format("{0}Panel", player_name);
+        new_panel.transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
+        new_panel.transform.FindChild("PlayerName").GetComponent<Text>().text = player_name;
+    }
+
+    [BRPC]
+    void DestroyPanel(string player_name)
+    {
+        Destroy(GameObject.Find(string.Format("{0}Panel", player_name)));
     }
 }

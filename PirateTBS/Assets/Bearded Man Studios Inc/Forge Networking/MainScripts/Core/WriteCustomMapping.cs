@@ -18,5 +18,8 @@ namespace BeardedManStudios.Network
 		public const uint ROOM_MANAGER_WRITE_TO_ROOM = 10;
 
 		public const uint TRANSPORT_OBJECT = 11;
+
+		public const uint CACHE_READ_SERVER = 12;
+		public const uint CACHE_READ_CLIENT = 13;
 	}
 }

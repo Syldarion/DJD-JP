@@ -7,6 +7,108 @@ Main Unity Forum Thread:  http://forum.unity3d.com/threads/superpowered-cross-pl
 Beginner Videos:   https://www.youtube.com/playlist?list=PLaMPnrbpanJ7DazlqTkZHHBSt8D5dx4Um
 Intermediate Videos:  https://www.youtube.com/playlist?list=PLaMPnrbpanJ6DC4RmaEbyHgcnqi6HrfTt
 
+Release V18:
+	Fixed issue with Cross Platform UDP sending an extra byte
+	Added generic fix for WinRT to create NetworkingPlayer dynamically
+	Updated WinRT threading issues in CrossPlatformUDP
+	Fixed timeout issues for connections
+	Code cleanup of using statements
+	Fixed thread checking
+	Added a delay to the task system
+	Fixed function signatures for WinRT
+	Updated to support Unity 5.3 scene setups
+	Fixed removal of NMB in NetWorker and SNMB
+	Updated name assignment of Networking Player
+	Cached better supports updated date-time expirations
+	Added fix for lan discovery on iOS, Mac and Android
+	Removal of explicit setting for reliable on SNMB rpc
+	Added better thread locking to SNMB and Networing Streams
+	Overhauled CrossPlatformUDP to use a packagemanager
+	Overhauled CrossPlatformUDP to use a client manager
+	Moved all resend packets to manager
+	Added batching to the RPC invokes to make them faster
+	Fixed out of bound dictionary issues
+	Updated try catch logging for index out of range on read
+	Various formatting adjustments
+	Updated mutex locks on resends
+	Fixed malformed packet from throwing killing error
+	Now cloning bytes into newly generated NetworkingStreamRPC rather than copying reference
+	Fixed out of bounds issue with reading RPC's for objects that don't yet exist
+	Redundant mutex checking on writing to network stream
+	Fixed issue with skip replication on RPC
+	Fixed issue with skip replication on RPC queue
+
+Release V17.1 User Fixs:
+	Added ability for the default calls (RPC) to run on FixedUpdate rather than just Update
+	Bug fixes for offline mode
+	Fixed misspelling on maxPlayers which was MaxPlayers so it was assigning to itself
+	Uncommented the timeout thread
+	Updated ObjectMapper to support chinese characters
+	Fixed dictionary sync error on client disconnects
+
+Release V17.01 Hotfix:
+	Returning to older fix for dealyed event throwing object destroyed message
+
+Release V17:
+	Fixed spelling for AddDynamicCommandEvent
+	Added new "ChangeOwner" function that is now a part of SimpleNetworkedMonoBehavior so you can change the owner of an object
+	Added a pulic "allowOwnershipChange" bool that if is false will prevent the object from being able to transfer ownership
+	In order to not rely on Unity sorting order, ids of SNMBs in the scene on build will compile an id to be used
+	TCP is now once again working, just needs to be fully tested
+	Moved bandwidth tracking to be global
+	Instantiate callback's paramater is now SNMB and not GameObject
+	Initialize for networking now passes the socket used in initialization to get further from static PrimarySocket dependency
+	Set some threads to run as background thread
+	Cleaned up useless using statements and fully qualified type names
+	Fix for controlling socket on NetworkingManager on new networking manager
+	Added null check fixes on NetworkingManager
+	Fixed close socket error on iOS
+	Removed useless debug logs
+	Added automatic name for UnityEventObject
+	Fixed disconnect to be called on the main thread
+	Added new cache reset for Cache class in relation to disconnecting and re-connecting
+	Added compiled network id mapping to objects that are already in the scene
+	Fixed various spellings
+	Created thread helper class for checking main thread and future thread management
+	Optimized performance (for server) on sending packets by doing preparation ahead of time
+	Fix error with comparing base object error on second run
+	Fixed issue with NetworkingManager disconnect having null check
+	Fixed UDP reliable packet groups not coming through
+	Exiting on UDP when player is not found
+	Added simple hash that is required to match on connect to avoid needless traffic
+	Fixed WriteCustom from hijacking UDP packets or being ignored from processed
+	Updated ObjectMapper to use the functions it has rather than duplicating code
+	TCPProcess will return faster when data is not available
+	Allowing networker to have a flag for when it is using the unityengine (NetworkingManager) or not
+	Fixed bug with byte[] and BMSByte sending after large data sets have been sent
+
+Release V16.8:
+	Fix for out of sync exception on disconnecting timed out players
+	MessageInfo will be considered when doing the arguments length check
+	Created a cache demo to make sure it is working properly
+	Fixed issue with cache not sending data larger than 1024 bytes
+	Fixed issue with core not reading byte correctly from the BMSByte.Read<byte> method
+	Cache now using new system for sending data and the Cache scene is claiming that the contents are identical
+	Update for fix on iOS UnityEventObject
+
+Release V16.7:
+	Fixed spelling on isBareMetal from isBearMetal
+	All socket references are now set to null on Networking.Reset
+	New Networking.networkReset event that is fired when the Networking.Reset method is being called
+	Fixed casting issue in writing raw that was caused from casting a CachedUDPClient to an IPEndPoint
+	Updated the Send method so that the server doesn't send messages to itself as they are already processed
+	Added an exception that is only checked in the editor for MapBytes, it will throw an exception when a supplied object is null
+	Added NetworkingManager.Instance.OwningNetWorker to the null checks for the setup actions
+
+Release V16.6:
+	Added AuthoritativeURPC to SimpleNetworkedMonoBehavior
+	Fixed issue where when a client calls NetworkReceivers.Owner it is getting reflected on the server
+	Added new NetworkReceivers.ServerAndOwner option
+	Timeout event for connecting to a server you can assign timeout time with "ConnectTimeout" and register to the "connectTimeout" event on the NetWorker
+
+Release V16.5:
+	Client side prediction update
+
 Release V16.4:
 	Added exception (to editor only) when the argument count for an RPC does not match the method signature parameter count
 

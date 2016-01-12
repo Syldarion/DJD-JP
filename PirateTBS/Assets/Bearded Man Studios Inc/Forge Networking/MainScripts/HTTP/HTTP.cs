@@ -19,13 +19,12 @@
 
 
 
+using BeardedManStudios.Threading;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
-using BeardedManStudios.Threading;
 
 #if NETFX_CORE
 using Windows.UI.Xaml.Media.Imaging;
@@ -287,7 +286,7 @@ namespace BeardedManStudios.Network
 					}
 				}
 				catch (Exception e)
- 				{
+				{
 					request.Abort();
 #if NETFX_CORE
 					callback(e)
@@ -296,7 +295,7 @@ namespace BeardedManStudios.Network
 #endif
 				}
 #endif
- 				
+				
 				request.Abort();
 #if NETFX_CORE
 				callback(responseFromServer);
@@ -305,7 +304,7 @@ namespace BeardedManStudios.Network
 #endif
 			}
 			catch (Exception e)
- 			{
+			{
 				request.Abort();
 #if NETFX_CORE
 				callback(e);

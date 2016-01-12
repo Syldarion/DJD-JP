@@ -816,14 +816,15 @@ namespace SimpleJSON
 
 		public override string ToString()
 		{
-			string result = "[ ";
+			string result = "[";
 			foreach (JSONNode N in m_List)
 			{
 				if (result.Length > 2)
-					result += ", ";
+					result += ",";
+
 				result += N.ToString();
 			}
-			result += " ]";
+			result += "]";
 			return result;
 		}
 

@@ -14,91 +14,9 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.109 seconds
+- Completed reload, in  0.105 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
 <RI> Initializing input.
 <RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 0.722359 ms
-Setting up 1 worker threads for Enlighten.
-  Thread -> id: 137c -> priority: 1 
-Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.475173 ms
-
-Unloading 15 unused Assets to reduce memory usage. Loaded Objects now: 673.
-Total: 0.649216 ms (FindLiveObjects: 0.033060 ms CreateObjectMapping: 0.034230 ms MarkObjects: 0.566125 ms  DeleteObjects: 0.015213 ms)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CustomLobbyPlayer.OnNameChange (System.String name) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCall`1[System.String].Invoke (System.Object[] args) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCallList.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEventBase.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEvent`1[T0].Invoke (.T0 arg0) [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.SendOnSubmit () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.DeactivateInputField () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.OnUpdateSelected (UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute (IUpdateSelectedHandler handler, UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute[IUpdateSelectedHandler] (UnityEngine.GameObject target, UnityEngine.EventSystems.BaseEventData eventData, UnityEngine.EventSystems.EventFunction`1 functor) [0x00000] in <filename unknown>:0 
-UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
-UnityEngine.DebugLogHandler:LogException(Exception, Object)
-UnityEngine.Logger:LogException(Exception, Object)
-UnityEngine.Debug:LogException(Exception)
-UnityEngine.EventSystems.ExecuteEvents:Execute(GameObject, BaseEventData, EventFunction`1)
-UnityEngine.EventSystems.StandaloneInputModule:SendUpdateEventToSelectedObject()
-UnityEngine.EventSystems.StandaloneInputModule:Process()
-UnityEngine.EventSystems.EventSystem:Update()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CustomLobbyPlayer.OnNameChange (System.String name) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCall`1[System.String].Invoke (System.Object[] args) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCallList.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEventBase.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEvent`1[T0].Invoke (.T0 arg0) [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.SendOnSubmit () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.DeactivateInputField () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.OnDeselect (UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute (IDeselectHandler handler, UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute[IDeselectHandler] (UnityEngine.GameObject target, UnityEngine.EventSystems.BaseEventData eventData, UnityEngine.EventSystems.EventFunction`1 functor) [0x00000] in <filename unknown>:0 
-UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
-UnityEngine.DebugLogHandler:LogException(Exception, Object)
-UnityEngine.Logger:LogException(Exception, Object)
-UnityEngine.Debug:LogException(Exception)
-UnityEngine.EventSystems.ExecuteEvents:Execute(GameObject, BaseEventData, EventFunction`1)
-UnityEngine.EventSystems.EventSystem:SetSelectedGameObject(GameObject, BaseEventData)
-UnityEngine.EventSystems.PointerInputModule:DeselectIfSelectionChanged(GameObject, BaseEventData)
-UnityEngine.EventSystems.StandaloneInputModule:ProcessMousePress(MouseButtonEventData)
-UnityEngine.EventSystems.StandaloneInputModule:ProcessMouseEvent(Int32)
-UnityEngine.EventSystems.StandaloneInputModule:ProcessMouseEvent()
-UnityEngine.EventSystems.StandaloneInputModule:Process()
-UnityEngine.EventSystems.EventSystem:Update()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CustomLobbyPlayer.OnNameChange (System.String name) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCall`1[System.String].Invoke (System.Object[] args) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.InvokableCallList.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEventBase.Invoke (System.Object[] parameters) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Events.UnityEvent`1[T0].Invoke (.T0 arg0) [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.SendOnSubmit () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.DeactivateInputField () [0x00000] in <filename unknown>:0 
-  at UnityEngine.UI.InputField.OnDeselect (UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute (IDeselectHandler handler, UnityEngine.EventSystems.BaseEventData eventData) [0x00000] in <filename unknown>:0 
-  at UnityEngine.EventSystems.ExecuteEvents.Execute[IDeselectHandler] (UnityEngine.GameObject target, UnityEngine.EventSystems.BaseEventData eventData, UnityEngine.EventSystems.EventFunction`1 functor) [0x00000] in <filename unknown>:0 
-UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
-UnityEngine.DebugLogHandler:LogException(Exception, Object)
-UnityEngine.Logger:LogException(Exception, Object)
-UnityEngine.Debug:LogException(Exception)
-UnityEngine.EventSystems.ExecuteEvents:Execute(GameObject, BaseEventData, EventFunction`1)
-UnityEngine.EventSystems.EventSystem:SetSelectedGameObject(GameObject, BaseEventData)
-UnityEngine.EventSystems.PointerInputModule:ClearSelection()
-UnityEngine.EventSystems.StandaloneInputModule:DeactivateModule()
-UnityEngine.EventSystems.EventSystem:OnDisable()
- 
-(Filename:  Line: -1)
-
-UnloadTime: 6.654246 ms

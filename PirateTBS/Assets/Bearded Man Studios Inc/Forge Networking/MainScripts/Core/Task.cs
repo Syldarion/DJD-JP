@@ -1,15 +1,34 @@
 ﻿using System;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
 #if NETFX_CORE
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
 #endif
 
 namespace BeardedManStudios.Threading
 {
+	public static class ThreadManagement
+	{
+		public static int MainThreadId { get; private set; }
+
+		public static int GetCurrentThreadId()
+		{
+#if NETFX_CORE
+			return System.Threading.Tasks.Task.CurrentId.GetValueOrDefault();
+#else
+			return Thread.CurrentThread.ManagedThreadId;
+#endif
+		}
+
+		public static void Initialize() { MainThreadId = GetCurrentThreadId(); }
+
+		public static bool IsMainThread
+		{
+			get { return GetCurrentThreadId() == MainThreadId; }
+		}
+	}
+
 	public class Task
 	{
 		private static List<Task> tasks = new List<Task>();
@@ -25,16 +44,18 @@ namespace BeardedManStudios.Threading
 		{
 #if !NETFX_CORE
 			TrackedThread = new Thread(new ThreadStart(expression));
+			TrackedThread.IsBackground = true;
 #endif
 		}
 
 		public void Kill()
 		{
+#if !NETFX_CORE
+			TrackedThread.Abort();
+#endif
+
 			lock (taskMutex)
 			{
-#if !NETFX_CORE
-				TrackedThread.Abort();
-#endif
 				tasks.Remove(this);
 			}
 		}
@@ -53,15 +74,19 @@ namespace BeardedManStudios.Threading
 		}
 		
 #if NETFX_CORE
-		public static System.Threading.Tasks.Task Run(Action expression)
+		public static System.Threading.Tasks.Task Run(Action expression, int delayOrSleep = 0)
 #else
-		public static Task Run(Action expression)
+		public static Task Run(Action expression, int delayOrSleep = 0)
 #endif
 		{
 			Task task = new Task();
 
 			Action inline = () =>
 			{
+#if !NETFX_CORE
+				Thread.Sleep(delayOrSleep);
+#endif
+
 				expression();
 
 				lock (taskMutex)
@@ -75,6 +100,8 @@ namespace BeardedManStudios.Threading
 #if NETFX_CORE
 			return System.Threading.Tasks.Task.Run(async () =>
 			{
+				await System.Threading.Tasks.Task.Delay(delayOrSleep);
+
 				inline();
 			});
 #else

@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace BeardedManStudios.Network
+﻿namespace BeardedManStudios.Network
 {
 	public struct MessageInfo
 	{

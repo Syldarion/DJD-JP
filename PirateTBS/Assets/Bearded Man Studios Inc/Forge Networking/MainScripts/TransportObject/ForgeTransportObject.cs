@@ -19,10 +19,9 @@
 
 
 
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace BeardedManStudios.Network
 {
@@ -61,7 +60,7 @@ namespace BeardedManStudios.Network
 			id = currentId++;
 			Initialize();
 			transportObjects.Add(id, this);
-        }
+		}
 
 		public static ForgeTransportObject Locate(ulong identifier)
 		{
@@ -90,7 +89,7 @@ namespace BeardedManStudios.Network
 				serializer.Clear();
 				ObjectMapper.MapBytes(serializer, id);
 
-                foreach (FieldInfo field in fields)
+				foreach (FieldInfo field in fields)
 					ObjectMapper.MapBytes(serializer, field.GetValue(this));
 
 				Networking.WriteCustom(WriteCustomMapping.TRANSPORT_OBJECT, Networking.PrimarySocket, serializer, reliable, receivers);

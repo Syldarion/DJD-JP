@@ -19,10 +19,9 @@
 
 
 
-using UnityEngine;
-
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BeardedManStudios.Network.Unity
 {
@@ -42,15 +41,12 @@ namespace BeardedManStudios.Network.Unity
 		/// </summary>
 		public static void Create()
 		{
-			if (Instance != null)
+			if (!ReferenceEquals(Instance, null))
 				return;
 
 			Instance = new GameObject("MAIN_THREAD_MANAGER").AddComponent<MainThreadManager>();
 			DontDestroyOnLoad(Instance.gameObject);
 		}
-
-		private static bool inLoop = false;
-		private static List<Action> mainThreadActionsBuffer = new List<Action>();
 
 		/// <summary>
 		/// A list of functions to run
@@ -60,13 +56,13 @@ namespace BeardedManStudios.Network.Unity
 		/// <summary>
 		/// A mutex to be used to prevent threads from overriding each others logic
 		/// </summary>
-		private static object mutex = new System.Object();
+		private static object mutex = new object();
 
 		// Setup the singleton in the Awake
 		private void Awake()
 		{
 			// If an instance already exists then delete this copy
-			if (Instance != null)
+			if (!ReferenceEquals(Instance, null))
 			{
 				Destroy(gameObject);
 				return;
@@ -87,20 +83,12 @@ namespace BeardedManStudios.Network.Unity
 		{
 			// Only create this object on the main thread
 #if NETFX_CORE
-			if (Instance == null)
+			if (ReferenceEquals(Instance, null))
 #else
-			if (ReferenceEquals(Instance, null) && System.Threading.Thread.CurrentThread.ManagedThreadId == 1)
+			if (ReferenceEquals(Instance, null) && Threading.ThreadManagement.IsMainThread)
 #endif
 			{
 				Create();
-			}
-
-			// If we are in the loop and it is trying to add main thread actions, then add it to the
-			// back buffer of actions to be added after the loop has been completed
-			if (inLoop)
-			{
-				mainThreadActionsBuffer.Add(action);
-				return;
 			}
 
 			// Make sure to lock the mutex so that we don't override
@@ -111,34 +99,37 @@ namespace BeardedManStudios.Network.Unity
 			}
 		}
 
-		private void Update()
-		{
+		private void HandleActions() {
 			// If there are any functions in the list, then run
 			// them all and then clear the list
 			if (mainThreadActions.Count > 0)
 			{
-				// We have started the loop
-				inLoop = true;
+				// Get a copy of all of the actions
+				List<Action> copiedActions = new List<Action>();
 
-				// Ditto the last lock bro'
 				lock (mutex)
 				{
-					foreach (Action action in mainThreadActions)
-						action();
-
+					copiedActions.AddRange(mainThreadActions.ToArray());
 					mainThreadActions.Clear();
 				}
 
-				// We have ended the loop
-				inLoop = false;
+				foreach (Action action in copiedActions)
+					action();
 			}
 
 			// If there are any buffered actions then move them to the main list
-			if (mainThreadActionsBuffer.Count > 0)
-			{
-				mainThreadActions.AddRange(mainThreadActionsBuffer.ToArray());
-				mainThreadActionsBuffer.Clear();
-			}
+			//if (mainThreadActionsBuffer.Count > 0)
+			//{
+			//	mainThreadActions.AddRange(mainThreadActionsBuffer.ToArray());
+			//	mainThreadActionsBuffer.Clear();
+			//}
+		}
+
+		private void Update()
+		{
+			// JM: added support for actions to be handled in fixed loop
+			if (!Networking.RunActionsInFixedLoop) 
+				HandleActions ();
 
 			if (unityUpdate != null)
 				unityUpdate();
@@ -146,6 +137,10 @@ namespace BeardedManStudios.Network.Unity
 
 		private void FixedUpdate()
 		{
+			// JM: added support for actions to be handled in fixed loop
+			if (Networking.RunActionsInFixedLoop) 
+				HandleActions ();
+				
 			if (unityFixedUpdate != null)
 				unityFixedUpdate();
 		}

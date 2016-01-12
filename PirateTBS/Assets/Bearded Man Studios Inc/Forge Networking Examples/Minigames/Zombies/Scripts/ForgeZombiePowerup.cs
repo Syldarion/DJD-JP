@@ -1,6 +1,5 @@
 ﻿using BeardedManStudios.Network;
 using UnityEngine;
-using System.Collections;
 
 public class ForgeZombiePowerup : NetworkedMonoBehavior 
 {
@@ -18,5 +17,5 @@ public class ForgeZombiePowerup : NetworkedMonoBehavior
 
 			Networking.Destroy(this);
 		}
-    }
+	}
 }

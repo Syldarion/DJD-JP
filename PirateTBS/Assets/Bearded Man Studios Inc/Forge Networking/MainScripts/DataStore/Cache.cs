@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using UnityEngine;
 
 #if NETFX_CORE
 using System.Threading.Tasks;
+
 #else
-using System.ComponentModel;
 #endif
 
 namespace BeardedManStudios.Network
@@ -17,10 +15,18 @@ namespace BeardedManStudios.Network
 	/// </summary>
 	public static class Cache
 	{
+		// Default expiry datetime for a cached object.
+		readonly static DateTime maxDateTime = DateTime.MaxValue;
+
+		/// <summary>
+		/// Determines if the chache has been initialized yet or not
+		/// </summary>
+		private static bool initialized = false;
+
 		/// <summary>
 		/// The memory cache for the data
 		/// </summary>
-		private static Dictionary<string, object> memory = new Dictionary<string, object>();
+		static Dictionary<string, CachedObject> memory = new Dictionary<string, CachedObject>();
 
 		/// <summary>
 		/// The main socket for communicating the cache back and forth
@@ -31,8 +37,7 @@ namespace BeardedManStudios.Network
 		/// <summary>
 		/// The set of types that are allowed and a byte mapping to them
 		/// </summary>
-		private static Dictionary<byte, Type> typeMap = new Dictionary<byte, Type>()
-		{
+		private static Dictionary<byte, Type> typeMap = new Dictionary<byte, Type>() {
 			{ 0, typeof(byte) },
 			{ 1, typeof(char) },
 			{ 2, typeof(short) },
@@ -62,73 +67,96 @@ namespace BeardedManStudios.Network
 		/// </summary>
 		private static Dictionary<int, Action<object>> responseHooks = new Dictionary<int, Action<object>>();
 
-		/// <summary>
-		/// Called when the network as interpreted that a cache message has been sent
-		/// </summary>
-		/// <param name="bytes">The data that was received</param>
-		/// <param name="player">The player that requested data from the cache</param>
-		public static void NetworkRead(BMSByte bytes, NetworkingPlayer player = null)
+		private static void CheckSetup(bool resetOnDisconnect = true)
 		{
-			// This is a read
-			if (bytes[1] == 0)
+			RemoveExpiredObjects();
+
+			if (initialized)
+				return;
+
+			initialized = true;
+
+			Socket.AddCustomDataReadEvent(WriteCustomMapping.CACHE_READ_SERVER, NetworkReadServer);
+			Socket.AddCustomDataReadEvent(WriteCustomMapping.CACHE_READ_CLIENT, NetworkReadClient);
+
+			if (resetOnDisconnect)
 			{
-				byte type = bytes.GetBasicType<byte>(2);
-				int responseHookId = bytes.GetBasicType<int>(3);
-				string key = Encryptor.Encoding.GetString(bytes.byteArr, 3 + sizeof(int), bytes.Size - 3 - sizeof(int));
-
-				UnityEngine.Debug.Log(key);
-
-				object obj = Get(key);
-
-				UnityEngine.Debug.Log(obj);
-
-				// TODO:  Let the client know it is null
-				if (obj == null)
-					return;
-
-				BMSByte data = new BMSByte();
-				data.Append(new byte[] { 3 });
-				data.Append(new byte[] { 2 });
-				data.Append(new byte[] { type });
-				data.Append(BitConverter.GetBytes(responseHookId));
-				ObjectMapper.MapBytes(data, obj);
-
-				Socket.WriteRaw(player, data, "BMS_INTERNAL_Cache_" + key);
+				// JM: reset variables in case app disconnects and starts up new session
+				Socket.disconnected += DisconnectReset;
 			}
-			// This is a write
-			else if (bytes[1] == 1)
+		}
+
+		static void RemoveExpiredObjects()
+		{
+			foreach (KeyValuePair<string, CachedObject> entry in memory)
+				if (entry.Value.IsExpired())
+					memory.Remove(entry.Key);
+		}
+
+		private static void DisconnectReset()
+		{
+			Socket.disconnected -= DisconnectReset;
+
+			initialized = false;
+			memory = new Dictionary<string, CachedObject>();
+			responseHookIncrementer = 0;
+			responseHooks = new Dictionary<int, Action<object>>();
+		}
+
+		/// <summary>
+		/// Called when the network as interpreted that a cache message has been sent from the client
+		/// </summary>
+		/// <param name="player">The player that requested data from the cache</param>
+		/// <param name="stream">The data that was received</param>
+		public static void NetworkReadServer(NetworkingPlayer player, NetworkingStream stream)
+		{
+			byte type = ObjectMapper.Map<byte>(stream);
+			int responseHookId = ObjectMapper.Map<int>(stream);
+			string key = ObjectMapper.Map<string>(stream);
+
+			object obj = Get(key);
+
+			// TODO:  Let the client know it is null
+			if (obj == null)
+				return;
+
+			BMSByte data = new BMSByte();
+			ObjectMapper.MapBytes(data, type, responseHookId, obj);
+
+			Networking.WriteCustom(WriteCustomMapping.CACHE_READ_CLIENT, Socket, data, player, true);
+		}
+
+		/// <summary>
+		/// Called when the network as interpreted that a cache message has been sent from the server
+		/// </summary>
+		/// <param name="player">The server</param>
+		/// <param name="stream">The data that was received</param>
+		private static void NetworkReadClient(NetworkingPlayer player, NetworkingStream stream)
+		{
+			byte type = ObjectMapper.Map<byte>(stream);
+			int responseHookId = ObjectMapper.Map<int>(stream);
+
+			object obj = null;
+
+			if (typeMap[type] == typeof(Vector2))
+				obj = ObjectMapper.Map<Vector2>(stream);
+			else if (typeMap[type] == typeof(Vector3))
+				obj = ObjectMapper.Map<Vector3>(stream);
+			else if (typeMap[type] == typeof(Vector4))
+				obj = ObjectMapper.Map<Vector4>(stream);
+			else if (typeMap[type] == typeof(Color))
+				obj = ObjectMapper.Map<Color>(stream);
+			else if (typeMap[type] == typeof(Quaternion))
+				obj = ObjectMapper.Map<Quaternion>(stream);
+			else if (typeMap[type] == typeof(string))
+				obj = ObjectMapper.Map<string>(stream);
+			else
+				obj = ObjectMapper.Map(typeMap[type], stream);
+
+			if (responseHooks.ContainsKey(responseHookId))
 			{
-				// TODO:  Implement the writing feature for clients later
-			}
-			// This is a response from the server
-			else if (bytes[1] == 2)
-			{
-				byte type = bytes.GetBasicType<byte>(2);
-				int responseHookId = bytes.GetBasicType<int>(3);
-				object obj = null;
-				int offset = 3 + sizeof(int);
-
-
-				if (typeMap[type] == typeof(Vector2))
-					obj = bytes.GetVector2(offset);
-				else if (typeMap[type] == typeof(Vector3))
-					obj = bytes.GetVector3(offset);
-				else if (typeMap[type] == typeof(Vector4))
-					obj = bytes.GetVector4(offset);
-				else if (typeMap[type] == typeof(Color))
-					obj = bytes.GetColor(offset);
-				else if (typeMap[type] == typeof(Quaternion))
-					obj = bytes.GetQuaternion(offset);
-				else if (typeMap[type] == typeof(string))
-					obj = bytes.GetString(offset);
-				else
-					obj = bytes.GetBasicType(typeMap[type], offset);
-
-				if (responseHooks.ContainsKey(responseHookId))
-				{
-					responseHooks[responseHookId](obj);
-					responseHooks.Remove(responseHookId);
-				}
+				responseHooks[responseHookId](obj);
+				responseHooks.Remove(responseHookId);
 			}
 		}
 
@@ -140,14 +168,16 @@ namespace BeardedManStudios.Network
 		/// <returns>Return object from key otherwise return the default value of the type or null</returns>
 		private static T Get<T>(string key)
 		{
+			CheckSetup();
+
 			if (!Socket.IsServer)
 				return default(T);
 
 			if (!memory.ContainsKey(key))
 				return default(T);
 
-			if (memory[key].GetType() == typeof(T))
-				return (T)memory[key];
+			if (memory[key] is T)
+				return (T)memory[key].Value;
 
 			return default(T);
 		}
@@ -159,11 +189,13 @@ namespace BeardedManStudios.Network
 		/// <returns>The object at the given key in cache otherwise null</returns>
 		private static object Get(string key)
 		{
+			CheckSetup();
+
 			if (!Socket.IsServer)
 				return null;
 
 			if (memory.ContainsKey(key))
-				return memory[key];
+				return memory[key].Value;
 
 			return null;
 		}
@@ -175,6 +207,8 @@ namespace BeardedManStudios.Network
 		/// <returns>The string data at the desired key or null</returns>
 		public static void Request<T>(string key, Action<object> callback)
 		{
+			CheckSetup();
+
 			if (callback == null)
 				throw new NetworkException("A callback is needed when requesting data from the server");
 
@@ -186,24 +220,24 @@ namespace BeardedManStudios.Network
 
 			responseHooks.Add(responseHookIncrementer, callback);
 
-			byte[] keyBin = Encryptor.Encoding.GetBytes(key);
 			BMSByte data = new BMSByte();
-			data.Append(new byte[] { 3 });
-			data.Append(new byte[] { 0 });
+			byte targetType = byte.MaxValue;
 
 			foreach (KeyValuePair<byte, Type> kv in typeMap)
 			{
 				if (typeof(T) == kv.Value)
 				{
-					data.Append(new byte[] { kv.Key });
+					targetType = kv.Key;
 					break;
 				}
 			}
 
-			data.Append(BitConverter.GetBytes(responseHookIncrementer));
-			data.Append(keyBin);
+			if (targetType == byte.MaxValue)
+				throw new NetworkException("Invalid type specified");
 
-			Socket.WriteRaw(data, "BMS_INTERNAL_Cache_" + key, true, true);
+			ObjectMapper.MapBytes(data, targetType, responseHookIncrementer, key);
+
+			Networking.WriteCustom(WriteCustomMapping.CACHE_READ_SERVER, Socket, data, true, NetworkReceivers.Server);
 			responseHookIncrementer++;
 		}
 
@@ -216,13 +250,28 @@ namespace BeardedManStudios.Network
 		/// <returns>True if successful insert or False if the key already exists</returns>
 		public static bool Insert<T>(string key, T value)
 		{
+			return Insert(key, value, maxDateTime);
+		}
+
+		/// <summary>
+		/// Inserts a NEW key/value into cache
+		/// </summary>
+		/// <typeparam name="T">The serializable type of object</typeparam>
+		/// <param name="key">The name variable used for storing the specified object</param>
+		/// <param name="value">The object that is to be stored into cache</param>
+		/// <param name="expireAt">The DateTime defining when the cached object should expire</param>
+		/// <returns>True if successful insert or False if the key already exists</returns>
+		public static bool Insert<T>(string key, T value, DateTime expireAt)
+		{
+			CheckSetup();
+
 			if (!Socket.IsServer)
-				throw new NetworkException("The Cache insert method is not yet supported for clients");
+				throw new NetworkException("Inserting cache values is not yet supported for clients!");
 
 			if (!memory.ContainsKey(key))
 				return false;
 
-			memory.Add(key, value);
+			memory.Add(key, new CachedObject(value, expireAt));
 
 			return true;
 		}
@@ -235,13 +284,50 @@ namespace BeardedManStudios.Network
 		/// <param name="value">The object that is to be stored into cache</param>
 		public static void Set<T>(string key, T value)
 		{
+			Set(key, value, maxDateTime);
+		}
+
+		/// <summary>
+		/// Inserts a new key/value or updates a key's value in cache
+		/// </summary>
+		/// <typeparam name="T">The serializable type of object</typeparam>
+		/// <param name="key">The name variable used for storing the specified object</param>
+		/// <param name="value">The object that is to be stored into cache</param>
+		/// <param name="expireAt">The DateTime defining when the cached object should expire</param>
+		public static void Set<T>(string key, T value, DateTime expireAt)
+		{
+			CheckSetup();
+
 			if (!Socket.IsServer)
-				throw new NetworkException("The Cache insert method is not yet supported for clients");
+				throw new NetworkException("Setting cache values is not yet supported for clients!");
+
+			var cachedObject = new CachedObject(value, expireAt);
 
 			if (!memory.ContainsKey(key))
-				memory.Add(key, value);
+				memory.Add(key, cachedObject);
 			else
-				memory[key] = value;
+				memory[key] = cachedObject;
+		}
+
+		/// <summary>
+		/// CachedObject class.
+		/// </summary>
+		public class CachedObject
+		{
+			public object Value { get; private set; }
+
+			public DateTime ExpireAt { get; private set; }
+
+			public CachedObject(object value, DateTime expireAt)
+			{
+				Value = value;
+				ExpireAt = expireAt;
+			}
+
+			public bool IsExpired()
+			{
+				return DateTime.Now >= ExpireAt;
+			}
 		}
 	}
 }

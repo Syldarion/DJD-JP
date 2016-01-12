@@ -19,10 +19,8 @@
 
 
 
-using UnityEngine;
-using System.Collections;
-
 using BeardedManStudios.Network;
+using UnityEngine;
 
 namespace BeardedManStudios.Forge.Examples
 {

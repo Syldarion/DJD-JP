@@ -20,11 +20,8 @@
 
 
 #if !NETFX_CORE
-using System.Collections.Generic;
 using System;
-using System.Net;
 using System.Net.Sockets;
-using System.ComponentModel;
 using System.Threading;
 #endif
 
@@ -45,9 +42,6 @@ namespace BeardedManStudios.Network
 		private TcpClient client = null;
 
 		private Thread readWorker = null;
-
-		private NetworkingStream writeStream = new NetworkingStream();
-		private NetworkingStream readStream = new NetworkingStream();
 
 		~DefaultClientTCP() { Disconnect(); }
 
@@ -72,8 +66,6 @@ namespace BeardedManStudios.Network
 				UnityEngine.Security.PrefetchSocketPolicy(hostAddress, 843);	// TODO:  Make this configurable
 #endif
 
-			//UnityEngine.Debug.Log("Connecting to address: " + hostAddress + " with port " + port);
-
 			connector = new Thread(new ParameterizedThreadStart(ThreadedConnect));
 			connector.Start(new object[] { hostAddress, port });
 		}
@@ -89,13 +81,13 @@ namespace BeardedManStudios.Network
 				// The client requires a TcpServer that is connected 
 				// to the same address specified by the server and port 
 				// combination.
-				client = new TcpClient(hostAddress, (int)port);
+				client = new TcpClient(hostAddress, port);
 
 				// Get a client stream for reading and writing. 
 				// Stream stream = client.GetStream();
 				netStream = client.GetStream();
 
-				readWorker = new System.Threading.Thread(new System.Threading.ThreadStart(ReadAsync));
+				readWorker = new Thread(new ThreadStart(ReadAsync));
 				readWorker.Start();
 			}
 			catch
@@ -111,11 +103,14 @@ namespace BeardedManStudios.Network
 		{
 			BMSByte tmp = new BMSByte();
 			ObjectMapper.MapBytes(tmp, "disconnect");
+			
+			lock (writeMutex)
+			{
+				writeStream.SetProtocolType(Networking.ProtocolType.TCP);
+				writeStream.Prepare(this, NetworkingStream.IdentifierType.Disconnect, 0, tmp, NetworkReceivers.Server, noBehavior: true);
 
-			writeStream.SetProtocolType(Networking.ProtocolType.TCP);
-			writeStream.Prepare(this, NetworkingStream.IdentifierType.Disconnect, null, tmp, NetworkReceivers.Server);
-
-			Write(writeStream);
+				Write(writeStream);
+			}
 
 			if (readWorker != null)
 #if UNITY_IOS
@@ -171,25 +166,12 @@ namespace BeardedManStudios.Network
 			BMSByte tmp = new BMSByte();
 			ObjectMapper.MapBytes(tmp, "update");
 
-			writeStream.SetProtocolType(Networking.ProtocolType.TCP);
-			writeStream.Prepare(this, NetworkingStream.IdentifierType.None, null, tmp, NetworkReceivers.Server);
-
-			Write(writeStream);
-		}
-
-		private void StreamReceived(BMSByte data)
-		{
-			readStream.Consume(this, null, data);
-
-			if (readStream.identifierType == NetworkingStream.IdentifierType.Player)
-				OnConnected();
-
-			DataRead(null, readStream);
-
-			if (readStream.identifierType == NetworkingStream.IdentifierType.Disconnect)
+			lock(writeMutex)
 			{
-				OnDisconnected(ObjectMapper.Map<string>(readStream));
-				Disconnect();
+				writeStream.SetProtocolType(Networking.ProtocolType.TCP);
+				writeStream.Prepare(this, NetworkingStream.IdentifierType.None, 0, tmp, NetworkReceivers.Server, noBehavior: true);
+
+				Write(writeStream);
 			}
 		}
 
@@ -209,7 +191,7 @@ namespace BeardedManStudios.Network
 							readBuffer = ReadBuffer(netStream);
 
 							if (readBuffer.Size > 0)
-								StreamReceived(readBuffer);
+								StreamReceived(server, readBuffer);
 						} while (backBuffer.Size > 0);
 					}
 

@@ -80,6 +80,7 @@
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeController.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerBody.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerFloats.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Cache\ForgeDemoCache.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\ClientTimeout\Scripts\ForgeExample_TimeoutDisconnect.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Error Handling\Scripts\ForgeExample_ErrorHandling.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Hello Cube\Scripts\ForgeExample_MakePlayer.cs" />
@@ -119,6 +120,9 @@
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingStreamRPC.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\ObjectMapper.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\Task.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\ClientManager.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\Header.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\PacketManager.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\WriteCustomMapping.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\DataStore\Cache.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\CachedUdpClient.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\UnityEventObject.cs" />
+    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\UnitySceneManager.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\Autostart.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\StartHeadlessLinux.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\Logo\PoweredByForge.cs" />

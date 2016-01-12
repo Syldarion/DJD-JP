@@ -36,11 +36,22 @@ namespace BeardedManStudios.Network.Unity
 		/// </summary>
 		public static void Create()
 		{
-			if (instance != null)
+			if (!ReferenceEquals(instance, null))
 				return;
 
-			instance = new GameObject("NetWorker Authority").AddComponent<NetWorkerKiller>();
-			DontDestroyOnLoad(instance.gameObject);
+			if (Threading.ThreadManagement.IsMainThread)
+			{
+				instance = new GameObject("NetWorker Authority").AddComponent<NetWorkerKiller>();
+				DontDestroyOnLoad(instance.gameObject);
+			}
+			else
+			{
+				MainThreadManager.Run(() =>
+				{
+					instance = new GameObject("NetWorker Authority").AddComponent<NetWorkerKiller>();
+					DontDestroyOnLoad(instance.gameObject);
+				});
+			}
 		}
 
 		/// <summary>
@@ -50,7 +61,7 @@ namespace BeardedManStudios.Network.Unity
 		{
 			get
 			{
-				if (instance == null)
+				if (ReferenceEquals(instance, null))
 					Create();
 
 				return instance;
@@ -72,7 +83,7 @@ namespace BeardedManStudios.Network.Unity
 		/// <param name="netWorker"></param>
 		public static void AddNetWorker(NetWorker netWorker)
 		{
-			if (Instance == null || NetWorkers == null)
+			if (ReferenceEquals(Instance, null) || NetWorkers == null)
 				NetWorkers = new List<NetWorker>();
 
 			if (!NetWorkers.Contains(netWorker))
@@ -87,16 +98,14 @@ namespace BeardedManStudios.Network.Unity
 			if (NetWorkers == null || NetWorkers.Count == 0)
 				return;
 
-			foreach (NetWorker socket in NetWorkers)
-			{
-				if (socket.Connected)
-					socket.Disconnect();
-				else if (socket is CrossPlatformUDP)
-					((CrossPlatformUDP)socket).DisconnectCleanup();
+			Networking.Disconnect();
 
-			}
-
+			UnityEventObject.Cleanup();
 			Threading.Task.KillAll();
+
+			NetWorkers.Clear();
+			NetWorkers = null;
+			instance = null;
 		}
 	}
 }

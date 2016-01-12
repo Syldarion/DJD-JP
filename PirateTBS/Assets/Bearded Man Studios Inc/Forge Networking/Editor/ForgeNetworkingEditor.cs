@@ -19,17 +19,15 @@
 
 
 
+using BeardedManStudios.Network;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using BeardedManStudios.Network;
 using UnityEditor;
 using UnityEngine;
-using System.Collections;
 
 public class ForgeNetworkingEditor : EditorWindow
 {
-	public const float CURRENT_VERSION = 16.4f;
+	public const float CURRENT_VERSION = 18.0f;
 
 	private static ForgeNetworkingEditor Instance;
 	//private Texture2D ForgeIcon;

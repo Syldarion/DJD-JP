@@ -23,11 +23,9 @@
 #define BMS_DEBUGGING_UNITY
 #endif
 
-using UnityEngine;
-
-using System.Collections.Generic;
 using System;
 using System.Text;
+using UnityEngine;
 
 namespace BeardedManStudios.Network
 {
@@ -77,12 +75,6 @@ namespace BeardedManStudios.Network
 		/// <returns>Returns the type of comparison passed</returns>
 		public static bool Compare<T>(NetworkingStream stream, object o)
 		{
-#if BMS_DEBUGGING_UNITY
-			UnityEngine.Debug.Log("[ObjectMapper Stream Bytes] " + (stream != null ? stream.Bytes.Count.ToString() : string.Empty));
-			UnityEngine.Debug.Log("[ObjectMapper Stream NetworkID] " + (stream != null ? stream.NetworkId.ToString() : string.Empty));
-			UnityEngine.Debug.Log("[ObjectMapper Object] " + o);
-#endif
-
 			stream.StartPeek();
 			object obj = null;
 
@@ -141,29 +133,29 @@ namespace BeardedManStudios.Network
 		public static object MapBasicType(Type type, NetworkingStream stream)
 		{
 			if (type == typeof(sbyte))
-				return (sbyte)stream.Read(ref readBytes, sizeof(sbyte))[0];
+				return (sbyte)stream.Read(sizeof(sbyte))[0];
 			else if (type == typeof(byte))
-				return (byte)stream.Read(ref readBytes, sizeof(byte))[0];
+				return (byte)stream.Read(sizeof(byte))[0];
 			else if (type == typeof(char))
-				return (byte)stream.Read(ref readBytes, sizeof(byte))[0];
+				return (byte)stream.Read(sizeof(byte))[0];
 			else if (type == typeof(short))
-				return BitConverter.ToInt16(stream.Read(ref readBytes, sizeof(short)), 0);
+				return BitConverter.ToInt16(stream.Read(sizeof(short)), 0);
 			else if (type == typeof(ushort))
-				return BitConverter.ToUInt16(stream.Read(ref readBytes, sizeof(short)), 0);
+				return BitConverter.ToUInt16(stream.Read(sizeof(short)), 0);
 			else if (type == typeof(bool))
-				return BitConverter.ToBoolean(stream.Read(ref readBytes, sizeof(bool)), 0);
+				return BitConverter.ToBoolean(stream.Read(sizeof(bool)), 0);
 			else if (type == typeof(int))
-				return BitConverter.ToInt32(stream.Read(ref readBytes, sizeof(int)), 0);
+				return BitConverter.ToInt32(stream.Read(sizeof(int)), 0);
 			else if (type == typeof(uint))
-				return BitConverter.ToUInt32(stream.Read(ref readBytes, sizeof(int)), 0);
+				return BitConverter.ToUInt32(stream.Read(sizeof(int)), 0);
 			else if (type == typeof(float))
-				return BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
+				return BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
 			else if (type == typeof(long))
-				return BitConverter.ToInt64(stream.Read(ref readBytes, sizeof(long)), 0);
+				return BitConverter.ToInt64(stream.Read(sizeof(long)), 0);
 			else if (type == typeof(ulong))
-				return BitConverter.ToUInt64(stream.Read(ref readBytes, sizeof(long)), 0);
+				return BitConverter.ToUInt64(stream.Read(sizeof(long)), 0);
 			else if (type == typeof(double))
-				return BitConverter.ToDouble(stream.Read(ref readBytes, sizeof(double)), 0);
+				return BitConverter.ToDouble(stream.Read(sizeof(double)), 0);
 			else
 				throw new NetworkException(11, "The type " + type.ToString() + " is not allowed to be sent over the network (yet)");
 		}
@@ -175,37 +167,32 @@ namespace BeardedManStudios.Network
 		/// <returns>Returns a string out of the Networking Stream</returns>
 		public static object MapString(NetworkingStream stream)
 		{
-#if BMS_DEBUGGING_UNITY
-			UnityEngine.Debug.Log("[ObjectMapper MapString Stream Bytes] " + stream.Bytes);
-			UnityEngine.Debug.Log("[ObjectMapper MapString Stream NetworkId] " + stream.NetworkId);
-#endif
-			int length = BitConverter.ToInt32(stream.Read(ref readBytes, sizeof(int)), 0);
-#if BMS_DEBUGGING_UNITY
-			UnityEngine.Debug.Log("[ObjectMapper Length] " + length);
-#endif
+			int length = BitConverter.ToInt32(stream.Read(sizeof(int)), 0);
 
 			if (length <= 0)
 				return string.Empty;
 
 #if NETFX_CORE
-			return Encoding.UTF8.GetString(stream.Read(ref readBytes, length), 0, length);
+			return Encoding.UTF8.GetString(stream.Read(length), 0, length);
 #else
 			if (length > stream.Bytes.Size - sizeof(int))
 			{
-#if BMS_DEBUGGING_UNITY
-				UnityEngine.Debug.Log("[ObjectMapper (Attempted to read a string that doesn't exist)]");
-#endif
 				return string.Empty;
 				//throw new NetworkException(12, "Attempted to read a string that doesn't exist");
 			}
 
-			return Encoding.UTF8.GetString(stream.Read(ref readBytes, length), 0, length);
+			string obj = Encoding.UTF8.GetString(stream.Read(length), 0, length);
+			if (obj.Length == 12 && obj != "Hello World!")
+			{
+				int x = 0;
+			}
+			return obj;
 #endif
 		}
 
 		private static int size;
 		private static float x, y, z, w;
-		private static byte[] readBytes = new byte[0];
+		//private static byte[] readBytes = new byte[0];
 
 		/// <summary>
 		/// Get a Vector2 out of a Networking Stream
@@ -214,8 +201,8 @@ namespace BeardedManStudios.Network
 		/// <returns>A Vector2 out of the Networking Stream</returns>
 		public static object MapVector2(NetworkingStream stream)
 		{
-			x = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			y = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
+			x = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			y = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
 			return new Vector2(x, y);
 		}
 
@@ -226,9 +213,9 @@ namespace BeardedManStudios.Network
 		/// <returns>A Vector3 out of the Networking Stream</returns>
 		public static object MapVector3(NetworkingStream stream)
 		{
-			x = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			y = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			z = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
+			x = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			y = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			z = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
 
 			return new Vector3(x, y, z);
 		}
@@ -241,10 +228,10 @@ namespace BeardedManStudios.Network
 		/// <returns>A type of Vector4 (Vector4/Color/Quaternion) out of the Networking Stream</returns>
 		public static object MapVector4(Type type, NetworkingStream stream)
 		{
-			x = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			y = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			z = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
-			w = BitConverter.ToSingle(stream.Read(ref readBytes, sizeof(float)), 0);
+			x = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			y = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			z = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
+			w = BitConverter.ToSingle(stream.Read(sizeof(float)), 0);
 
 			if (type == typeof(Vector4))
 				return new Vector4(x, y, z, w);
@@ -262,8 +249,14 @@ namespace BeardedManStudios.Network
 		/// <returns>A byte array that was read from the Networking Stream</returns>
 		public static object MapByteArray(NetworkingStream stream)
 		{
-			byteArrSize = BitConverter.ToInt32(stream.Read(ref readBytes, sizeof(int)), 0);
-			return stream.Read(ref readBytes, byteArrSize);
+			byteArrSize = Map<int>(stream);
+			byte[] readBytes = stream.Read(byteArrSize);
+
+			byte[] value = new byte[byteArrSize];
+			for (int i = 0; i < value.Length; i++)
+				value[i] = readBytes[i];
+
+			return value;
 		}
 
 		/// <summary>
@@ -274,8 +267,8 @@ namespace BeardedManStudios.Network
 		/// <returns>A BMSByte that was read from the Networking Stream</returns>
 		public static object MapBMSByte(NetworkingStream stream)
 		{
-			size = BitConverter.ToInt32(stream.Read(ref readBytes, sizeof(int)), 0);
-			return new BMSByte().Clone(stream.Read(ref readBytes, size));
+			size = Map<int>(stream);
+			return new BMSByte().Clone(stream.Read(size), size);
 		}
 
 		/// <summary>
@@ -287,15 +280,21 @@ namespace BeardedManStudios.Network
 		{
 			foreach (object o in args)
 			{
+#if UNITY_EDITOR
+				if (o == null)
+					throw new NetworkException("You are trying to serialize a null object, null objects have no dimentions and can not be mapped across the network");
+#endif
+
 				Type type = o.GetType();
 
 				if (type == typeof(string))
 				{
+					var strBytes = Encoding.UTF8.GetBytes((string)o);
 					// TODO:  Need to make custom string serialization to binary
-					bytes.Append(BitConverter.GetBytes(((string)o).Length));
+					bytes.Append(BitConverter.GetBytes(strBytes.Length));
 
-					if (((string)o).Length > 0)
-						bytes.Append(Encoding.UTF8.GetBytes((string)o));
+					if (strBytes.Length > 0)
+						bytes.Append(strBytes);
 				}
 				else if (type == typeof(sbyte))
 					bytes.BlockCopy<sbyte>(o, 1);

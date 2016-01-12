@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using BeardedManStudios.Network;
+﻿using BeardedManStudios.Network;
+using UnityEngine;
 
 public class ForgeExample_DoObjectTransport : MonoBehaviour
 {

@@ -1,4 +1,4 @@
-﻿/*-----------------------------+------------------------------\
+/*-----------------------------+------------------------------\
 |                                                             |
 |                        !!!NOTICE!!!                         |
 |                                                             |
@@ -18,11 +18,7 @@
 \------------------------------+-----------------------------*/
 
 using UnityEngine;
-using BeardedManStudios.Network;
-using UnityEngine.SceneManagement;
-
 #if UNITY_EDITOR && !UNITY_WEBPLAYER
-using System.Collections;
 #endif
 
 namespace BeardedManStudios.Network.Unity
@@ -59,8 +55,15 @@ namespace BeardedManStudios.Network.Unity
 			Go();
 		}
 
+		private void RemoveSocketReference()
+		{
+			socket = null;
+		}
+
 		private void Go()
 		{
+			Networking.networkReset += RemoveSocketReference;
+
 			if (proximityBasedUpdates)
 				socket.MakeProximityBased(proximityDistance);
 
@@ -85,10 +88,7 @@ namespace BeardedManStudios.Network.Unity
 		private void LoadScene()
 		{
 			Networking.SetPrimarySocket(socket);
-            if (SceneManager.GetSceneByName(sceneName).IsValid())
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-            else
-                SceneManager.LoadScene(sceneName);
-        }
+			UnitySceneManager.LoadScene(sceneName);
+		}
 	}
 }

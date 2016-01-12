@@ -6,8 +6,6 @@ using BeardedManStudios.Network;
 
 public class NetworkInfoManager : MonoBehaviour
 {
-    public GameObject LobbyPlayer;
-
     bool IsHosting;
     string ServerIP;
     int ServerPort;
@@ -15,16 +13,6 @@ public class NetworkInfoManager : MonoBehaviour
     int MaxPlayers;
 
     NetWorker Socket;
-
-	void Start()
-    {
-        DontDestroyOnLoad(this);
-    }
-
-	void Update()
-    {
-
-	}
 
     public void UpdateServerAndRun(bool hosting)
     {
@@ -36,10 +24,8 @@ public class NetworkInfoManager : MonoBehaviour
             {
                 ServerIP = "127.0.0.1";
                 ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-                Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
+                //Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
                 MaxPlayers = (int)GameObject.Find("PlayerCountSlider").GetComponent<Slider>().value;
-
-                Socket = Networking.Host((ushort)ServerPort, Networking.TransportationProtocolType.UDP, MaxPlayers);
             }
             else
             {
@@ -47,42 +33,48 @@ public class NetworkInfoManager : MonoBehaviour
                 if (ServerIP == "localhost")
                     ServerIP = "127.0.0.1";
                 ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-                Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
-
-                Socket = Networking.Connect(ServerIP, (ushort)ServerPort, Networking.TransportationProtocolType.UDP);
+                //Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
             }
 
-            Networking.SetPrimarySocket(Socket);
-
-            //Networking.Sockets[(ushort)ServerPort].connected += delegate
-            Socket.connected += delegate
-            {
-                if (SceneManager.GetSceneByName("lobby").IsValid())
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("lobby"));
-                else
-                    SceneManager.LoadScene("lobby");
-                if (Socket.IsServer)
-                    Networking.ChangeClientScene(Socket, "lobby");
-            };
-            //Networking.Sockets[(ushort)ServerPort].disconnected += delegate
-            Socket.disconnected += delegate
-            {
-                if (SceneManager.GetSceneByName("menu").IsValid())
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
-                else
-                    SceneManager.LoadScene("menu");
-                if (Socket.IsServer)
-                    Networking.ChangeClientScene(Socket, "menu");
-            };
-            Socket.serverDisconnected += delegate
-            {
-                if (SceneManager.GetSceneByName("menu").IsValid())
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
-                else
-                    SceneManager.LoadScene("menu");
-                if (Socket.IsServer)
-                    Networking.ChangeClientScene(Socket, "menu");
-            };
+            LoadLobbyScene();
         }
+    }
+
+    void LoadLobbyScene()
+    {
+        if (SceneManager.GetSceneByName("lobby").IsValid())
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("lobby"));
+        else
+            SceneManager.LoadScene("lobby");
+
+        if(IsHosting)
+            Socket = Networking.Host((ushort)ServerPort, Networking.TransportationProtocolType.UDP, MaxPlayers);
+        else
+            Socket = Networking.Connect(ServerIP, (ushort)ServerPort, Networking.TransportationProtocolType.UDP);
+
+        Networking.SetPrimarySocket(Socket);
+
+        if (Socket.Connected && Socket.IsServer)
+            Networking.ChangeClientScene(Socket, "lobby");
+    }
+
+    void LoadMenuScene()
+    {
+        if (SceneManager.GetSceneByName("menu").IsValid())
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
+        else
+            SceneManager.LoadScene("menu");
+        if (Socket.IsServer)
+            Networking.ChangeClientScene(Socket, "menu");
+    }
+
+    void ServerDisconnect(string message)
+    {
+        if (SceneManager.GetSceneByName("menu").IsValid())
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("menu"));
+        else
+            SceneManager.LoadScene("menu");
+        if (Socket.IsServer)
+            Networking.ChangeClientScene(Socket, "menu");
     }
 }

@@ -36,7 +36,7 @@ public class NetworkedMonoBehavior_Editor : Editor
 	private List<ForgeEditorDisplayButton> _editorButtons = new List<ForgeEditorDisplayButton>();
 	private GUIStyle _editorStyle;
 
-	void OnEnable()
+	private void OnEnable()
 	{
 		//lerpFoldout = new AnimBool(true);
 		//authoritativeFoldout = new AnimBool(true);

@@ -19,9 +19,8 @@
 
 
 
-using UnityEngine;
-
 using BeardedManStudios.Network;
+using UnityEngine;
 
 public class ForgeExample_SpawnPlayers : MonoBehaviour
 {

@@ -1,7 +1,6 @@
-﻿using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class PoweredByForge : MonoBehaviour
 {
@@ -28,9 +27,6 @@ public class PoweredByForge : MonoBehaviour
 
 		yield return new WaitForSeconds(1.5f);
 
-        if (SceneManager.GetSceneByName(SceneToLoad).IsValid())
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneToLoad));
-        else
-            SceneManager.LoadScene(SceneToLoad);
-    }
+		BeardedManStudios.Network.Unity.UnitySceneManager.LoadScene(SceneToLoad);
+	}
 }

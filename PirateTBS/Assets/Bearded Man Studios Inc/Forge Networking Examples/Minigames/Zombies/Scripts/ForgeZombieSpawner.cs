@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
 using BeardedManStudios.Network;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class ForgeZombieSpawner : MonoBehaviour
 {
@@ -93,17 +91,17 @@ public class ForgeZombieSpawner : MonoBehaviour
 		BeardedManStudios.Network.Unity.MainThreadManager.Run(() =>
 		{
 			Debug.Log("Quit game");
-			SceneManager.LoadScene("ForgeQuickStartMenu");
+			BeardedManStudios.Network.Unity.UnitySceneManager.LoadScene("ForgeQuickStartMenu");
 		});
 	}
 
-	private void ZombieSpawned(GameObject zombie)
+	private void ZombieSpawned(SimpleNetworkedMonoBehavior zombie)
 	{
-		_zombies.Add(zombie);
+		_zombies.Add(zombie.gameObject);
 	}
 
-	private void PowerupSpawned(GameObject powerup)
+	private void PowerupSpawned(SimpleNetworkedMonoBehavior powerup)
 	{
-		_powerups.Add(powerup);
+		_powerups.Add(powerup.gameObject);
 	}
 }

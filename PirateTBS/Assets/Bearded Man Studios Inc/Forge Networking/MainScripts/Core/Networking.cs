@@ -27,6 +27,7 @@ using System.Collections.Generic;
 #if !NETFX_CORE
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 #endif
 
 namespace BeardedManStudios.Network
@@ -96,7 +97,8 @@ namespace BeardedManStudios.Network
 			{
 				connectedInvoker -= value;
 			}
-		} static ConnectionEvent connectedInvoker;	// Because iOS doesn't have a JIT - Multi-cast function pointer.
+		}
+		static ConnectionEvent connectedInvoker;    // Because iOS doesn't have a JIT - Multi-cast function pointer.
 
 		/// <summary>
 		/// Fires whenever a ping has been recieved by the ping request <see cref="Networking.Ping" />
@@ -111,7 +113,35 @@ namespace BeardedManStudios.Network
 			{
 				pingReceivedInvoker -= value;
 			}
-		} static NetWorker.PingReceived pingReceivedInvoker;	// Because iOS doesn't have a JIT - Multi-cast function pointer.
+		}
+		static NetWorker.PingReceived pingReceivedInvoker;    // Because iOS doesn't have a JIT - Multi-cast function pointer.
+
+		// JM: added for threaded lan discovery
+		public static event NetWorker.LANEndPointFound lanEndPointFound
+		{
+			add
+			{
+				lanEndPointFoundInvoker += value;
+			}
+			remove
+			{
+				lanEndPointFoundInvoker -= value;
+			}
+		}
+		static NetWorker.LANEndPointFound lanEndPointFoundInvoker;    // Because iOS doesn't have a JIT - Multi-cast function pointer.
+
+		public static event NetWorker.BasicEvent networkReset
+		{
+			add
+			{
+				networkResetInvoker += value;
+			}
+			remove
+			{
+				networkResetInvoker -= value;
+			}
+		}
+		static NetWorker.BasicEvent networkResetInvoker;    // Because iOS doesn't have a JIT - Multi-cast function pointer.
 
 		/// <summary>
 		/// A getter for the current primary socket.  Usually in games you will have one socket that does the main communication
@@ -132,16 +162,16 @@ namespace BeardedManStudios.Network
 		/// <summary>
 		/// The list of callbacks that are fired for a network instantiate
 		/// </summary>
-		private static Dictionary<int, Action<GameObject>> instantiateCallbacks = new Dictionary<int, Action<GameObject>>();
+		private static Dictionary<int, Action<SimpleNetworkedMonoBehavior>> instantiateCallbacks = new Dictionary<int, Action<SimpleNetworkedMonoBehavior>>();
 		private static int callbackCounter = 1;
 
 		/// <summary>
 		/// Tell the system if we are currently running it as Bare Metal or not - Mainly internal
 		/// </summary>
-		/// <param name="isBearMetal">If this is a Bare Metal instance</param>
-		public static void SetBareMetal(bool isBearMetal)
+		/// <param name="isBareMetal">If this is a Bare Metal instance</param>
+		public static void SetBareMetal(bool isBareMetal)
 		{
-			IsBareMetal = isBearMetal;
+			IsBareMetal = isBareMetal;
 		}
 
 		/// <summary>
@@ -183,8 +213,9 @@ namespace BeardedManStudios.Network
 		///		NetWorker socket = Networking.Host((ushort)port, protocolType, playerCount, isWinRT);	
 		///	}
 		/// </example>
-		public static NetWorker Host(ushort port, TransportationProtocolType comType, int maxConnections, bool winRT = false, string overrideIP = null, bool allowWebplayerConnection = false, bool relayToAll = true, bool useNat = false)
+		public static NetWorker Host(ushort port, TransportationProtocolType comType, int maxConnections, bool winRT = false, string overrideIP = null, bool allowWebplayerConnection = false, bool relayToAll = true, bool useNat = false, NetWorker.NetworkErrorEvent errorCallback = null)
 		{
+			Threading.ThreadManagement.Initialize();
 			Unity.MainThreadManager.Create();
 
 			if (Sockets == null) Sockets = new Dictionary<ushort, NetWorker>();
@@ -205,6 +236,12 @@ namespace BeardedManStudios.Network
 				}
 			}
 
+			// JM: added error callback in args in case Connect() below fails
+			if (errorCallback != null)
+			{
+				Sockets[port].error += errorCallback;
+			}
+
 			Sockets[port].connected += delegate()
 			{
 				Sockets[port].AssignUniqueId(0);
@@ -222,7 +259,7 @@ namespace BeardedManStudios.Network
 				SocketPolicyServer.Begin();
 #endif
 
-			SimpleNetworkedMonoBehavior.Initialize();
+			SimpleNetworkedMonoBehavior.Initialize(Sockets[port]);
 			return Sockets[port];
 		}
 
@@ -263,6 +300,7 @@ namespace BeardedManStudios.Network
 		/// </example>
 		public static NetWorker Connect(string ip, ushort port, TransportationProtocolType comType, bool winRT = false, bool useNat = false, bool standAlone = false)
 		{
+			Threading.ThreadManagement.Initialize();
 			Unity.MainThreadManager.Create();
 
 			if (Sockets == null) Sockets = new Dictionary<ushort, NetWorker>();
@@ -280,7 +318,7 @@ namespace BeardedManStudios.Network
 				else if (Sockets[port].Disconnected)
 					Sockets.Remove(port);
 				else
-					return Sockets[port];	// It has not finished connecting yet
+					return Sockets[port]; // It has not finished connecting yet
 #endif
 			}
 			else if (comType == TransportationProtocolType.UDP)
@@ -303,7 +341,7 @@ namespace BeardedManStudios.Network
 			Sockets[port].Connect(ip, port);
 
 			if (!standAlone)
-				SimpleNetworkedMonoBehavior.Initialize();
+				SimpleNetworkedMonoBehavior.Initialize(Sockets[port]);
 
 			return Sockets[port];
 		}
@@ -317,31 +355,49 @@ namespace BeardedManStudios.Network
 		/// <param name="winRT">If this is Windows Phone or Windows Store, this should be true, otherwise default to false</param>
 		/// <returns>The <see cref="NetWorker"/> that has been bound for this communication, null if none were found</returns>
 #if NETFX_CORE
-		public static IPEndPointWinRT LanDiscovery(ushort port, int listenWaitTime = 10000, TransportationProtocolType protocol = TransportationProtocolType.UDP, bool winRT = false)
+		public static void LanDiscovery(ushort port, int listenWaitTime = 10000, TransportationProtocolType protocol = TransportationProtocolType.UDP, bool winRT = false)
 #else
-		public static IPEndPoint LanDiscovery(ushort port, int listenWaitTime = 10000, TransportationProtocolType protocol = TransportationProtocolType.UDP, bool winRT = false)
+		public static void LanDiscovery(ushort port, int listenWaitTime = 10000, TransportationProtocolType protocol = TransportationProtocolType.UDP, bool winRT = false)
 #endif
 		{
+			System.Threading.Thread lanDiscoveryThread = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(LanDiscoveryThread));
+			lanDiscoveryThread.Start(new object[] { port, listenWaitTime });
+		}
+
+		// JM: made threaded to not freeze main thread
+		private static void LanDiscoveryThread(object args)
+		{
+			ushort port = (ushort)((object[])args)[0];
+			int listenWaitTime = (int)((object[])args)[1];
 #if !NETFX_CORE && !UNITY_WEBPLAYER
+			// JM: brought in shavedrat's changes posted on EpicJoin to fix OSX
+			List<string> localSubNet = new List<string>();
+			NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+			foreach (var netInterface in interfaces)
+			{
+				if ((netInterface.OperationalStatus == OperationalStatus.Up ||
+					netInterface.OperationalStatus == OperationalStatus.Unknown) &&
+					(netInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
+						netInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet))
+
+				{
+					foreach (var d in netInterface.GetIPProperties().UnicastAddresses)
+					{
+						if (d.Address.AddressFamily == AddressFamily.InterNetwork)
+						{
+							var ipAddress = d.Address;
+							if (ipAddress.ToString().Contains("."))
+								localSubNet.Add(ipAddress.ToString().Remove(ipAddress.ToString().LastIndexOf('.')));
+						}
+					}
+				}
+			}
+
 			UdpClient Client = new UdpClient();
 			IPEndPoint foundEndpoint = new IPEndPoint(IPAddress.Any, 0);
 			bool found = false;
 
-			List<string> localSubNet = new List<string>();
-
-			foreach (System.Net.NetworkInformation.NetworkInterface f in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
-			{
-				if (f.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up)
-				{
-					foreach (System.Net.NetworkInformation.GatewayIPAddressInformation d in f.GetIPProperties().GatewayAddresses)
-					{
-						if (d.Address.ToString() == "0.0.0.0") continue;
-
-						if (d.Address.ToString().Contains("."))
-							localSubNet.Add(d.Address.ToString().Remove(d.Address.ToString().LastIndexOf('.')));
-					}
-				}
-			}
 
 			foreach (string s in localSubNet)
 				Client.Send(new byte[1], 1, new IPEndPoint(IPAddress.Parse(s + ".255"), port));
@@ -366,15 +422,18 @@ namespace BeardedManStudios.Network
 
 			Client.Close();
 
-			if (found)
-				return foundEndpoint;
+			if (found && lanEndPointFoundInvoker != null)
+				lanEndPointFoundInvoker(foundEndpoint);
+
+
 #elif NETFX_CORE
 			// TODO:  Implement
 #elif UNITY_WEBPLAYER
 			Debug.LogError("Unable to find local at this time for webplayer");
 #endif
 
-			return null;
+			if (lanEndPointFoundInvoker != null)
+				lanEndPointFoundInvoker(null);
 		}
 
 		/// <summary>
@@ -472,7 +531,7 @@ namespace BeardedManStudios.Network
 		public static void Disconnect()
 		{
 #if !NETFX_CORE
-			if (NetworkingManager.Instance != null && NetworkingManager.Instance.OwningNetWorker.IsServer)
+			if (!ReferenceEquals(NetworkingManager.Instance, null) && NetworkingManager.Instance.OwningNetWorker.IsServer) // JM: NetworkingManager.Instance cannot be server if null
 				SocketPolicyServer.End();
 #endif
 
@@ -608,7 +667,7 @@ namespace BeardedManStudios.Network
 			return true;
 		}
 
-		private static void CallInstantiate(string obj, NetworkReceivers receivers, Action<GameObject> callback = null)
+		private static void CallInstantiate(string obj, NetworkReceivers receivers, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			SimpleNetworkedMonoBehavior netBehavior;
 			if (ValidateNetworkedObject(obj, out netBehavior))
@@ -618,17 +677,20 @@ namespace BeardedManStudios.Network
 					instantiateCallbacks.Add(callbackCounter, callback);
 
 					NetworkingManager.Instantiate(receivers, obj, netBehavior.transform.position, netBehavior.transform.rotation, callbackCounter);
+
 					callbackCounter++;
 
 					if (callbackCounter == 0)
 						callbackCounter++;
 				}
 				else
+				{
 					NetworkingManager.Instantiate(receivers, obj, netBehavior.transform.position, netBehavior.transform.rotation, 0);
+				}
 			}
 		}
 
-		private static void CallInstantiate(string obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers, Action<GameObject> callback = null)
+		private static void CallInstantiate(string obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			SimpleNetworkedMonoBehavior netBehavior;
 			if (ValidateNetworkedObject(obj, out netBehavior))
@@ -647,7 +709,7 @@ namespace BeardedManStudios.Network
 			}
 		}
 
-		public static bool RunInstantiateCallback(int index, GameObject spawn)
+		public static bool RunInstantiateCallback(int index, SimpleNetworkedMonoBehavior spawn)
 		{
 			if (instantiateCallbacks.ContainsKey(index))
 			{
@@ -664,7 +726,7 @@ namespace BeardedManStudios.Network
 		/// </summary>
 		/// <param name="obj">Object to be instantiated by object name</param>
 		/// <param name="receivers">Recipients will receive this instantiate call</param>
-		public static void Instantiate(string obj, NetworkReceivers receivers, Action<GameObject> callback = null)
+		public static void Instantiate(string obj, NetworkReceivers receivers, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			if (NetworkingManager.Instance == null || !NetworkingManager.Instance.IsSetup)
 			{
@@ -684,7 +746,7 @@ namespace BeardedManStudios.Network
 		/// <param name="position">Position of instantiated object</param>
 		/// <param name="rotation">Rotation of instantiated object</param>
 		/// <param name="receivers">Recipients will receive this instantiate call</param>
-		public static void Instantiate(string obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers, Action<GameObject> callback = null)
+		public static void Instantiate(string obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			if (NetworkingManager.Instance == null || !NetworkingManager.Instance.IsSetup)
 			{
@@ -702,11 +764,14 @@ namespace BeardedManStudios.Network
 		/// </summary>
 		/// <param name="obj">Object to be instantiated by object name</param>
 		/// <param name="receivers">Recipients will receive this instantiate call (Default: All)</param>
-		public static void Instantiate(GameObject obj, NetworkReceivers receivers = NetworkReceivers.All, Action<GameObject> callback = null)
+		public static void Instantiate(GameObject obj, NetworkReceivers receivers = NetworkReceivers.All, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			if (!NetworkingManager.IsOnline)
 			{
-				callback(GameObject.Instantiate(obj) as GameObject);
+				// JM: offline fixes
+				SimpleNetworkedMonoBehavior snmb = (GameObject.Instantiate(obj) as GameObject).GetComponent<SimpleNetworkedMonoBehavior>();
+				snmb.OfflineStart();
+				callback(snmb);
 				return;
 			}
 
@@ -728,11 +793,14 @@ namespace BeardedManStudios.Network
 		/// <param name="position">Position of instantiated object</param>
 		/// <param name="rotation">Rotation of instantiated object</param>
 		/// <param name="receivers">Recipients will receive this instantiate call (Default: All)</param>
-		public static void Instantiate(GameObject obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers = NetworkReceivers.All, Action<GameObject> callback = null)
+		public static void Instantiate(GameObject obj, Vector3 position, Quaternion rotation, NetworkReceivers receivers = NetworkReceivers.All, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			if (!NetworkingManager.IsOnline)
 			{
-				callback(GameObject.Instantiate(obj, position, rotation) as GameObject);
+				// JM: offline fixes
+				SimpleNetworkedMonoBehavior snmb = (GameObject.Instantiate(obj, position, rotation) as GameObject).GetComponent<SimpleNetworkedMonoBehavior>();
+				snmb.OfflineStart();
+				callback(snmb);
 				return;
 			}
 
@@ -752,7 +820,7 @@ namespace BeardedManStudios.Network
 		/// </summary>
 		/// <param name="resourcePath">Location of the resource</param>
 		/// <param name="receivers">Recipients will receive this instantiate call (Default: All)</param>
-		public static void InstantiateFromResources(string resourcePath, NetworkReceivers receivers = NetworkReceivers.All, Action<GameObject> callback = null)
+		public static void InstantiateFromResources(string resourcePath, NetworkReceivers receivers = NetworkReceivers.All, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			GameObject obj = Resources.Load<GameObject>(resourcePath);
 
@@ -774,7 +842,7 @@ namespace BeardedManStudios.Network
 		/// <param name="position">Position of instantiated object</param>
 		/// <param name="rotation">Rotation of instantiated object</param>
 		/// <param name="receivers">Recipients will receive this instantiate call (Default: All)</param>
-		public static void InstantiateFromResources(string resourcePath, Vector3 position, Quaternion rotation, NetworkReceivers receivers = NetworkReceivers.All, Action<GameObject> callback = null)
+		public static void InstantiateFromResources(string resourcePath, Vector3 position, Quaternion rotation, NetworkReceivers receivers = NetworkReceivers.All, Action<SimpleNetworkedMonoBehavior> callback = null)
 		{
 			GameObject obj = Resources.Load<GameObject>(resourcePath);
 
@@ -867,8 +935,8 @@ namespace BeardedManStudios.Network
 		/// <param name="reliableUDP">If this be a reliable UDP</param>
 		public static void WriteCustom(uint id, NetWorker netWorker, BMSByte data, bool reliableUDP = false, NetworkReceivers recievers = NetworkReceivers.All)
 		{
-			NetworkingStream stream = new NetworkingStream(netWorker is CrossPlatformUDP ? ProtocolType.UDP : ProtocolType.TCP).Prepare(netWorker, NetworkingStream.IdentifierType.Custom, null,
-				data, recievers, netWorker is CrossPlatformUDP && reliableUDP, id);
+			NetworkingStream stream = new NetworkingStream(netWorker is CrossPlatformUDP ? ProtocolType.UDP : ProtocolType.TCP).Prepare(netWorker, NetworkingStream.IdentifierType.Custom, 0,
+				data, recievers, netWorker is CrossPlatformUDP && reliableUDP, id, noBehavior: true);
 
 			if (netWorker.IsServer)
 			{
@@ -883,12 +951,12 @@ namespace BeardedManStudios.Network
 						break;
 				}
 
-				if (recievers == NetworkReceivers.Server) // If only sending to the server, then just execute it itself.
+				if (recievers == NetworkReceivers.Server || recievers == NetworkReceivers.ServerAndOwner) // If only sending to the server, then just execute it itself.
 					return;
 			}
 
 			if (netWorker is CrossPlatformUDP)
-				netWorker.Write(id, stream, reliableUDP);
+				netWorker.Write("BMS_INTERNAL_Write_Custom_" + id.ToString(), stream, reliableUDP);
 			else
 				netWorker.Write(stream);
 		}
@@ -908,13 +976,13 @@ namespace BeardedManStudios.Network
 			if (netWorker is CrossPlatformUDP)
 			{
 				netWorker.Write(id, target, new NetworkingStream(ProtocolType.UDP).Prepare(
-					netWorker, NetworkingStream.IdentifierType.Custom, null, data, NetworkReceivers.Others, reliableUDP, id
+					netWorker, NetworkingStream.IdentifierType.Custom, 0, data, NetworkReceivers.Others, reliableUDP, id, noBehavior: true
 				), reliableUDP);
 			}
 			else
 			{
 				netWorker.Write(target, new NetworkingStream(ProtocolType.TCP).Prepare(
-					netWorker, NetworkingStream.IdentifierType.Custom, null, data, NetworkReceivers.Others, reliableUDP, id
+					netWorker, NetworkingStream.IdentifierType.Custom, 0, data, NetworkReceivers.Others, reliableUDP, id, noBehavior: true
 				));
 			}
 		}
@@ -979,7 +1047,14 @@ namespace BeardedManStudios.Network
 			}
 
 			Sockets.Clear();
+
+			PrimarySocket = null;
 			SimpleNetworkedMonoBehavior.ResetAll();
+
+			if (networkResetInvoker != null)
+				networkResetInvoker();
+
+			networkResetInvoker = null;
 		}
 
 		#region Message Groups
@@ -1104,7 +1179,7 @@ namespace BeardedManStudios.Network
 			IPEndPoint ep = new IPEndPoint(address, host.port);
 
 			Client.Send(new byte[1], 1, ep);
-			System.DateTime start = System.DateTime.Now;
+			DateTime start = DateTime.Now;
 			int counter = 0;
 			int maxTries = 50;
 
@@ -1119,7 +1194,7 @@ namespace BeardedManStudios.Network
 				}
 
 				if (counter++ >= maxTries)
-					return;	// TODO:  Fire off a failed event
+					return; // TODO: Fire off a failed event
 
 				System.Threading.Thread.Sleep(1000);
 				Client.Send(new byte[1], 1, new IPEndPoint(address, host.port));
@@ -1134,5 +1209,9 @@ namespace BeardedManStudios.Network
 				pingReceivedInvoker(host, time);
 #endif
 		}
+
+		// JM: option for RPCs to run off fixed loop.  
+		//fixed loop should probably be used in networked games because different machines may have slower or faster frame rates which will change the timings of RPCs
+		public static bool RunActionsInFixedLoop = false;
 	}
 }

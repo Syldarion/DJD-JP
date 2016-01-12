@@ -12,6 +12,7 @@ public class PortScript : MonoBehaviour
 
 	void Start()
     {
+        portName = "";
         portPanel = GameObject.Find("PortPanel").GetComponent<CanvasGroup>();
     }
 	

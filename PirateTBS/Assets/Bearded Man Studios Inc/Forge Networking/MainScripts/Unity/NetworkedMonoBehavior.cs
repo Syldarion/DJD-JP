@@ -28,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using UnityEngine;
 
 namespace BeardedManStudios.Network
@@ -307,6 +306,12 @@ namespace BeardedManStudios.Network
 		public float authoritativeSyncRotation = 5.0f;
 
 		#region Authoritative Frame History
+
+		/// <summary>
+		/// The mutex for locking the logic for the authoritative frame
+		/// </summary>
+		private object _authoritativeFrameMutex;
+
 		/// <summary>
 		/// The type of authoritative frame
 		/// </summary>
@@ -335,10 +340,15 @@ namespace BeardedManStudios.Network
 				FramePrevious = new Vector3(previous.x, previous.y, previous.z);
 			}
 
+			public void UpdateDelta()
+			{
+				FrameValue = FrameActualValue - FramePrevious;
+			}
+
 			public override string ToString()
 			{
 				return "Authoritative Frame { \"Frame\":" + Frame + ", \"Actual\":\"" + FrameActualValue + "\", \"Previous\":\"" +
-				       FramePrevious + "\", \"Delta\":\"" + FrameValue + "\" }";
+					   FramePrevious + "\", \"Delta\":\"" + FrameValue + "\" }";
 			}
 		}
 
@@ -350,19 +360,24 @@ namespace BeardedManStudios.Network
 		{
 			#region Private Variables
 			private List<AuthoritativeFrame> _positionFrameHistory = null; 
-			//private List<AuthoritativeFrame> _rotationFrameHistory = null; 
-			//private List<AuthoritativeFrame> _scaleFrameHistory = null;
+			private List<AuthoritativeFrame> _rotationFrameHistory = null; 
+			private List<AuthoritativeFrame> _scaleFrameHistory = null;
 
 			private bool _trackPos;
-			//private bool _trackRotation;
-			//private bool _trackScale;
+			private bool _trackRotation;
+			private bool _trackScale;
 
 			private byte _previousPosFrame = 0;
-			#endregion
+			private byte _previousRotFrame = 0;
+			private byte _previousScaFrame = 0;
 
-			#region Public Variables
+			private float _posTimeStamp;
+			private float _rotTimeStamp;
+			private float _scaTimeStamp;
 
-			public byte LastFrame = 255;
+			private byte _posLastFrame = 255;
+			private byte _rotLastFrame = 255;
+			private byte _scaLastFrame = 255;
 
 			#endregion
 
@@ -376,12 +391,13 @@ namespace BeardedManStudios.Network
 			public void Setup(bool trackPos, bool trackRotation, bool trackScale)
 			{
 				_trackPos = trackPos;
-				//_trackRotation = trackRotation;
-				//_trackScale = trackScale;
+				_posTimeStamp = Time.time;
+				_trackRotation = trackRotation;
+				_trackScale = trackScale;
 
 				_positionFrameHistory = !_trackPos ? null : new List<AuthoritativeFrame>(byte.MaxValue);
-				//_rotationFrameHistory = !_trackRotation ? null : new List<AuthoritativeFrame>(byte.MaxValue);
-				//_scaleFrameHistory = !_trackScale ? null : new List<AuthoritativeFrame>(byte.MaxValue);
+				_rotationFrameHistory = !_trackRotation ? null : new List<AuthoritativeFrame>(byte.MaxValue);
+				_scaleFrameHistory = !_trackScale ? null : new List<AuthoritativeFrame>(byte.MaxValue);
 			}
 
 			/// <summary>
@@ -392,114 +408,342 @@ namespace BeardedManStudios.Network
 			/// <param name="value">The target value of the server</param>
 			/// <param name="currentValue">The current value of the client</param>
 			/// <returns></returns>
-			public Vector3 UpdateFrame(AuthoritativeFrameType type, Vector3 currentValue, byte serverFrame, Vector3 serverValue, ref Vector3 previousValue)
+			public Vector3 UpdateFrame(NetWorker owningNetworker, AuthoritativeFrameType type, Vector3 currentValue, byte serverFrame, Vector3 serverValue, ref Vector3 previousValue)
 			{
-                byte currentFrame = NetworkingManager.Instance.CurrentFrame;
-				bool frameFound = false;
-
-				#region ADD/UPDATE CLIENT FRAME
-				if (/*Vector3.Distance(previousValue, currentValue) > 0.01f || */currentFrame != _previousPosFrame)
+				switch (type)
 				{
-					Vector3 delta = currentValue;
-					Vector3 previous = previousValue;
-
-					_previousPosFrame = currentFrame;
-
-					if (_positionFrameHistory.Count > 0)
-					{
-      //                  string positionDebugFrame = "Frames\n===================\n<color=blue>Before</color>\n";
-						//foreach (AuthoritativeFrame frame in _positionFrameHistory)
-						//{
-						//	positionDebugFrame += frame + "\n";
-						//}
-
-						for (int i = _positionFrameHistory.Count -1; i >= 0; --i)
-						{
-							if (_positionFrameHistory[i].Frame == currentFrame)
-							{
-								frameFound = true;
-								//previousFrame.FrameActualValue = currentValue;
-								//previousFrame.FrameValue = currentValue - previousValue;
-								//previousFrame.FramePrevious = previousValue;
-
-								//This shouldn't happen but if it does, we want to make sure to re-align our history
-								//if (i + 1 < _positionFrameHistory.Count)
-								//{
-								//	for (int x = i + 1; x < _positionFrameHistory.Count; ++x)
-								//	{
-								//		_positionFrameHistory[x].FramePrevious = _positionFrameHistory[x - 1].FrameActualValue;
-								//		_positionFrameHistory[x].FrameValue = _positionFrameHistory[x].FrameActualValue -
-								//		                                      _positionFrameHistory[x - 1].FrameActualValue;
-								//	}
-								//}
-								break;
-							}
-						}
-
-						if (!frameFound)
-						{
-							//positionDebugFrame += "Delta Prev Pos: " +
-							//                      _positionFrameHistory[_positionFrameHistory.Count - 1].FrameActualValue + 
-							//					  ", Current Pos: " + delta;
-                            delta -= _positionFrameHistory[_positionFrameHistory.Count - 1].FrameActualValue;
-						}
-						else
-							delta = Vector3.zero;
-
-						previous = _positionFrameHistory[_positionFrameHistory.Count - 1].FrameActualValue;
-						//positionDebugFrame += "\n<color=red>After</color>\n";
-						//	foreach (AuthoritativeFrame frame in _positionFrameHistory)
-						//{
-						//	positionDebugFrame += frame + "\n";
-						//}
-						//Debug.Log(positionDebugFrame);
-					}
-
-					if (!frameFound)
-						_positionFrameHistory.Add(new AuthoritativeFrame(currentFrame, currentValue, delta, previous));
-
-					previousValue = currentValue;
+					case AuthoritativeFrameType.Position:
+						if (!_trackPos)
+							return currentValue;
+						break;
+					case AuthoritativeFrameType.Rotation:
+						if (!_trackRotation)
+							return currentValue;
+						break;
+					case AuthoritativeFrameType.Scale:
+						if (!_trackScale)
+							return currentValue;
+						break;
 				}
-				#endregion
-
-				if (LastFrame != serverFrame)
-				{
-                    LastFrame = serverFrame;
-					//int iter = 0;
-					frameFound = false;
-					Vector3 pos = currentValue;
-					//if (_positionFrameHistory.Count > 0)
-					//{
-					//	for (int i = _positionFrameHistory.Count - 1; i >= 0; --i)
-					//	{
-					//		if (_positionFrameHistory[i].Frame == serverFrame)
-					//		{
-					//			frameFound = true;
-					//			iter = i;
-					//			break;
-					//		}
-					//	}
-
-					//	if (frameFound)
-					//	{
-					//		_positionFrameHistory.RemoveRange(0, iter);
-					//		Debug.Log("Frame Found");
-
-					//		pos = serverValue;
-					//		for (int i = 0; i < _positionFrameHistory.Count; ++i)
-					//			pos += _positionFrameHistory[i].FrameValue; //Get the delta distance
-					//	}
-					//}
-
-					currentValue = pos;
-				}
-
-				return currentValue;
+				//ADD/UPDATE CLIENT FRAME
+				HandleClient(type, currentValue, ref previousValue);
+				
+				return FinishFrame(owningNetworker, type, currentValue, serverFrame, serverValue);
 			}
 			#endregion
 
 			#region Private API
-			
+
+			private void HandleClient(AuthoritativeFrameType type, Vector3 currentValue, ref Vector3 previousValue)
+			{
+				byte currentFrame = NetworkingManager.Instance.CurrentFrame;
+				bool valueChanged = Vector3.Distance(currentValue, previousValue) > 0.01f;
+				bool frameFound = false;
+				switch (type)
+				{
+					case AuthoritativeFrameType.Position:
+						if (currentFrame != _previousPosFrame || valueChanged)
+						{
+							if (valueChanged)
+								_posTimeStamp = Time.time;
+
+							Vector3 delta = Vector3.zero;
+							Vector3 previous = previousValue;
+
+							_previousPosFrame = currentFrame;
+
+							if (_positionFrameHistory.Count > 0)
+							{
+								for (int i = _positionFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_positionFrameHistory[i].Frame == currentFrame)
+									{
+										frameFound = true;
+										_positionFrameHistory[i].FrameActualValue = currentValue;
+										_positionFrameHistory[i].UpdateDelta();
+										break;
+									}
+								}
+
+								if (!frameFound)
+								{
+									delta = currentValue - _positionFrameHistory[_positionFrameHistory.Count - 1].FrameActualValue;
+
+									previousValue = currentValue;
+								}
+
+								previous = _positionFrameHistory[_positionFrameHistory.Count - 1].FrameActualValue;
+							}
+
+							if (!frameFound)
+							{
+								AuthoritativeFrame tempNewFrame = new AuthoritativeFrame(currentFrame, currentValue, delta, previous);
+								_positionFrameHistory.Add(tempNewFrame);
+							}
+
+							if (_positionFrameHistory.Count > byte.MaxValue)
+								_positionFrameHistory.RemoveRange(0, (int)(_positionFrameHistory.Count * 0.8f));
+						}
+						break;
+					case AuthoritativeFrameType.Rotation:
+						if (currentFrame != _previousRotFrame || valueChanged)
+						{
+							if (valueChanged)
+								_rotTimeStamp = Time.time;
+
+							Vector3 delta = Vector3.zero;
+							Vector3 previous = previousValue;
+
+							_previousRotFrame = currentFrame;
+
+							if (_rotationFrameHistory.Count > 0)
+							{
+								for (int i = _rotationFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_rotationFrameHistory[i].Frame == currentFrame)
+									{
+										frameFound = true;
+										_rotationFrameHistory[i].FrameActualValue = currentValue;
+										_rotationFrameHistory[i].UpdateDelta();
+										break;
+									}
+								}
+
+								if (!frameFound)
+								{
+									delta = currentValue - _rotationFrameHistory[_rotationFrameHistory.Count - 1].FrameActualValue;
+
+									previousValue = currentValue;
+								}
+
+								previous = _rotationFrameHistory[_rotationFrameHistory.Count - 1].FrameActualValue;
+							}
+
+							if (!frameFound)
+							{
+								AuthoritativeFrame tempNewFrame = new AuthoritativeFrame(currentFrame, currentValue, delta, previous);
+								_rotationFrameHistory.Add(tempNewFrame);
+							}
+
+							if (_rotationFrameHistory.Count > byte.MaxValue)
+								_rotationFrameHistory.RemoveRange(0, (int)(_rotationFrameHistory.Count * 0.8f));
+						}
+						break;
+					case AuthoritativeFrameType.Scale:
+						if (currentFrame != _previousScaFrame || valueChanged)
+						{
+							if (valueChanged)
+								_scaTimeStamp = Time.time;
+
+							Vector3 delta = Vector3.zero;
+							Vector3 previous = previousValue;
+
+							_previousScaFrame = currentFrame;
+
+							if (_scaleFrameHistory.Count > 0)
+							{
+								for (int i = _scaleFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_scaleFrameHistory[i].Frame == currentFrame)
+									{
+										frameFound = true;
+										_scaleFrameHistory[i].FrameActualValue = currentValue;
+										_scaleFrameHistory[i].UpdateDelta();
+										break;
+									}
+								}
+
+								if (!frameFound)
+								{
+									delta = currentValue - _scaleFrameHistory[_scaleFrameHistory.Count - 1].FrameActualValue;
+
+									previousValue = currentValue;
+								}
+
+								previous = _scaleFrameHistory[_scaleFrameHistory.Count - 1].FrameActualValue;
+							}
+
+							if (!frameFound)
+							{
+								AuthoritativeFrame tempNewFrame = new AuthoritativeFrame(currentFrame, currentValue, delta, previous);
+								_scaleFrameHistory.Add(tempNewFrame);
+							}
+
+							if (_scaleFrameHistory.Count > byte.MaxValue)
+								_scaleFrameHistory.RemoveRange(0, (int)(_scaleFrameHistory.Count * 0.8f));
+						}
+						break;
+				}
+			}
+
+			private Vector3 FinishFrame(NetWorker owningNetworker, AuthoritativeFrameType type, Vector3 currentValue, byte serverFrame, Vector3 serverValue)
+			{
+				bool frameFound = false;
+				int iter = 0;
+				Vector3 pos = currentValue;
+				switch (type)
+				{
+					case AuthoritativeFrameType.Position:
+						if (_posLastFrame != serverFrame)
+						{
+							_posLastFrame = serverFrame;
+							_posTimeStamp = Time.time;
+							
+							if (_positionFrameHistory.Count > 0)
+							{
+								for (int i = _positionFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_positionFrameHistory[i].Frame == serverFrame)
+									{
+										frameFound = true;
+										iter = i;
+										break;
+									}
+								}
+
+								if (frameFound)
+								{
+									_positionFrameHistory.RemoveRange(0, iter);
+
+									_positionFrameHistory[0].FrameActualValue = serverValue;
+									_positionFrameHistory[0].FrameValue = Vector3.zero;
+
+									if (_positionFrameHistory.Count > 1)
+									{
+										_positionFrameHistory[1].FramePrevious = _positionFrameHistory[0].FrameActualValue;
+										_positionFrameHistory[1].UpdateDelta();
+									}
+
+									pos = serverValue;
+									for (int i = 0; i < _positionFrameHistory.Count; ++i)
+										pos += _positionFrameHistory[i].FrameValue; //Get the delta distance
+								}
+							}
+
+							currentValue = pos;
+						}
+						else
+						{
+							if ((Time.time - _posTimeStamp) * 1000 > owningNetworker.PreviousServerPing + 100)
+							{
+								_posTimeStamp = Time.time;
+								if (Vector3.Distance(currentValue, serverValue) > 0.1f)
+								{
+									currentValue = serverValue;
+									_positionFrameHistory.Clear();
+								}
+							}
+						}
+						break;
+					case AuthoritativeFrameType.Rotation:
+						if (_rotLastFrame != serverFrame)
+						{
+							_rotLastFrame = serverFrame;
+							_rotTimeStamp = Time.time;
+
+							if (_rotationFrameHistory.Count > 0)
+							{
+								for (int i = _rotationFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_rotationFrameHistory[i].Frame == serverFrame)
+									{
+										frameFound = true;
+										iter = i;
+										break;
+									}
+								}
+
+								if (frameFound)
+								{
+									_rotationFrameHistory.RemoveRange(0, iter);
+
+									_rotationFrameHistory[0].FrameActualValue = serverValue;
+									_rotationFrameHistory[0].FrameValue = Vector3.zero;
+
+									if (_rotationFrameHistory.Count > 1)
+									{
+										_rotationFrameHistory[1].FramePrevious = _rotationFrameHistory[0].FrameActualValue;
+										_rotationFrameHistory[1].UpdateDelta();
+									}
+
+									pos = serverValue;
+									for (int i = 0; i < _rotationFrameHistory.Count; ++i)
+										pos += _rotationFrameHistory[i].FrameValue; //Get the delta distance
+								}
+							}
+
+							currentValue = pos;
+						}
+						else
+						{
+							if ((Time.time - _rotTimeStamp) * 1000 > owningNetworker.PreviousServerPing + 100)
+							{
+								_rotTimeStamp = Time.time;
+								if (Vector3.Distance(currentValue, serverValue) > 0.1f)
+								{
+									currentValue = serverValue;
+									_rotationFrameHistory.Clear();
+								}
+							}
+						}
+						break;
+					case AuthoritativeFrameType.Scale:
+						if (_scaLastFrame != serverFrame)
+						{
+							_scaLastFrame = serverFrame;
+							_scaTimeStamp = Time.time;
+
+							if (_scaleFrameHistory.Count > 0)
+							{
+								for (int i = _scaleFrameHistory.Count - 1; i >= 0; --i)
+								{
+									if (_scaleFrameHistory[i].Frame == serverFrame)
+									{
+										frameFound = true;
+										iter = i;
+										break;
+									}
+								}
+
+								if (frameFound)
+								{
+									_scaleFrameHistory.RemoveRange(0, iter);
+
+									_scaleFrameHistory[0].FrameActualValue = serverValue;
+									_scaleFrameHistory[0].FrameValue = Vector3.zero;
+
+									if (_scaleFrameHistory.Count > 1)
+									{
+										_scaleFrameHistory[1].FramePrevious = _scaleFrameHistory[0].FrameActualValue;
+										_scaleFrameHistory[1].UpdateDelta();
+									}
+
+									pos = serverValue;
+									for (int i = 0; i < _scaleFrameHistory.Count; ++i)
+										pos += _scaleFrameHistory[i].FrameValue; //Get the delta distance
+								}
+							}
+
+							currentValue = pos;
+						}
+						else
+						{
+							if ((Time.time - _scaTimeStamp) * 1000 > owningNetworker.PreviousServerPing + 100)
+							{
+								_scaTimeStamp = Time.time;
+								if (Vector3.Distance(currentValue, serverValue) > 0.1f)
+								{
+									currentValue = serverValue;
+									_scaleFrameHistory.Clear();
+								}
+							}
+						}
+						break;
+				}
+
+				return currentValue;
+			}
+
 			#endregion
 		}
 		#endregion
@@ -517,12 +761,12 @@ namespace BeardedManStudios.Network
 		/// <summary>
 		/// The previous authoritative rotation
 		/// </summary>
-		//private Vector3 previousAuthoritativeRotation = Vector3.zero;
+		private Vector3 previousAuthoritativeRotation = Vector3.zero;
 
 		/// <summary>
 		/// The previous authoritative scale
 		/// </summary>
-		//private Vector3 previousAuthoritativeScale = Vector3.zero;
+		private Vector3 previousAuthoritativeScale = Vector3.zero;
 
 		/// <summary>
 		/// An event that is fired on the server when an input down was requested from a client
@@ -653,10 +897,7 @@ namespace BeardedManStudios.Network
 		/// <summary>
 		/// Called when the data has been initialized across the network for this object (purpose is to override)
 		/// </summary>
-		protected virtual void NetworkInitialized()
-		{
-
-		}
+		protected virtual void NetworkInitialized() { }
 
 		/// <summary>
 		/// Determines if the collider has already been turned off for this object
@@ -795,9 +1036,9 @@ namespace BeardedManStudios.Network
 		/// <param name="isOwner">Is this the owner of this object</param>
 		/// <param name="networkId">Network ID of who owns it</param>
 		/// <param name="ownerId">The network identifyer for the player who owns this object</param>
-		public override void Setup(NetWorker owningSocket, bool isOwner, ulong networkId, ulong ownerId)
+		public override void Setup(NetWorker owningSocket, bool isOwner, ulong networkId, ulong ownerId, bool isSceneObject = false)
 		{
-			base.Setup(owningSocket, isOwner, networkId, ownerId);
+			base.Setup(owningSocket, isOwner, networkId, ownerId, isSceneObject);
 
 			bool foundServerAuthority = false, clientPrediction = false;
 
@@ -862,6 +1103,7 @@ namespace BeardedManStudios.Network
 
 			RPC("InitializeObject", NetworkReceivers.Server);
 
+			_authoritativeFrameMutex = new object();
 			frameHistory.Setup(serializePosition != SerializeVector3Properties.None, 
 								serializeRotation != SerializeVector3Properties.None, 
 								serializeScale != SerializeVector3Properties.None);
@@ -971,11 +1213,11 @@ namespace BeardedManStudios.Network
 				Debug.LogError("The input key " + ((KeyCode)keyCode).ToString() + " was requested from the client but no input request inputDownRequest has not been assigned");
 #endif
 
-			if (keyUpBuffer.Contains(keyCode))
-			{
-				KeyUpRequest(keyCode, frame);
-				keyUpBuffer.Remove(keyCode);
-			}
+			//if (keyUpBuffer.Contains(keyCode))
+			//{
+			//	KeyUpRequest(keyCode, frame);
+			//	keyUpBuffer.Remove(keyCode);
+			//}
 		}
 
 		[BRPC]
@@ -1093,14 +1335,15 @@ namespace BeardedManStudios.Network
 
 		protected override void UnityUpdate()
 		{
+			// TODO:  Look into this
+			if (this == null)
+				return;
+
 			HasSerialized = false;
 
 			base.UnityUpdate();
 
 			if (!NetworkingManager.IsOnline)
-				return;
-
-			if (this == null)
 				return;
 
 			if (serverIsAuthority && (OwningNetWorker.IsServer || (IsOwner && clientSidePrediction)))
@@ -1178,8 +1421,11 @@ namespace BeardedManStudios.Network
 
 				if (clientSidePrediction && IsOwner)
 				{
-					if (serverIsAuthority)
-						TrackFrameHistory();
+					lock (_authoritativeFrameMutex)
+					{
+						if (serverIsAuthority)
+							TrackFrameHistory();
+					}
 
 					if (currentKeys.Count != 0 || mouseIndices.Count != 0)
 					{
@@ -1198,10 +1444,12 @@ namespace BeardedManStudios.Network
 								Vector3.Distance(transform.position, targetPosition) > authoritativeTeleportSyncDistance)
 								transform.position = targetPosition;
 							else
+							{
 								transform.position = Vector3.Lerp(transform.position, targetPosition, lerpT);
 
-							if (Vector3.Distance(transform.position, targetPosition) <= lerpStopOffset)
-								transform.position = targetPosition;
+								if (Vector3.Distance(transform.position, targetPosition) <= lerpStopOffset)
+									transform.position = targetPosition;
+							}
 						}
 					}
 				}
@@ -1215,10 +1463,12 @@ namespace BeardedManStudios.Network
 						if (!lerpRotation || skipInterpolation)
 							transform.rotation = convertedTargetRotation;
 						else
+						{
 							transform.rotation = Quaternion.Slerp(transform.rotation, convertedTargetRotation, lerpT);
 
-						if (Quaternion.Angle(transform.rotation, convertedTargetRotation) <= lerpAngleStopOffset)
-							transform.rotation = convertedTargetRotation;
+							if (Quaternion.Angle(transform.rotation, convertedTargetRotation) <= lerpAngleStopOffset)
+								transform.rotation = convertedTargetRotation;
+						}
 					}
 				}
 
@@ -1227,10 +1477,12 @@ namespace BeardedManStudios.Network
 					if (!lerpScale || skipInterpolation)
 						transform.localScale = targetScale;
 					else
+					{
 						transform.localScale = Vector3.Lerp(transform.localScale, targetScale, lerpT);
 
-					if (Vector3.Distance(transform.localScale, targetScale) <= lerpStopOffset)
-						transform.localScale = targetScale;
+						if (Vector3.Distance(transform.localScale, targetScale) <= lerpStopOffset)
+							transform.localScale = targetScale;
+					}
 				}
 
 				foreach (NetRef<object> obj in Properties)
@@ -1257,30 +1509,17 @@ namespace BeardedManStudios.Network
 		{
 			if (OwningNetWorker.IsServer)
 				return;
-
-			//if (Vector3.Distance(previousAuthoritativePosition, transform.position) < 0.01f)
-			//	return;
-
-			//if (frameHistory.LastFrame == targetFrame)
-			//	return;
-
-			//frameHistory.LastFrame = targetFrame;
-
-			//TODO Prediction handling for position
-			//targetFrame
-			//targetPosition
-			//targetRotation
-			//targetScale
-
-			//frameHistory
-			//NetworkingManager.Instance.CurrentFrame
-			//previousAuthoritativePosition
-			//previousAuthoritativeRotation
-			//previousAuthoritativeScale
 			
+			byte serverFrame = (byte)(targetFrame - NetworkingManager.Instance.GetFrameCountFromTime(OwningNetWorker.PreviousServerPing));
 			//Idea is to store the frames as they come down and
-			Vector3 nextPos = frameHistory.UpdateFrame(AuthoritativeFrameType.Position, transform.position, (byte)(targetFrame - NetworkingManager.Instance.GetFrameCountFromTime(OwningNetWorker.PreviousServerPing)), targetPosition, ref previousAuthoritativePosition);
+			Vector3 nextPos = frameHistory.UpdateFrame(OwningNetWorker, AuthoritativeFrameType.Position, transform.position, serverFrame, targetPosition, ref previousAuthoritativePosition);
 			transform.position = nextPos;
+
+			Vector3 nextRot = frameHistory.UpdateFrame(OwningNetWorker, AuthoritativeFrameType.Rotation, transform.rotation.eulerAngles, serverFrame, targetRotation, ref previousAuthoritativeRotation);
+			transform.rotation = Quaternion.Euler(nextRot);
+
+			Vector3 nextScale = frameHistory.UpdateFrame(OwningNetWorker, AuthoritativeFrameType.Scale, transform.localScale, serverFrame, targetScale, ref previousAuthoritativeScale);
+			transform.localScale = nextScale;
 		}
 
 		private void UpdateRemoteNetRef(NetRef<object> obj)
@@ -1386,12 +1625,12 @@ namespace BeardedManStudios.Network
 			if (OwningNetWorker is CrossPlatformUDP)
 			{
 				writeStream.SetProtocolType(Networking.ProtocolType.UDP);
-				Networking.WriteUDP(OwningNetWorker, myUniqueId, writeStream.Prepare(OwningNetWorker, NetworkingStream.IdentifierType.NetworkedBehavior, this, serializedBuffer, (OwningNetWorker.ProximityBasedMessaging ? NetworkReceivers.OthersProximity : NetworkReceivers.Others)), isReliable);
+				Networking.WriteUDP(OwningNetWorker, myUniqueId, writeStream.Prepare(OwningNetWorker, NetworkingStream.IdentifierType.NetworkedBehavior, this.NetworkedId, serializedBuffer, (OwningNetWorker.ProximityBasedMessaging ? NetworkReceivers.OthersProximity : NetworkReceivers.Others)), isReliable);
 			}
 			else
 			{
 				writeStream.SetProtocolType(Networking.ProtocolType.TCP);
-				Networking.WriteTCP(OwningNetWorker, writeStream.Prepare(OwningNetWorker, NetworkingStream.IdentifierType.NetworkedBehavior, this, serializedBuffer, OwningNetWorker.ProximityBasedMessaging ? NetworkReceivers.OthersProximity : NetworkReceivers.Others));
+				Networking.WriteTCP(OwningNetWorker, writeStream.Prepare(OwningNetWorker, NetworkingStream.IdentifierType.NetworkedBehavior, this.NetworkedId, serializedBuffer, OwningNetWorker.ProximityBasedMessaging ? NetworkReceivers.OthersProximity : NetworkReceivers.Others));
 			}
 
 			HasSerialized = true;

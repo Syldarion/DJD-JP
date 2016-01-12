@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
+﻿
 using BeardedManStudios.Network;
 
 public class ForgeExample_ObjectToTransport : ForgeTransportObject

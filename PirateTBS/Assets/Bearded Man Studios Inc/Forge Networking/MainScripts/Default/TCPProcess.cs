@@ -20,9 +20,7 @@
 
 
 #if !NETFX_CORE
-using UnityEngine;
 using System;
-using System.Collections;
 using System.Net.Sockets;
 #endif
 
@@ -38,7 +36,11 @@ namespace BeardedManStudios.Network
 		protected BMSByte readBuffer = new BMSByte();
 		protected BMSByte backBuffer = new BMSByte();
 
-		protected object writeMutex = new System.Object();
+		protected object writeMutex = new object();
+		protected object rpcMutex = new object();
+
+		protected NetworkingStream writeStream = new NetworkingStream();
+		protected NetworkingStream readStream = new NetworkingStream();
 
 		protected BMSByte ReadBuffer(NetworkStream stream)
 		{
@@ -52,9 +54,12 @@ namespace BeardedManStudios.Network
 				backBuffer.SetSize(previousSize + count);
 			}
 
-			int size = BitConverter.ToInt32(backBuffer.byteArr, 0);
+			int size = BitConverter.ToInt32(backBuffer.byteArr, backBuffer.StartIndex());
 
 			readBuffer.Clear();
+
+			if (count == 0)
+				return readBuffer;
 
 			readBuffer.BlockCopy(backBuffer.byteArr, backBuffer.StartIndex(4), size);
 
@@ -64,6 +69,93 @@ namespace BeardedManStudios.Network
 				backBuffer.Clear();
 
 			return readBuffer;
+		}
+
+		private object tmp = new object();
+		protected void StreamReceived(NetworkingPlayer sender, BMSByte bytes)
+		{
+			if (TrackBandwidth)
+				BandwidthIn += (ulong)bytes.Size;
+
+			lock (tmp)
+			{
+				bytes.MoveStartIndex(1);
+				readStream.Reset();
+
+				if (base.ProcessReceivedData(sender, bytes, bytes[0]))
+					return;
+
+				// TODO:  Not needed after initialization
+				readStream.SetProtocolType(Networking.ProtocolType.TCP);
+				if (readStream.Consume(this, sender, bytes) == null)
+					return;
+
+				// Do not process player because it is processed through the listener
+				if (readStream.identifierType == NetworkingStream.IdentifierType.Player)
+				{
+					if (!Connected)
+						OnConnected();
+
+					return;
+				}
+
+				if (readStream.Ready)
+				{
+					// TODO:  These need to be done better since there are many of them
+					if (readStream.Bytes.Size < 22)
+					{
+						try
+						{
+							if (ObjectMapper.Compare<string>(readStream, "update"))
+								UpdateNewPlayer(sender);
+
+							if (ObjectMapper.Compare<string>(readStream, "disconnect"))
+							{
+								// TODO:  If this eventually sends something to the player they will not exist
+								Disconnect(sender);
+								return;
+							}
+						}
+						catch
+						{
+							throw new NetworkException(12, "Mal-formed defalut communication");
+						}
+					}
+				}
+
+				if (ReadStream(sender, readStream) && IsServer)
+					RelayStream(readStream);
+
+				DataRead(sender, readStream);
+			}
+		}
+
+		protected bool ReadStream(NetworkingPlayer sender, NetworkingStream stream)
+		{
+			if (IsServer)
+			{
+				if (stream.Receivers == NetworkReceivers.MessageGroup && Me.MessageGroup != stream.Sender.MessageGroup)
+					return true;
+
+				OnDataRead(sender, stream);
+			}
+			else
+				OnDataRead(null, stream);
+
+			// Don't execute this logic on the server if the server doesn't own the object
+			if (!ReferenceEquals(stream.NetworkedBehavior, null) && stream.Receivers == NetworkReceivers.Owner)
+				return true;
+
+			if (stream.identifierType == NetworkingStream.IdentifierType.RPC)
+			{
+				lock (rpcMutex)
+				{
+					if ((new NetworkingStreamRPC(stream)).FailedExecution)
+						return false;
+				}
+			}
+
+			return true;
 		}
 
 		abstract public override void Connect(string hostAddress, ushort port);

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace BeardedManStudios.Network
 {

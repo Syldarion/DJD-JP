@@ -20,7 +20,6 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace BeardedManStudios.Network
@@ -89,14 +88,21 @@ namespace BeardedManStudios.Network
 #endif
 			foreach (PropertyInfo property in properties)
 			{
+				//if (property.PropertyType == typeof(BMSByte))
+				//	continue;
+
 				if (property.CanRead && property.CanWrite)
 					property.SetValue(this, property.GetValue(stream, null), null);
 			}
-
+			
 			if (!skipCall)
 				FailedExecution = !NetworkedBehavior.InvokeRPC(this);
 			else
-				Bytes = new BMSByte().Clone(stream.Bytes);
+			{
+				Bytes = new BMSByte().Clone(stream.Bytes.byteArr, stream.Bytes.byteArr.Length - 1);
+				Bytes.MoveStartIndex(stream.Bytes.StartIndex());
+				Bytes.SetSize(stream.Bytes.Size);
+			}
 		}
 
 		/// <summary>
@@ -129,7 +135,14 @@ namespace BeardedManStudios.Network
 			ulong id = 0;
 			if (MethodName == INSTANTIATE_METHOD_NAME)
 			{
-				string objName = stream.Bytes.GetString(start + 16);
+				// TODO:  Debug log if start != 30 what it is equal to
+#if UNITY_EDITOR
+				if (start != 30)
+					UnityEngine.Debug.LogError("The start value is not 30 it is " + start);
+#endif
+
+				// We add 16 because it is the size of 2 ulongs since the first 2 args of the instantiate are 2 ulongs
+				string objName = stream.Bytes.GetString(30 + 16);
 
 				if (!NetworkingManager.TryPullIdFromObject(objName, ref id))
 					throw new NetworkException("Invalid object being instantiated");

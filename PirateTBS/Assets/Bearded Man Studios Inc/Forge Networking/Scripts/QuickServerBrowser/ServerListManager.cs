@@ -1,4 +1,4 @@
-﻿/*-----------------------------+------------------------------\
+/*-----------------------------+------------------------------\
 |                                                             |
 |                        !!!NOTICE!!!                         |
 |                                                             |
@@ -21,7 +21,6 @@
 
 using BeardedManStudios.Network;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ServerListManager : MonoBehaviour
@@ -95,21 +94,15 @@ public class ServerListManager : MonoBehaviour
 		if (socket.Connected)
 		{
 			Networking.SetPrimarySocket(socket);
-            if (SceneManager.GetSceneByName(host.sceneName).IsValid())
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(host.sceneName));
-            else
-                SceneManager.LoadScene(host.sceneName);
-        }
+			BeardedManStudios.Network.Unity.UnitySceneManager.LoadScene(host.sceneName);
+		}
 		else
 		{
 			socket.connected += delegate()
 			{
 				Networking.SetPrimarySocket(socket);
-                if (SceneManager.GetSceneByName(host.sceneName).IsValid())
-                    SceneManager.SetActiveScene(SceneManager.GetSceneByName(host.sceneName));
-                else
-                    SceneManager.LoadScene(host.sceneName);
-            };
+				BeardedManStudios.Network.Unity.UnitySceneManager.LoadScene(host.sceneName);
+			};
 		}
 	}
 

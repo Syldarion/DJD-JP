@@ -27,6 +27,9 @@
 //    Sridhar Kulkarni (sridharkulkarni@gmail.com)
 //    Marek Safar (marek.safar@gmail.com)
 //
+// Modified by:
+//    Brent Farris (brent@beardedmangames.com)
+//
 // Copyright (C) Ximian, Inc. http://www.ximian.com
 // Copyright 2011 Xamarin Inc.
 //
@@ -55,9 +58,9 @@
 #if !NETFX_CORE
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections.Generic;
 
 namespace BeardedManStudios.Network
 {

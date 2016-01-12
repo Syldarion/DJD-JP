@@ -1,4 +1,4 @@
-﻿/*-----------------------------+------------------------------\
+/*-----------------------------+------------------------------\
 |                                                             |
 |                        !!!NOTICE!!!                         |
 |                                                             |
@@ -19,11 +19,9 @@
 
 
 
-using UnityEngine;
-
 using BeardedManStudios.Network;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace BeardedManStudios.Forge.Examples
 {
@@ -146,12 +144,12 @@ namespace BeardedManStudios.Forge.Examples
 			if (OwningNetWorker.IsServer && Input.GetKeyDown(KeyCode.N))
 			{
 				Networking.ChangeClientScene(OwningNetWorker, "ForgeWriteCustom");
-				SceneManager.LoadScene("ForgeWriteCustom");
+				Network.Unity.UnitySceneManager.LoadScene("ForgeWriteCustom");
 			}
 			else if (OwningNetWorker.IsServer && Input.GetKeyDown(KeyCode.M))
 			{
 				Networking.ChangeClientScene(OwningNetWorker, "ForgeHelloCubeResources");
-				SceneManager.LoadScene("ForgeHelloCubeResources");
+				Network.Unity.UnitySceneManager.LoadScene("ForgeHelloCubeResources");
 			}
 
 			if (Input.GetKeyDown(KeyCode.L))
@@ -190,7 +188,7 @@ namespace BeardedManStudios.Forge.Examples
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				Networking.Disconnect();
-				SceneManager.LoadScene(0);
+				Network.Unity.UnitySceneManager.LoadScene(0);
 			}
 		}
 
@@ -240,14 +238,14 @@ namespace BeardedManStudios.Forge.Examples
 			GUILayout.Label("Press B or F to assign your name across the network.");
 			GUILayout.Label("This will also updated get the latest list of players");
 
-			GUILayout.Label("Bytes In: " + OwningNetWorker.BandwidthIn);
-			GUILayout.Label("Bytes Out: " + OwningNetWorker.BandwidthOut);
+			GUILayout.Label("Bytes In: " + NetWorker.BandwidthIn);
+			GUILayout.Label("Bytes Out: " + NetWorker.BandwidthOut);
 
-			GUILayout.Label("Kilobytes In: " + (OwningNetWorker.BandwidthIn / 1024.0f));
-			GUILayout.Label("Kilobytes Out: " + (OwningNetWorker.BandwidthOut / 1024.0f));
+			GUILayout.Label("Kilobytes In: " + (NetWorker.BandwidthIn / 1024.0f));
+			GUILayout.Label("Kilobytes Out: " + (NetWorker.BandwidthOut / 1024.0f));
 
-			GUILayout.Label("Megabytes In: " + (OwningNetWorker.BandwidthIn / 1024.0f / 1024.0f));
-			GUILayout.Label("Megabytes Out: " + (OwningNetWorker.BandwidthOut / 1024.0f / 1024.0f));
+			GUILayout.Label("Megabytes In: " + (NetWorker.BandwidthIn / 1024.0f / 1024.0f));
+			GUILayout.Label("Megabytes Out: " + (NetWorker.BandwidthOut / 1024.0f / 1024.0f));
 
 			GUILayout.Label("Current Frame: " + NetworkingManager.Instance.CurrentFrame);
 		}

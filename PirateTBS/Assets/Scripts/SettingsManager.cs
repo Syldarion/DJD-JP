@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using BeardedManStudios.Network;
 
 public class SettingsManager : NetworkedMonoBehavior
@@ -19,9 +18,9 @@ public class SettingsManager : NetworkedMonoBehavior
 
     void Awake()
     {
-        AddNetworkVariable(() => MapTypeIndex, x => OnMapTypeChange((int)x));
-        AddNetworkVariable(() => MapSizeIndex, x => OnMapSizeChange((int)x));
-        AddNetworkVariable(() => GamePaceIndex, x => OnGamePaceChange((int)x));
+        AddNetworkVariable(() => MapTypeIndex, x => UpdateMapType((int)x));
+        AddNetworkVariable(() => MapSizeIndex, x => UpdateMapSize((int)x));
+        AddNetworkVariable(() => GamePaceIndex, x => UpdateGamePace((int)x));
         AddNetworkVariable(() => MapSeed, x => MapSeed = (int)x);
     }
 
@@ -34,14 +33,31 @@ public class SettingsManager : NetworkedMonoBehavior
     {
         MapSeed = Random.Range(0, 1000000);
     }
+    
+    public void UpdateMapType(int map_type_index)
+    {
+        RPC("OnMapTypeChange", map_type_index);
+    }
 
-    public void OnMapTypeChange(int map_type_index)
+    public void UpdateMapSize(int map_size_index)
+    {
+        RPC("OnMapSizeChange", map_size_index);
+    }
+
+    public void UpdateGamePace(int game_pace_index)
+    {
+        RPC("OnGamePaceChange", game_pace_index);
+    }
+
+    [BRPC]
+    void OnMapTypeChange(int map_type_index)
     {
         MapTypeIndex = map_type_index;
         MapTypeSelection.value = MapTypeIndex;
     }
-
-    public void OnMapSizeChange(int map_size_index)
+    
+    [BRPC]
+    void OnMapSizeChange(int map_size_index)
     {
         MapSizeIndex = map_size_index;
         MapSizeSelection.value = MapSizeIndex;
@@ -74,8 +90,9 @@ public class SettingsManager : NetworkedMonoBehavior
                 break;
         }
     }
-
-    public void OnGamePaceChange(int game_pace_index)
+    
+    [BRPC]
+    void OnGamePaceChange(int game_pace_index)
     {
         GamePaceIndex = game_pace_index;
         GamePaceSelection.value = GamePaceIndex;

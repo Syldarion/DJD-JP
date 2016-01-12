@@ -20,7 +20,6 @@
 
 
 using System;
-using System.Globalization;
 
 namespace BeardedManStudios.Network
 {
@@ -116,7 +115,17 @@ namespace BeardedManStudios.Network
 		/// Set the name of this player
 		/// </summary>
 		/// <param name="name">The name to be assigned</param>
+		[Obsolete("Rename() is deprecated, please use SetName() instead.")]
 		public void Rename(string name)
+		{
+			SetName(name);
+		}
+
+		/// <summary>
+		/// Set the name of this player
+		/// </summary>
+		/// <param name="name">The name to be assigned</param>
+		public void SetName(string name)
 		{
 			Name = name;
 		}
