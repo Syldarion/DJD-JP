@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class ChatMessageScript : MonoBehaviour
@@ -10,8 +9,6 @@ public class ChatMessageScript : MonoBehaviour
 
 	void Start()
     {
-        //Filter = GameObject.Find("ChatFilter").GetComponent<ChatFilter>();
-
         GameObject chatParent = GameObject.Find("LobbyChat/Messages");
 
         transform.SetParent(chatParent.transform, false);
@@ -19,7 +16,6 @@ public class ChatMessageScript : MonoBehaviour
 
         if (chatParent.transform.childCount > 20)
             Destroy(chatParent.transform.GetChild(0).gameObject);
-        //Message = Filter.PirateFilter(Message);
 
         UpdateMessage();
     }

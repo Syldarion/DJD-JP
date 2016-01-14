@@ -20,12 +20,16 @@ public class HexGrid : MonoBehaviour
     {
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
-        gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
-        gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
+        //gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
+        //gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
+
+        gridWidth = 40;
+        gridHeight = 40;
 
         tiles = new List<HexTile>();
 
-        Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
+        //Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
+        Random.seed = 10000;
 
         GenerateGrid(gridWidth, gridHeight, 64);
 	}

@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -169,17 +171,14 @@
     <Compile Include="Assets\Scripts\FleetScript.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />
-    <Compile Include="Assets\Scripts\HostPanelScript.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
     <Compile Include="Assets\Scripts\LobbyPlayerSpawner.cs" />
-    <Compile Include="Assets\Scripts\MainMenuCanvasController.cs" />
+    <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
-    <Compile Include="Assets\Scripts\RevealMenuItem.cs" />
-    <Compile Include="Assets\Scripts\RevealMenuPanel.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />

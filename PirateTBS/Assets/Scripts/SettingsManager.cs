@@ -38,18 +38,24 @@ public class SettingsManager : NetworkedMonoBehavior
     {
         if (Networking.PrimarySocket.IsServer)
             RPC("OnMapTypeChange", map_type_index);
+        else
+            MapTypeSelection.value = MapTypeIndex;
     }
 
     public void UpdateMapSize(int map_size_index)
     {
         if (Networking.PrimarySocket.IsServer)
             RPC("OnMapSizeChange", map_size_index);
+        else
+            MapSizeSelection.value = MapSizeIndex;
     }
 
     public void UpdateGamePace(int game_pace_index)
     {
         if (Networking.PrimarySocket.IsServer)
             RPC("OnGamePaceChange", game_pace_index);
+        else
+            GamePaceSelection.value = GamePaceIndex;
     }
 
     [BRPC]

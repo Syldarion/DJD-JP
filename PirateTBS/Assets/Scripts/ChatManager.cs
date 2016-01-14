@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.UI;
-using System.Collections;
 using BeardedManStudios.Network;
 
 public class ChatManager : NetworkedMonoBehavior
