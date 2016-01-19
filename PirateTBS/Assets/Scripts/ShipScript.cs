@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Network;
 
 public class Cargo
 {
@@ -38,7 +39,7 @@ public enum ShipClass
     Frigate
 }
 
-public class ShipScript : MonoBehaviour
+public class ShipScript : NetworkedMonoBehavior
 {
     public int HullHealth { get; private set; }
     public int SailHealth { get; private set; }
@@ -58,7 +59,7 @@ public class ShipScript : MonoBehaviour
 
 	void Start()
     {
-        
+        SetClass(ShipClass.Pinnace);
 	}
 	
 	void Update()

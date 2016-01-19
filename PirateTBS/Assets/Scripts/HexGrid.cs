@@ -2,12 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Network;
 
-public class HexGrid : MonoBehaviour
+public class HexGrid : SimpleNetworkedMonoBehavior
 {
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
+    public List<PortScript> ports;
 
     float hexWidth;
 
@@ -20,16 +22,12 @@ public class HexGrid : MonoBehaviour
     {
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
-        //gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
-        //gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
-
-        gridWidth = 40;
-        gridHeight = 40;
+        gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
+        gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
 
         tiles = new List<HexTile>();
 
-        //Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
-        Random.seed = 10000;
+        Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
 
         GenerateGrid(gridWidth, gridHeight, 64);
 	}
@@ -76,7 +74,8 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        CreatePorts(gridWidth / 4);
+        if (NetworkingManager.Instance.OwningPlayer.NetworkId == 0)
+            CreatePorts(gridWidth / 4);
     }
     //i = x + width * y
     void CreatePorts(int number_of_ports)
@@ -102,13 +101,20 @@ public class HexGrid : MonoBehaviour
         {
             selected_tile = Random.Range(0, coastal_tiles.Count);
 
-            GameObject new_port = Instantiate(PortPrefab);
-            new_port.transform.SetParent(coastal_tiles[selected_tile].transform);
-            new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+            RPC("SpawnPort", NetworkReceivers.AllBuffered, coastal_tiles[selected_tile].name);
 
             coastal_tiles[selected_tile].Has_Port = true;
             coastal_tiles.RemoveAt(selected_tile);
         }
+    }
+
+    [BRPC]
+    void SpawnPort(string parent_name)
+    {
+        GameObject new_port = Instantiate(PortPrefab);
+        new_port.transform.SetParent(GameObject.Find(parent_name).transform);
+        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        ports.Add(new_port.GetComponent<PortScript>());
     }
 
     struct Point

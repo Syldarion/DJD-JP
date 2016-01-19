@@ -1,34 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using BeardedManStudios.Network;
 
-public class PortScript : MonoBehaviour
+public class PortScript : NetworkedMonoBehavior
 {
-    //Ports have to be networked brah
-    //Time to start that shit
-
-    string portName;
-    CanvasGroup portPanel;
+    public string PortName;
+    public Nationality PortNationality;
+    public HexTile SpawnTile;
 
 	void Start()
     {
-        portName = "";
-        portPanel = GameObject.Find("PortPanel").GetComponent<CanvasGroup>();
+        foreach (HexTile.HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
+            if (GetComponentInParent<HexTile>().GetNeighbor(hc)._TileType == HexTile.TileType.Water)
+            {
+                SpawnTile = GetComponentInParent<HexTile>().GetNeighbor(hc);
+                break;
+            }
     }
 	
 	void Update()
     {
 
-    }
-
-    void OnMouseEnter()
-    {
-        portPanel.alpha = 1;
-        portPanel.GetComponent<Text>().text = portName;
-    }
-
-    void OnMouseExit()
-    {
-        portPanel.alpha = 0;
     }
 }

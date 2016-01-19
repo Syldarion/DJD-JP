@@ -78,7 +78,6 @@ public class HexTile : MonoBehaviour
 
     void OnMouseEnter()
     {
-        GameObject.Find("PosText").GetComponent<Text>().text = this.name;
     }
 
     void OnMouseExit()

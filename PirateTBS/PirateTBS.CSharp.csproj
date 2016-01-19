@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -79,26 +77,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeController.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerBody.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\AuthoritativeAndClientPrediction\Scripts\ForgeExample_AuthoritativeControllerFloats.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Cache\ForgeDemoCache.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\ClientTimeout\Scripts\ForgeExample_TimeoutDisconnect.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Error Handling\Scripts\ForgeExample_ErrorHandling.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Hello Cube\Scripts\ForgeExample_MakePlayer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Hello Cube\Scripts\ForgeExample_Move.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Pure RPC\Scripts\ForgeExample_PureRPC.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Spawn Players\Scripts\ForgeExample_SpawnPlayers.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Transport Object\Scripts\ForgeExample_DoObjectTransport.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Transport Object\Scripts\ForgeExample_ObjectToTransport.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Write Custom\Scripts\ForgeExample_WriteCustom.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Examples\Write Raw\Scripts\ForgeExample_WriteRaw.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgePlayer_Zombie.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombie.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombieBullet.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombiePowerup.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Minigames\Zombies\Scripts\ForgeZombieSpawner.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking Examples\Unit\UnitRPC\UnitRPC.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\ForgeUtilities\Chat\Scripts\ForgeChat.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\ArbiterServer.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothAdapterWrapper.cs" />
@@ -177,10 +155,12 @@
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
+    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
+    <Compile Include="Assets\Scripts\TextColorFlow.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>
   <ItemGroup>

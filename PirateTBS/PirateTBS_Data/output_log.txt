@@ -14,9 +14,56 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.105 seconds
+- Completed reload, in  0.144 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.661213 ms
+No connection has been established for this network scene, preparing offline play...
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 32f8 -> priority: 1 
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.769209 ms
+NullReferenceException: Object reference not set to an instance of an object
+  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
+  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
+  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 564.
+Total: 0.479526 ms (FindLiveObjects: 0.028379 ms CreateObjectMapping: 0.013458 ms MarkObjects: 0.427155 ms  DeleteObjects: 0.009947 ms)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.636649 ms
+
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 307.
+Total: 0.449098 ms (FindLiveObjects: 0.019017 ms CreateObjectMapping: 0.011410 ms MarkObjects: 0.393802 ms  DeleteObjects: 0.024576 ms)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at HexGrid.GenerateGrid (Int32 x, Int32 y, Int32 control_points) [0x00000] in <filename unknown>:0 
+  at HexGrid.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+IndexOutOfRangeException: Array index is out of range.
+  at PlayerController.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at WaterHex.OnMouseOver () [0x00000] in <filename unknown>:0 
+UnityEngine.GameObject:SendMessage(String, Object, SendMessageOptions)
+UnityEngine.HitInfo:SendMessage(String)
+UnityEngine.SendMouseEvents:SendEvents(Int32, HitInfo)
+UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
+ 
+(Filename:  Line: -1)
+
