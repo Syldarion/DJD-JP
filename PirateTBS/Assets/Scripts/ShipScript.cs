@@ -41,31 +41,59 @@ public enum ShipClass
 
 public class ShipScript : NetworkedMonoBehavior
 {
+    [NetSync]
     public int HullHealth { get; private set; }
+    [NetSync]
     public int SailHealth { get; private set; }
+    [NetSync]
     public int CargoSpace { get; private set; }
+    [NetSync]
     public int Cannons { get; private set; }
     public int MaxCannons { get; private set; }
     public int Speed { get; private set; }
+    [NetSync]
     public int FullSpeed { get; private set; }
+    [NetSync]
     public int CrewNeeded { get; private set; }
+    [NetSync]
     public double DodgeChance { get; private set; }
     public int CrewMorale { get; private set; }
+    [NetSync]
     public string Name { get; private set; }
 
     public ShipClass Class { get { return Class; } set { SetClass(value); } }
     public Cargo Cargo { get; private set; }
     public PlayerScript Owner { get; private set; }
 
+    public HexTile CurrentPosition;
+
 	void Start()
     {
         Class = ShipClass.Pinnace;
+        Name = "Ship";
 	}
 	
 	void Update()
     {
 
 	}
+
+    public void SpawnShip(HexTile initial_tile)
+    {
+        transform.SetParent(initial_tile.transform, false);
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        CurrentPosition = initial_tile;
+    }
+
+    public void MoveShip(HexTile new_tile)
+    {
+        if (HexGrid.MovementHex(CurrentPosition, Speed).Contains(new_tile))
+        {
+            transform.SetParent(new_tile.transform, false);
+            transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+            CurrentPosition = new_tile;
+        }
+    }
 
     //This is only called once, when the object is first created
     //Wouldn't make much sense for a ship to suddenly become a different kind of ship
@@ -77,8 +105,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 50;
                 SailHealth = 50;
                 CargoSpace = 15;
-                MaxCannons = 4;
-                FullSpeed = 5;
+                Cannons = MaxCannons = 4;
+                Speed = FullSpeed = 5;
                 CrewNeeded = 6;
                 DodgeChance = 0.4;
                 break;
@@ -86,8 +114,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 60;
                 SailHealth = 70;
                 CargoSpace = 35;
-                MaxCannons = 6;
-                FullSpeed = 5;
+                Cannons = MaxCannons = 6;
+                Speed = FullSpeed = 5;
                 CrewNeeded = 9;
                 DodgeChance = 0.35;
                 break;
@@ -95,8 +123,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 80;
                 SailHealth = 80;
                 CargoSpace = 45;
-                MaxCannons = 8;
-                FullSpeed = 4;
+                Cannons = MaxCannons = 8;
+                Speed = FullSpeed = 4;
                 CrewNeeded = 11;
                 DodgeChance = 0.3;
                 break;
@@ -104,8 +132,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 120;
                 SailHealth = 100;
                 CargoSpace = 100;
-                MaxCannons = 10;
-                FullSpeed = 3;
+                Cannons = MaxCannons = 10;
+                Speed = FullSpeed = 3;
                 CrewNeeded = 14;
                 DodgeChance = 0.25;
                 break;
@@ -113,8 +141,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 120;
                 SailHealth = 100;
                 CargoSpace = 150;
-                MaxCannons = 8;
-                FullSpeed = 3;
+                Cannons = MaxCannons = 8;
+                Speed = FullSpeed = 3;
                 CrewNeeded = 12;
                 DodgeChance = 0.25;
                 break;
@@ -122,8 +150,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 200;
                 SailHealth = 200;
                 CargoSpace = 450;
-                MaxCannons = 12;
-                FullSpeed = 2;
+                Cannons = MaxCannons = 12;
+                Speed = FullSpeed = 2;
                 CrewNeeded = 19;
                 DodgeChance = 0.15;
                 break;
@@ -131,8 +159,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 250;
                 SailHealth = 250;
                 CargoSpace = 400;
-                MaxCannons = 24;
-                FullSpeed = 2;
+                Cannons = MaxCannons = 24;
+                Speed = FullSpeed = 2;
                 CrewNeeded = 31;
                 DodgeChance = 0.15;
                 break;
@@ -140,8 +168,8 @@ public class ShipScript : NetworkedMonoBehavior
                 HullHealth = 300;
                 SailHealth = 300;
                 CargoSpace = 600;
-                MaxCannons = 32;
-                FullSpeed = 1;
+                Cannons = MaxCannons = 32;
+                Speed = FullSpeed = 1;
                 CrewNeeded = 43;
                 DodgeChance = 0.1;
                 break;

@@ -15,9 +15,10 @@ public class PlayerScript : NetworkedMonoBehavior
     //english, spanish, dutch, french
     public int[] Reputation { get; private set; }
 
-    public GameObject ShipPrefab;
+    public GameObject FleetPrefab;
 
-    PortScript SpawnPort;
+    public PortScript SpawnPort;
+    public FleetScript ActiveFleet;
 
     void Start()
     {
@@ -38,9 +39,9 @@ public class PlayerScript : NetworkedMonoBehavior
         SpawnPort = ports[Random.Range(0, ports.Length - 1)];
 
         if (Networking.PrimarySocket.Connected)
-            SpawnShip();
+            SpawnFleet();
         else
-            Networking.PrimarySocket.connected += SpawnShip;
+            Networking.PrimarySocket.connected += SpawnFleet;
     }
 
     void Update()
@@ -48,24 +49,17 @@ public class PlayerScript : NetworkedMonoBehavior
 
 	}
 
-    void SpawnShip()
+    void SpawnFleet()
     {
-        Networking.PrimarySocket.connected -= SpawnShip;
-        Networking.Instantiate(ShipPrefab, NetworkReceivers.AllBuffered, callback: OnShipSpawn);
+        Networking.PrimarySocket.connected -= SpawnFleet;
+        Networking.Instantiate(FleetPrefab, NetworkReceivers.AllBuffered, callback: OnFleetSpawn);
     }
 
-    void OnShipSpawn(SimpleNetworkedMonoBehavior new_ship)
+    void OnFleetSpawn(SimpleNetworkedMonoBehavior new_fleet)
     {
-        MoveShip(new_ship.GetComponent<ShipScript>(), SpawnPort.SpawnTile);
+        new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
 
-        Fleets.Add(new FleetScript());
-        Fleets[Fleets.Count - 1].Ships.Add(new_ship.GetComponent<ShipScript>());
-    }
-
-    void MoveShip(ShipScript ship, HexTile new_hex)
-    {
-        ship.transform.SetParent(new_hex.transform, false);
-        ship.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        Fleets.Add(new_fleet.GetComponent<FleetScript>());
     }
 
     IEnumerator WaitForPortList()
