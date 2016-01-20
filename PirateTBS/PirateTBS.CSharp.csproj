@@ -155,7 +155,6 @@
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />

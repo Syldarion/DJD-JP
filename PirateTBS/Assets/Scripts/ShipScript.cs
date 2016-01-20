@@ -59,7 +59,7 @@ public class ShipScript : NetworkedMonoBehavior
 
 	void Start()
     {
-        SetClass(ShipClass.Pinnace);
+        Class = ShipClass.Pinnace;
 	}
 	
 	void Update()
@@ -71,8 +71,6 @@ public class ShipScript : NetworkedMonoBehavior
     //Wouldn't make much sense for a ship to suddenly become a different kind of ship
     public void SetClass(ShipClass new_class)
     {
-        Class = new_class;
-
         switch(new_class)
         {
             case ShipClass.Pinnace:

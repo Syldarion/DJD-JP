@@ -15,6 +15,10 @@ public class PlayerScript : NetworkedMonoBehavior
     //english, spanish, dutch, french
     public int[] Reputation { get; private set; }
 
+    public GameObject ShipPrefab;
+
+    PortScript SpawnPort;
+
     void Start()
     {
         TotalGold = 0;
@@ -22,12 +26,54 @@ public class PlayerScript : NetworkedMonoBehavior
         TotalCrew = 0;
         Fleets = new List<FleetScript>();
         Reputation = new int[4]{ 50, 50, 50, 50};
+
+        StartCoroutine("WaitForPortList");
 	}
-	
-	void Update()
+
+    public void Initialize()
+    {
+        Debug.Log(GameObject.Find("Grid"));
+        PortScript[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
+        Debug.Log(ports.Length);
+        SpawnPort = ports[Random.Range(0, ports.Length - 1)];
+
+        if (Networking.PrimarySocket.Connected)
+            SpawnShip();
+        else
+            Networking.PrimarySocket.connected += SpawnShip;
+    }
+
+    void Update()
     {
 
 	}
+
+    void SpawnShip()
+    {
+        Networking.PrimarySocket.connected -= SpawnShip;
+        Networking.Instantiate(ShipPrefab, NetworkReceivers.AllBuffered, callback: OnShipSpawn);
+    }
+
+    void OnShipSpawn(SimpleNetworkedMonoBehavior new_ship)
+    {
+        MoveShip(new_ship.GetComponent<ShipScript>(), SpawnPort.SpawnTile);
+
+        Fleets.Add(new FleetScript());
+        Fleets[Fleets.Count - 1].Ships.Add(new_ship.GetComponent<ShipScript>());
+    }
+
+    void MoveShip(ShipScript ship, HexTile new_hex)
+    {
+        ship.transform.SetParent(new_hex.transform, false);
+        ship.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+    }
+
+    IEnumerator WaitForPortList()
+    {
+        while (GameObject.Find("Grid").GetComponent<HexGrid>().ports.Count == 0)
+            yield return null;
+        Initialize();
+    }
 
     //new_nation should actually be set to a nation that already exists in game
     public void ChangeNationality(Nation new_nation)
