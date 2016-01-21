@@ -74,7 +74,7 @@ public class HexGrid : SimpleNetworkedMonoBehavior
             }
         }
 
-        if (NetworkingManager.Instance.OwningPlayer.NetworkId == 0)
+        if (NetworkingManager.Instance.OwnerId == 0)
             CreatePorts(gridWidth / 4);
     }
     //i = x + width * y
@@ -210,11 +210,12 @@ public class HexGrid : SimpleNetworkedMonoBehavior
                 for (int j = 0; j < 6; j++)
                 {
                     HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
-                    if(!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
-                    {
-                        visited.Add(neighbor_tile);
-                        fringes[i].Add(neighbor_tile);
-                    }
+                    if (neighbor_tile != null)
+                        if (!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
+                        {
+                            visited.Add(neighbor_tile);
+                            fringes[i].Add(neighbor_tile);
+                        }
                 }
             }
         }

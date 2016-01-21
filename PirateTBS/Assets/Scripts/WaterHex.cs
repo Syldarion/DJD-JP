@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using BeardedManStudios.Network;
 
 public class WaterHex : HexTile
 {
@@ -34,22 +35,31 @@ public class WaterHex : HexTile
 
     void OnMouseDown()
     {
-        PlayerScript player = GameObject.Find("PlayerController").GetComponent<PlayerScript>();
-        ShipScript tile_ship = GetComponentInChildren<ShipScript>();
+        PlayerScript player = GameObject.Find(Networking.PrimarySocket.Me.Name + "Controller").GetComponent<PlayerScript>();
+        FleetScript tile_fleet = GetComponentInChildren<FleetScript>();
 
-        if(player.SelectedShip != null)
+        Debug.Log(player.OwnerId);
+
+        if(player.ActiveFleet != null)
         {
-            if (tile_ship == null)
-                player.SelectedShip.MoveShip(this);
+            if (tile_fleet == null)
+                player.ActiveFleet.MoveFleet(this);
             else
             {
-                //Combat code
+                if(tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
+                {
+                    //Fleet merge UI
+                }
+                else
+                {
+                    //Combat UI
+                }
             }
         }
-        else if(tile_ship != null)
+        else if(tile_fleet != null)
         {
-            if (player.OwnerId == tile_ship.OwnerId)
-                player.SelectedShip = tile_ship;
+            if (player.OwnerId == tile_fleet.OwnerId)
+                player.ActiveFleet = tile_fleet;
         }
     }
 }

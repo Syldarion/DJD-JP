@@ -140,6 +140,7 @@
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\ForgeClickToRegister.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\StartGame.cs" />
     <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\SimpleJSON.cs" />
+    <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
+    <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
@@ -166,6 +168,7 @@
     <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Changelog.txt" />
     <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\NMB.txt" />
     <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\SNMB.txt" />
+    <None Include="Assets\ConsolePro\Readme.txt" />
     <None Include="Assets\PirateFilterList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

@@ -14,22 +14,22 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.089 seconds
+- Completed reload, in  0.115 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 41.827900 ms
+UnloadTime: 30.230623 ms
 No connection has been established for this network scene, preparing offline play...
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 2108 -> priority: 1 
+  Thread -> id: 3e44 -> priority: 1 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.862832 ms
+UnloadTime: 4.528727 ms
 NullReferenceException: Object reference not set to an instance of an object
   at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
   at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
@@ -38,26 +38,34 @@ NullReferenceException: Object reference not set to an instance of an object
 (Filename:  Line: -1)
 
 
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 572.
-Total: 0.521656 ms (FindLiveObjects: 0.039204 ms CreateObjectMapping: 0.026038 ms MarkObjects: 0.436810 ms  DeleteObjects: 0.009069 ms)
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 588.
+Total: 0.519901 ms (FindLiveObjects: 0.035108 ms CreateObjectMapping: 0.027794 ms MarkObjects: 0.446757 ms  DeleteObjects: 0.009654 ms)
 
 Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.634894 ms
+UnloadTime: 1.756311 ms
 
-Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 312.
-Total: 0.432421 ms (FindLiveObjects: 0.042130 ms CreateObjectMapping: 0.011410 ms MarkObjects: 0.357230 ms  DeleteObjects: 0.020772 ms)
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 323.
+Total: 0.393509 ms (FindLiveObjects: 0.021065 ms CreateObjectMapping: 0.011702 ms MarkObjects: 0.340261 ms  DeleteObjects: 0.019894 ms)
 
-NullReferenceException: Object reference not set to an instance of an object
-  at HexGrid.GenerateGrid (Int32 x, Int32 y, Int32 control_points) [0x00000] in <filename unknown>:0 
-  at HexGrid.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-Grid (UnityEngine.GameObject)
+158 coastal tiles
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-10
+NullReferenceException: Object reference not set to an instance of an object
+  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
+  at ShipScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 

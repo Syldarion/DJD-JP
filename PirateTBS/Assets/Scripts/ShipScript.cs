@@ -42,34 +42,31 @@ public enum ShipClass
 public class ShipScript : NetworkedMonoBehavior
 {
     [NetSync]
-    public int HullHealth { get; private set; }
+    public int HullHealth;
     [NetSync]
-    public int SailHealth { get; private set; }
+    public int SailHealth;
     [NetSync]
-    public int CargoSpace { get; private set; }
+    public int CargoSpace;
     [NetSync]
-    public int Cannons { get; private set; }
-    public int MaxCannons { get; private set; }
-    public int Speed { get; private set; }
+    public int Cannons;
+    public int MaxCannons;
+    public int Speed;
     [NetSync]
-    public int FullSpeed { get; private set; }
+    public int FullSpeed;
     [NetSync]
-    public int CrewNeeded { get; private set; }
+    public int CrewNeeded;
     [NetSync]
-    public double DodgeChance { get; private set; }
-    public int CrewMorale { get; private set; }
+    public double DodgeChance;
+    public int CrewMorale;
     [NetSync]
-    public string Name { get; private set; }
+    public string Name;
 
-    public ShipClass Class { get { return Class; } set { SetClass(value); } }
-    public Cargo Cargo { get; private set; }
-    public PlayerScript Owner { get; private set; }
-
-    public HexTile CurrentPosition;
+    public ShipClass Class;
+    public Cargo Cargo;
 
 	void Start()
     {
-        Class = ShipClass.Pinnace;
+        SetClass(ShipClass.Pinnace);
         Name = "Ship";
 	}
 	
@@ -78,27 +75,12 @@ public class ShipScript : NetworkedMonoBehavior
 
 	}
 
-    public void SpawnShip(HexTile initial_tile)
-    {
-        transform.SetParent(initial_tile.transform, false);
-        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        CurrentPosition = initial_tile;
-    }
-
-    public void MoveShip(HexTile new_tile)
-    {
-        if (HexGrid.MovementHex(CurrentPosition, Speed).Contains(new_tile))
-        {
-            transform.SetParent(new_tile.transform, false);
-            transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-            CurrentPosition = new_tile;
-        }
-    }
-
     //This is only called once, when the object is first created
     //Wouldn't make much sense for a ship to suddenly become a different kind of ship
     public void SetClass(ShipClass new_class)
     {
+        Class = new_class;
+
         switch(new_class)
         {
             case ShipClass.Pinnace:
@@ -174,6 +156,8 @@ public class ShipScript : NetworkedMonoBehavior
                 DodgeChance = 0.1;
                 break;
         }
+
+        GetComponentInParent<FleetScript>().UpdateFleetSpeed();
     }
 
     public void ApplyModifiers()
@@ -225,7 +209,6 @@ public class ShipScript : NetworkedMonoBehavior
         if (CrewMorale <= 30)
         {
             GetComponentInParent<FleetScript>().RemoveShip(this);
-            Owner = null;
         }
     }
 }

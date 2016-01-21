@@ -33,9 +33,7 @@ public class PlayerScript : NetworkedMonoBehavior
 
     public void Initialize()
     {
-        Debug.Log(GameObject.Find("Grid"));
         PortScript[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
-        Debug.Log(ports.Length);
         SpawnPort = ports[Random.Range(0, ports.Length - 1)];
 
         if (Networking.PrimarySocket.Connected)
@@ -52,14 +50,16 @@ public class PlayerScript : NetworkedMonoBehavior
     void SpawnFleet()
     {
         Networking.PrimarySocket.connected -= SpawnFleet;
-        Networking.Instantiate(FleetPrefab, NetworkReceivers.AllBuffered, callback: OnFleetSpawn);
+        if (IsOwner)
+            Networking.Instantiate(FleetPrefab, NetworkReceivers.AllBuffered, callback: OnFleetSpawn);
     }
 
     void OnFleetSpawn(SimpleNetworkedMonoBehavior new_fleet)
     {
-        new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
+        //new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
 
         Fleets.Add(new_fleet.GetComponent<FleetScript>());
+        Fleets[Fleets.Count - 1].RPC("SpawnFleet", SpawnPort.SpawnTile.name);
     }
 
     IEnumerator WaitForPortList()
