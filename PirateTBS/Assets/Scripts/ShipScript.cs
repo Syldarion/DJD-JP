@@ -6,24 +6,36 @@ using BeardedManStudios.Network;
 
 public class Cargo
 {
-    public int Food { get; private set; }
-    public int Gold { get; private set; }
-    public double Size { get { return Food / 100.0 + Gold / 1000.0; } private set { } }
+    public int Food;
+    public int Goods;
+    public int Luxuries;
+    public int Spice;
+    public int Sugar;
+    public int Gold;
 
-    public Cargo(int food, int gold)
+    public Cargo()
     {
-        Food = food;
-        Gold = gold;
+        Food = 0;
+        Goods = 0;
+        Luxuries = 0;
+        Spice = 0;
+        Sugar = 0;
+        Gold = 0;
     }
 
-    public void TakeCargo(Cargo cargo, int food, int gold)
+    public void MergeCargo(Cargo cargo)
     {
-        food = Mathf.Clamp(food, 0, cargo.Food);
-        gold = Mathf.Clamp(gold, 0, cargo.Gold);
-        Food += food;
-        cargo.Food -= food;
-        Gold += gold;
-        cargo.Gold -= gold;
+        Food += cargo.Food;
+        Goods += cargo.Goods;
+        Luxuries += cargo.Luxuries;
+        Spice += cargo.Spice;
+        Sugar += cargo.Sugar;
+        Gold += cargo.Gold;
+    }
+
+    public int Size()
+    {
+        return Food + Goods + Luxuries + Spice + Sugar + Gold;
     }
 }
 
@@ -41,33 +53,24 @@ public enum ShipClass
 
 public class ShipScript : NetworkedMonoBehavior
 {
-    [NetSync]
-    public int HullHealth;
-    [NetSync]
-    public int SailHealth;
-    [NetSync]
-    public int CargoSpace;
-    [NetSync]
-    public int Cannons;
+    [NetSync] public int HullHealth;
+    [NetSync] public int SailHealth;
+    [NetSync] public int CargoSpace;
+    [NetSync] public int Cannons;
+    [NetSync] public int FullSpeed;
+    [NetSync] public int CrewNeeded;
+    [NetSync] public double DodgeChance;
+    [NetSync] public string Name;
+
     public int MaxCannons;
     public int Speed;
-    [NetSync]
-    public int FullSpeed;
-    [NetSync]
-    public int CrewNeeded;
-    [NetSync]
-    public double DodgeChance;
     public int CrewMorale;
-    [NetSync]
-    public string Name;
-
     public ShipClass Class;
     public Cargo Cargo;
 
 	void Start()
     {
         SetClass(ShipClass.Pinnace);
-        Name = "Ship";
 	}
 	
 	void Update()
@@ -194,8 +197,8 @@ public class ShipScript : NetworkedMonoBehavior
 
     public void AddCargo(Cargo new_cargo)
     {
-        if (Cargo.Size + new_cargo.Size <= CargoSpace)
-            Cargo.TakeCargo(new_cargo, new_cargo.Food, new_cargo.Gold);
+        if (Cargo.Size() + new_cargo.Size() <= CargoSpace)
+            Cargo.MergeCargo(new_cargo);
     }
 
     public void SinkShip()
@@ -210,5 +213,17 @@ public class ShipScript : NetworkedMonoBehavior
         {
             GetComponentInParent<FleetScript>().RemoveShip(this);
         }
+    }
+
+    [BRPC]
+    public void SpawnShip(string ship_name, string fleet_parent_name)
+    {
+        this.name = ship_name;
+
+        FleetScript parent_fleet = GameObject.Find(fleet_parent_name).GetComponent<FleetScript>();
+        transform.SetParent(parent_fleet.transform);
+        transform.localPosition = Vector3.zero;
+
+        GetComponentInParent<FleetScript>().AddShip(this);
     }
 }

@@ -23,4 +23,10 @@ public class PortScript : NetworkedMonoBehavior
     {
 
     }
+
+    [BRPC]
+    public void UpdateName(string new_name)
+    {
+        PortName = new_name;
+    }
 }

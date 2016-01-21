@@ -23,7 +23,7 @@ public class LandHex : HexTile
 
         MeshRenderer.material.color = baseColor;
 
-        TileResources = new Cargo(0, 0);
+        TileResources = new Cargo();
     }
 
     void Update()
@@ -54,10 +54,10 @@ public class LandHex : HexTile
         switch(ResourceType)
         {
             case ResourceType.Food:
-                TileResources.TakeCargo(new Cargo(100 * ResourceLevel, 0), 100 * ResourceLevel, 0);
+                
                 break;
             case ResourceType.Gold:
-                TileResources.TakeCargo(new Cargo(0, 100 * ResourceLevel), 0, 100 * ResourceLevel);
+                
                 break;
         }
     }

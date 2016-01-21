@@ -15,6 +15,8 @@ public class FleetScript : NetworkedMonoBehavior
 
     public GameObject ShipPrefab;
 
+    public static int NewShipID = 0;
+
 	void Start()
     {
         Ships = new List<ShipScript>();
@@ -42,11 +44,13 @@ public class FleetScript : NetworkedMonoBehavior
     {
         if (!Ships.Contains(ship))
             Ships.Add(ship);
+
+        UpdateFleetSpeed();
     }
 
     public void UpdateFleetSpeed()
     {
-        FleetSpeed = 99;
+        FleetSpeed = 5;
         foreach (ShipScript s in Ships)
         {
             if (s.Speed < FleetSpeed)
@@ -55,8 +59,10 @@ public class FleetScript : NetworkedMonoBehavior
     }
 
     [BRPC]
-    public void SpawnFleet(string initial_tile_name)
+    public void SpawnFleet(string fleet_name, string initial_tile_name)
     {
+        this.name = fleet_name;
+
         HexTile initial_tile = GameObject.Find(initial_tile_name).GetComponent<HexTile>();
         transform.SetParent(initial_tile.transform, false);
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
@@ -70,13 +76,7 @@ public class FleetScript : NetworkedMonoBehavior
     {
         new_ship.transform.SetParent(transform);
         new_ship.transform.localPosition = Vector3.zero;
-        AddShip(new_ship.GetComponent<ShipScript>());
-    }
-
-    [BRPC]
-    void OnShipCreatedRPC()
-    {
-
+        new_ship.RPC("SpawnShip", string.Format("{0}Ship{1}", Networking.PrimarySocket.Me.Name, (++NewShipID).ToString()), this.name);
     }
 
     public void MoveFleet(HexTile new_tile)

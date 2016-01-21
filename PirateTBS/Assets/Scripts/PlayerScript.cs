@@ -20,6 +20,8 @@ public class PlayerScript : NetworkedMonoBehavior
     public PortScript SpawnPort;
     public FleetScript ActiveFleet;
 
+    public int NewFleetID;
+
     void Start()
     {
         TotalGold = 0;
@@ -27,6 +29,8 @@ public class PlayerScript : NetworkedMonoBehavior
         TotalCrew = 0;
         Fleets = new List<FleetScript>();
         Reputation = new int[4]{ 50, 50, 50, 50};
+
+        NewFleetID = 0;
 
         StartCoroutine("WaitForPortList");
 	}
@@ -44,7 +48,17 @@ public class PlayerScript : NetworkedMonoBehavior
 
     void Update()
     {
-
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (ActiveFleet != null)
+                ActiveFleet = null;
+            else
+            {
+                //Open menu
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+            Initialize();
 	}
 
     void SpawnFleet()
@@ -59,7 +73,7 @@ public class PlayerScript : NetworkedMonoBehavior
         //new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
 
         Fleets.Add(new_fleet.GetComponent<FleetScript>());
-        Fleets[Fleets.Count - 1].RPC("SpawnFleet", SpawnPort.SpawnTile.name);
+        Fleets[Fleets.Count - 1].RPC("SpawnFleet", string.Format("{0}Fleet{1}", Networking.PrimarySocket.Me.Name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
     }
 
     IEnumerator WaitForPortList()
