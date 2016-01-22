@@ -77,8 +77,6 @@ public class HexGrid : SimpleNetworkedMonoBehavior
                 new_hex.GetComponent<HexTile>().SetDirections(i % 2 == 0);
 
                 tiles.Add(new_hex.GetComponent<HexTile>());
-
-                Debug.Log(tiles[tiles.Count - 1]._TileType);
             }
         }
 

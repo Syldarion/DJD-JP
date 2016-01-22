@@ -10,27 +10,52 @@ public class PanCamera : MonoBehaviour
     Vector3 translation;
     bool flag;
 
+    Ray forward_ray;
+    RaycastHit hit;
+
+    Vector3 current_offset;
+
     void Start()
     {
         drag_speed = 200f;
-        zoom_speed = 200f;
+        zoom_speed = 100f;
         translation = Vector3.zero;
         flag = false;
 	}
 	
 	void Update()
     {
-        if (Input.GetMouseButton(0))
+        //100-500
+        forward_ray = new Ray(transform.position, transform.forward);
+        if (Physics.Raycast(forward_ray, out hit))
         {
-            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime);
+            if (hit.distance <= 500.0f && hit.distance >= 100.0f)
+                translation += transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoom_speed;
+            else if (hit.distance > 500.0f)
+                translation += transform.forward;
+            else if (hit.distance < 100.0f)
+                translation += -transform.forward;
+
+            current_offset = transform.position - hit.transform.position;
         }
-        flag = Input.GetMouseButton(0);
 
-        if (flag)
-            transform.position += translation;
+        if (Input.GetMouseButton(1))
+            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime * (hit.distance / 100));
+        else
+            translation += new Vector3(Input.GetAxis("Horizontal") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Vertical") * drag_speed * Time.deltaTime * (hit.distance / 100));
+
+        transform.position += translation;
         translation = Vector3.zero;
+    }
 
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        transform.Translate(transform.up * scroll * zoom_speed);
+    IEnumerator MoveToPosition(Vector3 new_pos)
+    {
+        Vector3 target = new_pos + current_offset;
+        while(Vector3.Distance(transform.position, target) > 0.1f)
+        {
+            transform.position = Vector3.Lerp(transform.position, target, 0.25f);
+            yield return null;
+        }
+        transform.position = target;
     }
 }

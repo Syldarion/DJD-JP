@@ -4,11 +4,12 @@ using BeardedManStudios.Network;
 
 public class WaterHex : HexTile
 {
+    float double_click_start = 0;
+
 	void Start()
     {
         MeshRenderer = GetComponent<SkinnedMeshRenderer>();
         baseColor = Color.cyan;
-        _TileType = TileType.Water;
 
         MeshRenderer.material.color = baseColor;
     }
@@ -38,28 +39,45 @@ public class WaterHex : HexTile
         PlayerScript player = GameObject.Find(Networking.PrimarySocket.Me.Name + "Controller").GetComponent<PlayerScript>();
         FleetScript tile_fleet = GetComponentInChildren<FleetScript>();
 
-        Debug.Log(player.OwnerId);
-
-        if(player.ActiveFleet != null)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (tile_fleet == null)
-                player.ActiveFleet.MoveFleet(this);
-            else
+            if (player.ActiveFleet != null)
             {
-                if(tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
-                {
-                    //Fleet merge UI
-                }
+                if (tile_fleet == null)
+                    player.ActiveFleet.MoveFleet(this);
                 else
                 {
-                    //Combat UI
+                    if (tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
+                    {
+                        //Fleet merge UI
+                    }
+                    else
+                    {
+                        //Combat UI
+                    }
                 }
             }
+            else if (tile_fleet != null)
+            {
+                if (player.OwnerId == tile_fleet.OwnerId)
+                    player.ActiveFleet = tile_fleet;
+            }
         }
-        else if(tile_fleet != null)
+    }
+
+    void OnMouseUp()
+    {
+        if (Time.time - double_click_start < 0.3f)
         {
-            if (player.OwnerId == tile_fleet.OwnerId)
-                player.ActiveFleet = tile_fleet;
+            this.OnDoubleClick();
+            double_click_start = -1;
         }
+        else
+            double_click_start = Time.time;
+    }
+
+    void OnDoubleClick()
+    {
+        Camera.main.GetComponent<PanCamera>().StartCoroutine("MoveToPosition", this.transform.position);
     }
 }

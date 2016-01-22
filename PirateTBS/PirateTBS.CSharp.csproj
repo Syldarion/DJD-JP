@@ -147,6 +147,7 @@
     <Compile Include="Assets\Scripts\ChatMessageScript.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
+    <Compile Include="Assets\Scripts\DraggableUI.cs" />
     <Compile Include="Assets\Scripts\FleetScript.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />

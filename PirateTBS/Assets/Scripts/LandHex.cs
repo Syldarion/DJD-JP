@@ -19,7 +19,6 @@ public class LandHex : HexTile
     {
         MeshRenderer = GetComponent<SkinnedMeshRenderer>();
         baseColor = Color.green;
-        _TileType = TileType.Land;
 
         MeshRenderer.material.color = baseColor;
 
