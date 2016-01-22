@@ -7,7 +7,7 @@ public class NetworkInfoManager : MonoBehaviour
 {
     bool IsHosting;
     string ServerIP;
-    string Password;
+    //string Password;
     int MaxPlayers;
     string PlayerName;
 
@@ -34,7 +34,7 @@ public class NetworkInfoManager : MonoBehaviour
             if (hosting)
             {
                 ServerIP = "127.0.0.1";
-                Password = GameObject.Find("HostServerPasswordInput").GetComponent<InputField>().text;
+                //Password = GameObject.Find("HostServerPasswordInput").GetComponent<InputField>().text;
                 PlayerName = GameObject.Find("HostPlayerNameInput").GetComponent<InputField>().text;
             }
             else
@@ -42,7 +42,7 @@ public class NetworkInfoManager : MonoBehaviour
                 ServerIP = GameObject.Find("JoinServerIPInput").GetComponent<InputField>().text;
                 if (ServerIP == "localhost")
                     ServerIP = "127.0.0.1";
-                Password = GameObject.Find("JoinServerPasswordInput").GetComponent<InputField>().text;
+                //Password = GameObject.Find("JoinServerPasswordInput").GetComponent<InputField>().text;
                 PlayerName = GameObject.Find("JoinPlayerNameInput").GetComponent<InputField>().text;
             }
 

@@ -4,39 +4,33 @@ using System.Collections;
 [AddComponentMenu("Camera Controls/Pan Camera")]
 public class PanCamera : MonoBehaviour
 {
-    float cameraSpeed;
+    float drag_speed;
+    float zoom_speed;
 
-	void Start()
+    Vector3 translation;
+    bool flag;
+
+    void Start()
     {
-        cameraSpeed = 2.0f;
+        drag_speed = 200f;
+        zoom_speed = 200f;
+        translation = Vector3.zero;
+        flag = false;
 	}
 	
 	void Update()
     {
-        /*
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(0))
         {
-            float left_right = Input.GetAxis("Mouse X");
-            float up_down = Input.GetAxis("Mouse Y");
-
-            transform.Translate(left_right, up_down, 0.0f, Space.Self);
+            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime);
         }
-        else if (Input.GetMouseButton(1))
-        {
-            float left_right = Input.GetAxis("Mouse X");
-            float up_down = -Input.GetAxis("Mouse Y");
+        flag = Input.GetMouseButton(0);
 
-            transform.Rotate(up_down, 0.0f, 0.0f, Space.Self);
-            transform.Rotate(0.0f, left_right, 0.0f, Space.World);
-        }
-        */
+        if (flag)
+            transform.position += translation;
+        translation = Vector3.zero;
 
-        transform.Translate((Input.GetAxis("Horizontal") * transform.right + 
-            Input.GetAxis("Vertical") * -transform.forward) * Time.deltaTime * cameraSpeed);
-
-        if (Input.GetKey(KeyCode.LeftShift))
-            transform.Translate(transform.up * Time.deltaTime * cameraSpeed);
-        else if (Input.GetKey(KeyCode.LeftControl))
-            transform.Translate(-transform.up * Time.deltaTime * cameraSpeed);
-	}
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        transform.Translate(transform.up * scroll * zoom_speed);
+    }
 }

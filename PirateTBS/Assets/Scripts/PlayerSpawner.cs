@@ -30,10 +30,4 @@ public class PlayerSpawner : NetworkedMonoBehavior
     {
         new_controller.name = Networking.PrimarySocket.Me.Name + "Controller";
     }
-
-    [BRPC]
-    void SpawnControllerRPC()
-    {
-        
-    }
 }

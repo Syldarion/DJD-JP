@@ -53,9 +53,15 @@ public class HexGrid : SimpleNetworkedMonoBehavior
                 Transform new_hex;
 
                 if (generated_grid[j + half_grid_y][i + half_grid_x] == 0)
+                {
                     new_hex = Instantiate(WaterHexPrefab).transform;
+                    new_hex.GetComponent<WaterHex>()._TileType = HexTile.TileType.Water;
+                }
                 else
+                {
                     new_hex = Instantiate(LandHexPrefab).transform;
+                    new_hex.GetComponent<LandHex>()._TileType = HexTile.TileType.Land;
+                }
 
                 new_hex.parent = this.transform;
                 new_hex.localPosition = new Vector3(i * (hexWidth * 0.76f), 0.0f, j * (0.876f * hexWidth));
@@ -71,6 +77,8 @@ public class HexGrid : SimpleNetworkedMonoBehavior
                 new_hex.GetComponent<HexTile>().SetDirections(i % 2 == 0);
 
                 tiles.Add(new_hex.GetComponent<HexTile>());
+
+                Debug.Log(tiles[tiles.Count - 1]._TileType);
             }
         }
 

@@ -14,22 +14,54 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.115 seconds
+- Completed reload, in  0.109 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
 <RI> Initializing input.
 <RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
 <RI> Initialized touch support.
-UnloadTime: 30.230623 ms
+UnloadTime: 36.811451 ms
 No connection has been established for this network scene, preparing offline play...
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 3e44 -> priority: 1 
+  Thread -> id: 4580 -> priority: 1 
+Initialize engine version: 5.3.1f1 (cc9cbbcc37b4)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 970 (ID=0x13c2)
+    Vendor:   NVIDIA
+    VRAM:     3072 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.039 seconds
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+<RI> Initialized touch support.
+UnloadTime: 0.436517 ms
+No connection has been established for this network scene, preparing offline play...
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 2804 -> priority: 1 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.528727 ms
+UnloadTime: 4.377760 ms
 NullReferenceException: Object reference not set to an instance of an object
   at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
   at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
@@ -39,15 +71,165 @@ NullReferenceException: Object reference not set to an instance of an object
 
 
 Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 588.
-Total: 0.519901 ms (FindLiveObjects: 0.035108 ms CreateObjectMapping: 0.027794 ms MarkObjects: 0.446757 ms  DeleteObjects: 0.009654 ms)
+Total: 0.548573 ms (FindLiveObjects: 0.050907 ms CreateObjectMapping: 0.017846 ms MarkObjects: 0.470163 ms  DeleteObjects: 0.009069 ms)
 
-Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.756311 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 5.114749 ms
+NullReferenceException: Object reference not set to an instance of an object
+  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
+  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
+  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+
+Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 588.
+Total: 0.479526 ms (FindLiveObjects: 0.027501 ms CreateObjectMapping: 0.018432 ms MarkObjects: 0.423937 ms  DeleteObjects: 0.009069 ms)
+
+Unloading 4 Unused Uerilaldzed filin ( 4erinulized filesdnoweri lloedaded: e)
+ (Serialized files now loaded: 0)
+UnloadTime: 2.027233 ms
+UnloadTime: 2.026941 ms
 
 Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 323.
-Total: 0.393509 ms (FindLiveObjects: 0.021065 ms CreateObjectMapping: 0.011702 ms MarkObjects: 0.340261 ms  DeleteObjects: 0.019894 ms)
+Total: 0.431836 ms (FindLiveObjects: 0.020480 ms CreateObjectMapping: 0.012288 ms MarkObjects: 0.377125 ms  DeleteObjects: 0.021357 ms)
 
-158 coastal tiles
+
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 323.
+Total: 0.443247 ms (FindLiveObjects: 0.021357 ms CreateObjectMapping: 0.011995 ms MarkObjects: 0.389121 ms  DeleteObjects: 0.020187 ms)
+
+195 coastal tiles
+ 
+(Filename: C:/buildslave/u1i9y/build/artifa5ts/generated/co mcna/runttime/Un
+ tEnginename:ebC:/buildinlave/gsity/build/Lirne: c3s/g
+
+nerated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at WaterHex.OnMouseOver () [0x00000] in <filename unknown>:0 
+UnityEngine.GameObject:SendMessage(String, Object, SendMessageOptions)
+UnityEngine.HitInfo:SendMessage(String)
+UnityEngine.SendMouseEvents:SendEvents(Int32, HitInfo)
+UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at WaterHex.OnMouseOver () [0x00000] in <filename unknown>:0 
+UnityEngine.GameObject:SendMessage(String, Object, SendMessageOptions)
+UnityEngine.HitInfo:SendMessage(String)
+UnityEngine.SendMouseEvents:SendEvents(Int32, HitInfo)
+UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
+  at ShipScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
+  at ShipScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
+  at ShipScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -66,6 +248,152 @@ NullReferenceException: Object reference not set to an instance of an object
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
+  at ShipScript.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
