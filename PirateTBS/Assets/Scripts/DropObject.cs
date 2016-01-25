@@ -4,6 +4,8 @@ using System.Collections;
 
 public class DropObject : MonoBehaviour, IDropHandler
 {
+    public Transform DropParent;
+
 	void Start()
 	{
 		
@@ -17,6 +19,7 @@ public class DropObject : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log(transform.name);
-        eventData.pointerDrag.transform.SetParent(transform.GetChild(0));
+        if (DropParent != null)
+            eventData.pointerDrag.transform.SetParent(DropParent);
     }
 }

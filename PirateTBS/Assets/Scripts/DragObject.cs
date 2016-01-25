@@ -22,6 +22,7 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         drag_object = gameObject;
         initial_parent = transform.parent;
         transform.SetParent(GameObject.Find("Canvas").transform);
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -34,5 +35,6 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         drag_object = null;
         if (transform.parent == initial_parent)
             transform.SetParent(initial_parent, false);
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
 }
