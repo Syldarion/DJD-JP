@@ -152,6 +152,7 @@ GameObject:
   - 114: {fileID: 11463876}
   - 114: {fileID: 11477128}
   - 225: {fileID: 22507984}
+  - 114: {fileID: 11448052}
   m_Layer: 5
   m_Name: ShipStatBlock
   m_TagString: Untagged
@@ -362,6 +363,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 5
+--- !u!114 &11448052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 242267c9d651d74499c9d531de5ea519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11463876
 MonoBehaviour:
   m_ObjectHideFlags: 1

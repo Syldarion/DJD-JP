@@ -5977,7 +5977,6 @@ Prefab:
     m_RemovedComponents:
     - {fileID: 11420860, guid: 03ce823d880e2f5419dbdea247bbfa7b, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 03ce823d880e2f5419dbdea247bbfa7b, type: 2}
-  m_RootGameObject: {fileID: 2011255073}
   m_IsPrefabParent: 0
 --- !u!1 &1272704921
 GameObject:
@@ -9841,22 +9840,10 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1999680641}
---- !u!1 &2011255073
+--- !u!1 &2011255073 stripped
 GameObject:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 113530, guid: 03ce823d880e2f5419dbdea247bbfa7b, type: 2}
   m_PrefabInternal: {fileID: 1271821498}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 2011255075}
-  - 114: {fileID: 2011255074}
-  m_Layer: 0
-  m_Name: Networking Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &2011255074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9882,18 +9869,6 @@ MonoBehaviour:
   resourcesDirectory: 
   frameInterval: 100
   updateTimeInterval: 1
---- !u!4 &2011255075
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 413530, guid: 03ce823d880e2f5419dbdea247bbfa7b, type: 2}
-  m_PrefabInternal: {fileID: 1271821498}
-  m_GameObject: {fileID: 2011255073}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
 --- !u!1 &2035393384
 GameObject:
   m_ObjectHideFlags: 0

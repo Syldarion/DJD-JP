@@ -60,8 +60,8 @@ public class ShipScript : NetworkedMonoBehavior
     [NetSync] public int FullSpeed;
     [NetSync] public int CrewNeeded;
     [NetSync] public double DodgeChance;
-    [NetSync] public string Name;
 
+    public string ShipType;
     public int MaxCannons;
     public int Speed;
     public int CrewMorale;
@@ -70,7 +70,7 @@ public class ShipScript : NetworkedMonoBehavior
 
 	void Start()
     {
-        SetClass(ShipClass.Pinnace);
+        SetClass((ShipClass)Random.Range(0, 7));
 	}
 	
 	void Update()
@@ -80,9 +80,11 @@ public class ShipScript : NetworkedMonoBehavior
 
     //This is only called once, when the object is first created
     //Wouldn't make much sense for a ship to suddenly become a different kind of ship
+    //Edit: Also called when clearing modifiers, because I am a terrible person
     public void SetClass(ShipClass new_class)
     {
         Class = new_class;
+        ShipType = new_class.ToString();
 
         switch(new_class)
         {
@@ -139,6 +141,7 @@ public class ShipScript : NetworkedMonoBehavior
                 Speed = FullSpeed = 2;
                 CrewNeeded = 19;
                 DodgeChance = 0.15;
+                ShipType = "Merchant Galleon";
                 break;
             case ShipClass.CombatGalleon:
                 HullHealth = 250;
@@ -148,6 +151,7 @@ public class ShipScript : NetworkedMonoBehavior
                 Speed = FullSpeed = 2;
                 CrewNeeded = 31;
                 DodgeChance = 0.15;
+                ShipType = "Combat Galleon";
                 break;
             case ShipClass.Frigate:
                 HullHealth = 300;
@@ -192,7 +196,7 @@ public class ShipScript : NetworkedMonoBehavior
                 new_name = new_name.Remove(i, 1);
                 i--;
             }
-        Name = new_name;
+        name = new_name;
     }
 
     public void AddCargo(Cargo new_cargo)
@@ -223,7 +227,5 @@ public class ShipScript : NetworkedMonoBehavior
         FleetScript parent_fleet = GameObject.Find(fleet_parent_name).GetComponent<FleetScript>();
         transform.SetParent(parent_fleet.transform);
         transform.localPosition = Vector3.zero;
-
-        GetComponentInParent<FleetScript>().AddShip(this);
     }
 }

@@ -151,6 +151,7 @@
     <Compile Include="Assets\Scripts\DropObject.cs" />
     <Compile Include="Assets\Scripts\FleetManager.cs" />
     <Compile Include="Assets\Scripts\FleetScript.cs" />
+    <Compile Include="Assets\Scripts\GameConsole.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Assets\Scripts\PortScript.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
+    <Compile Include="Assets\Scripts\ShipStatBlock.cs" />
     <Compile Include="Assets\Scripts\TextColorFlow.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>

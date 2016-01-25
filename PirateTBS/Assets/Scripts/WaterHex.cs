@@ -49,7 +49,12 @@ public class WaterHex : HexTile
                 {
                     if (tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
                     {
-                        //Fleet merge UI
+                        FleetManager manager = GameObject.Find("FleetManagementPanel").GetComponent<FleetManager>();
+                        manager.GetComponent<CanvasGroup>().alpha = 1;
+                        manager.GetComponent<CanvasGroup>().interactable = true;
+                        manager.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+                        manager.PopulateFleetManager(player.ActiveFleet, tile_fleet);
                     }
                     else
                     {

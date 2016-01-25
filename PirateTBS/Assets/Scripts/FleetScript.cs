@@ -34,23 +34,50 @@ public class FleetScript : NetworkedMonoBehavior
             Flagship = ship;
     }
 
-    public void RemoveShip(ShipScript ship)
-    {
-        if (Ships.Contains(ship))
-            Ships.Remove(ship);
-    }
-
     public void AddShip(ShipScript ship)
     {
         if (!Ships.Contains(ship))
             Ships.Add(ship);
+        UpdateFleetSpeed();
 
+        RPC("AddShipOthers", NetworkReceivers.Others, ship.name);
+    }
+
+    [BRPC]
+    void AddShipOthers(string ship_name)
+    {
+        ShipScript ship = GameObject.Find(ship_name).GetComponent<ShipScript>();
+        if (!Ships.Contains(ship))
+            Ships.Add(ship);
         UpdateFleetSpeed();
     }
 
+    public void RemoveShip(ShipScript ship)
+    {
+        if (Ships.Contains(ship))
+            Ships.Remove(ship);
+        UpdateFleetSpeed();
+        if (Ships.Count <= 0)
+            Destroy(this.gameObject);
+
+        RPC("RemoveShipOthers", NetworkReceivers.Others, ship.name);
+    }
+
+    [BRPC]
+    void RemoveShipOthers(string ship_name)
+    {
+        ShipScript ship = transform.FindChild(ship_name).GetComponent<ShipScript>();
+        if (Ships.Contains(ship))
+            Ships.Remove(ship);
+        UpdateFleetSpeed();
+        if (Ships.Count <= 0)
+            Destroy(this.gameObject);
+    }
+
+    //Fleet speed will always be equal to the slowest ship in the fleet
     public void UpdateFleetSpeed()
     {
-        FleetSpeed = 5;
+        FleetSpeed = 5;                             //Fastest fleet speed possible
         foreach (ShipScript s in Ships)
         {
             if (s.Speed < FleetSpeed)
@@ -77,6 +104,7 @@ public class FleetScript : NetworkedMonoBehavior
         new_ship.transform.SetParent(transform);
         new_ship.transform.localPosition = Vector3.zero;
         new_ship.RPC("SpawnShip", string.Format("{0}Ship{1}", Networking.PrimarySocket.Me.Name, (++NewShipID).ToString()), this.name);
+        AddShip(new_ship.GetComponent<ShipScript>());
     }
 
     public void MoveFleet(HexTile new_tile)
