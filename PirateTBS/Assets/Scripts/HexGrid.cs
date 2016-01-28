@@ -228,4 +228,26 @@ public class HexGrid : SimpleNetworkedMonoBehavior
 
         return visited;
     }
+
+    public void SetTile(int x_pos, int y_pos, HexTile.TileType new_type)
+    {
+        Color new_color = Color.white;
+        switch(new_type)
+        {
+            case HexTile.TileType.Fort:
+                new_color = Color.gray;
+                break;
+            case HexTile.TileType.Land:
+                new_color = Color.green;
+                break;
+            case HexTile.TileType.Port:
+                new_color = Color.yellow;
+                break;
+            case HexTile.TileType.Water:
+            default:
+                new_color = Color.blue;
+                break;
+        }
+        transform.FindChild(string.Format("{0},{1}", x_pos, y_pos)).GetComponent<SkinnedMeshRenderer>().material.color = new_color;
+    }
 }
