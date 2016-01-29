@@ -28,7 +28,7 @@ public class WaterHex : HexTile
     void OnMouseDown()
     {
         PlayerScript player = GameObject.Find(Networking.PrimarySocket.Me.Name + "Controller").GetComponent<PlayerScript>();
-        FleetScript tile_fleet = GetComponentInChildren<FleetScript>();
+        Fleet tile_fleet = GetComponentInChildren<Fleet>();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -46,10 +46,6 @@ public class WaterHex : HexTile
                         if (HexGrid.MovementHex(player.ActiveFleet.GetComponentInParent<HexTile>(), player.ActiveFleet.FleetSpeed).Contains(this))
                         {
                             FleetManager manager = GameObject.Find("FleetManagementPanel").GetComponent<FleetManager>();
-                            manager.GetComponent<CanvasGroup>().alpha = 1;
-                            manager.GetComponent<CanvasGroup>().interactable = true;
-                            manager.GetComponent<CanvasGroup>().blocksRaycasts = true;
-
                             manager.PopulateFleetManager(player.ActiveFleet, tile_fleet);
 
                             player.ActiveFleet = null;

@@ -6,7 +6,7 @@ public class FleetManager : MonoBehaviour
 {
     public GameObject ShipStatBlockPrefab;
 
-    FleetScript FleetA, FleetB;
+    Fleet FleetA, FleetB;
 
 	void Start()
 	{
@@ -18,18 +18,27 @@ public class FleetManager : MonoBehaviour
 		
 	}
 
-    public void PopulateFleetManager(FleetScript fleet_a, FleetScript fleet_b)
+    /// <summary>
+    /// Opens the fleet management panel, and populates it with the fleet information
+    /// </summary>
+    /// <param name="fleet_a">The fleet initializing the manager</param>
+    /// <param name="fleet_b">The fleet being moved onto</param>
+    public void PopulateFleetManager(Fleet fleet_a, Fleet fleet_b)
     {
+        GetComponent<CanvasGroup>().alpha = 1;
+        GetComponent<CanvasGroup>().interactable = true;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+
         GameObject.Find("FleetAName").GetComponentInChildren<Text>().text = fleet_a.name;
         GameObject.Find("FleetBName").GetComponentInChildren<Text>().text = fleet_b.name;
 
-        foreach(ShipScript s in fleet_a.Ships)
+        foreach(Ship s in fleet_a.Ships)
         {
             GameObject new_stat_block = Instantiate(ShipStatBlockPrefab);
             new_stat_block.transform.SetParent(GameObject.Find("FleetAShipsContent").transform, false);
             new_stat_block.GetComponent<ShipStatBlock>().PopulateStatBlock(s);
         }
-        foreach(ShipScript s in fleet_b.Ships)
+        foreach(Ship s in fleet_b.Ships)
         {
             GameObject new_stat_block = Instantiate(ShipStatBlockPrefab);
             new_stat_block.transform.SetParent(GameObject.Find("FleetBShipsContent").transform, false);
@@ -37,6 +46,9 @@ public class FleetManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Closes the fleet manager, wiping the list
+    /// </summary>
     public void CloseFleetManager()
     {
         Transform FleetAContent = GameObject.Find("FleetAShipsContent").transform;
@@ -52,7 +64,13 @@ public class FleetManager : MonoBehaviour
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
-    public void TransferShip(FleetScript fleet_from, FleetScript fleet_to, ShipScript ship)
+    /// <summary>
+    /// Transfers the ship to the given fleet, if the other fleet has it
+    /// </summary>
+    /// <param name="fleet_from">Fleet to move the ship from</param>
+    /// <param name="fleet_to">Fleet to move the ship to</param>
+    /// <param name="ship">Ship to transfer</param>
+    public void TransferShip(Fleet fleet_from, Fleet fleet_to, Ship ship)
     {
         if(fleet_from.Ships.Contains(ship))
         {

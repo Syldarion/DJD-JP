@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using BeardedManStudios.Network;
 
-public class PortScript : NetworkedMonoBehavior
+public class Port : NetworkedMonoBehavior
 {
-    public string PortName;
+    [NetSync] public string PortName;
     public Nationality PortNationality;
     public HexTile SpawnTile;
+    public Cargo Market;
+    public List<Ship> Shipyard;
 
 	void Start()
     {
@@ -22,12 +25,6 @@ public class PortScript : NetworkedMonoBehavior
 	void Update()
     {
 
-    }
-
-    [BRPC]
-    public void UpdateName(string new_name)
-    {
-        PortName = new_name;
     }
 
     void OnMouseDown()

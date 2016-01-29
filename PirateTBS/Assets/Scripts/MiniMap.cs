@@ -9,7 +9,7 @@ public class MiniMap : SimpleNetworkedMonoBehavior
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
-    public List<PortScript> ports;
+    public List<Port> ports;
 
     float hexWidth;
 
@@ -120,7 +120,7 @@ public class MiniMap : SimpleNetworkedMonoBehavior
         GameObject new_port = Instantiate(PortPrefab);
         new_port.transform.SetParent(GameObject.Find(parent_name).transform);
         new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        ports.Add(new_port.GetComponent<PortScript>());
+        ports.Add(new_port.GetComponent<Port>());
     }
 
     struct Point

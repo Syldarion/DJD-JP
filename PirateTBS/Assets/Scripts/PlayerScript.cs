@@ -10,15 +10,15 @@ public class PlayerScript : NetworkedMonoBehavior
     public int TotalGold { get; private set; }
     public int TotalShips { get; private set; }
     public int TotalCrew { get; private set; }
-    public List<FleetScript> Fleets { get; private set; }
+    public List<Fleet> Fleets { get; private set; }
 
     //english, spanish, dutch, french
     public int[] Reputation { get; private set; }
 
     public GameObject FleetPrefab;
 
-    public PortScript SpawnPort;
-    public FleetScript ActiveFleet;
+    public Port SpawnPort;
+    public Fleet ActiveFleet;
 
     public int NewFleetID;
 
@@ -27,7 +27,7 @@ public class PlayerScript : NetworkedMonoBehavior
         TotalGold = 0;
         TotalShips = 0;
         TotalCrew = 0;
-        Fleets = new List<FleetScript>();
+        Fleets = new List<Fleet>();
         Reputation = new int[4]{ 50, 50, 50, 50};
 
         NewFleetID = 0;
@@ -37,7 +37,7 @@ public class PlayerScript : NetworkedMonoBehavior
 
     public void Initialize()
     {
-        PortScript[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
+        Port[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
         SpawnPort = ports[Random.Range(0, ports.Length - 1)];
 
         if (Networking.PrimarySocket.Connected)
@@ -72,7 +72,7 @@ public class PlayerScript : NetworkedMonoBehavior
     {
         //new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
 
-        Fleets.Add(new_fleet.GetComponent<FleetScript>());
+        Fleets.Add(new_fleet.GetComponent<Fleet>());
         Fleets[Fleets.Count - 1].RPC("SpawnFleet", string.Format("{0}Fleet{1}", Networking.PrimarySocket.Me.Name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
     }
 

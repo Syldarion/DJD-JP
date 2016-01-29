@@ -9,7 +9,7 @@ public class HexGrid : SimpleNetworkedMonoBehavior
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
-    public List<PortScript> ports;
+    public List<Port> ports;
 
     float hexWidth;
 
@@ -17,6 +17,8 @@ public class HexGrid : SimpleNetworkedMonoBehavior
     int gridHeight;
 
     List<HexTile> tiles;
+
+    string parent_port;
 
 	void Start()
     {
@@ -107,20 +109,31 @@ public class HexGrid : SimpleNetworkedMonoBehavior
         {
             selected_tile = Random.Range(0, coastal_tiles.Count);
 
-            RPC("SpawnPort", NetworkReceivers.AllBuffered, coastal_tiles[selected_tile].name);
+            parent_port = coastal_tiles[selected_tile].name;
+            Networking.Instantiate(PortPrefab, NetworkReceivers.All, callback: SpawnPortCallback);
 
             coastal_tiles[selected_tile].Has_Port = true;
             coastal_tiles.RemoveAt(selected_tile);
         }
     }
 
-    [BRPC]
-    void SpawnPort(string parent_name)
+    void SpawnPortCallback(SimpleNetworkedMonoBehavior new_port)
     {
-        GameObject new_port = Instantiate(PortPrefab);
-        new_port.transform.SetParent(GameObject.Find(parent_name).transform);
+        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
         new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        ports.Add(new_port.GetComponent<PortScript>());
+        ports.Add(new_port.GetComponent<Port>());
+
+        RPC("SpawnPortOthers", NetworkReceivers.Others, new_port.name);
+    }
+
+    [BRPC]
+    void SpawnPortOthers(string port_name)
+    {
+        GameObject new_port = GameObject.Find(port_name);
+
+        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
+        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        ports.Add(new_port.GetComponent<Port>());
     }
 
     struct Point

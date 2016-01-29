@@ -13,7 +13,7 @@ public class ChatManager : NetworkedMonoBehavior
     [BRPC]
     public void SendChatMessage(string sender, string message)
     {
-        ChatMessageScript newChatMessage = Instantiate(ChatMessagePrefab).GetComponent<ChatMessageScript>();
+        ChatMessage newChatMessage = Instantiate(ChatMessagePrefab).GetComponent<ChatMessage>();
 
         newChatMessage.Sender = sender;
         newChatMessage.Message = message;

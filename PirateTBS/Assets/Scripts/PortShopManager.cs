@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PortShopManager : MonoBehaviour
 {
-    public PortScript CurrentPort;
+    public Port CurrentPort;
 
 	void Start()
 	{
@@ -24,7 +24,7 @@ public class PortShopManager : MonoBehaviour
         PopulateShop(CurrentPort);
     }
 
-    public void PopulateShop(PortScript port)
+    public void PopulateShop(Port port)
     {
         
     }

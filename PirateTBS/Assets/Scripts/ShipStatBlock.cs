@@ -14,7 +14,11 @@ public class ShipStatBlock : MonoBehaviour
 
 	}
 
-    public void PopulateStatBlock(ShipScript ship)
+    /// <summary>
+    /// Populates the stat block with the ship's information
+    /// </summary>
+    /// <param name="ship">Ship to make a stat block for</param>
+    public void PopulateStatBlock(Ship ship)
     {
         transform.FindChild("ShipNameText").GetComponent<Text>().text = ship.name;
         transform.FindChild("ShipTypeText").GetComponent<Text>().text = ship.ShipType;

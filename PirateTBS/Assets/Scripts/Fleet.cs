@@ -4,22 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using BeardedManStudios.Network;
 
-public class FleetScript : NetworkedMonoBehavior
+public class Fleet : NetworkedMonoBehavior
 {
-    public ShipScript Flagship;
-    public List<ShipScript> Ships;
-    
-    public int FleetSpeed;
-
-    public HexTile CurrentPosition;
-
+    public List<Ship> Ships;            //Ships in the fleet
+    public int FleetSpeed;              //Current speed of the fleet
+    public HexTile CurrentPosition;     //HexTile that the fleet is a child of
     public GameObject ShipPrefab;
-
     public static int NewShipID = 0;
 
 	void Start()
     {
-        Ships = new List<ShipScript>();
+        Ships = new List<Ship>();
         FleetSpeed = 5;
 	}
 
@@ -28,13 +23,11 @@ public class FleetScript : NetworkedMonoBehavior
 
 	}
 
-    public void SetFlagship(ShipScript ship)
-    {
-        if (ship != Flagship && Ships.Contains(ship))
-            Flagship = ship;
-    }
-
-    public void AddShip(ShipScript ship)
+    /// <summary>
+    /// Add a ship to the fleet
+    /// </summary>
+    /// <param name="ship">The ship to add to the fleet</param>
+    public void AddShip(Ship ship)
     {
         if (!Ships.Contains(ship))
             Ships.Add(ship);
@@ -42,17 +35,21 @@ public class FleetScript : NetworkedMonoBehavior
 
         RPC("AddShipOthers", NetworkReceivers.Others, ship.name);
     }
-
+    
     [BRPC]
     void AddShipOthers(string ship_name)
     {
-        ShipScript ship = GameObject.Find(ship_name).GetComponent<ShipScript>();
+        Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
         if (!Ships.Contains(ship))
             Ships.Add(ship);
         UpdateFleetSpeed();
     }
 
-    public void RemoveShip(ShipScript ship)
+    /// <summary>
+    /// Remove a ship from the fleet, if it exists
+    /// </summary>
+    /// <param name="ship">The ship to remove from the fleet</param>
+    public void RemoveShip(Ship ship)
     {
         if (Ships.Contains(ship))
             Ships.Remove(ship);
@@ -66,7 +63,7 @@ public class FleetScript : NetworkedMonoBehavior
     [BRPC]
     void RemoveShipOthers(string ship_name)
     {
-        ShipScript ship = transform.FindChild(ship_name).GetComponent<ShipScript>();
+        Ship ship = transform.FindChild(ship_name).GetComponent<Ship>();
         if (Ships.Contains(ship))
             Ships.Remove(ship);
         UpdateFleetSpeed();
@@ -74,17 +71,24 @@ public class FleetScript : NetworkedMonoBehavior
             Destroy(this.gameObject);
     }
 
-    //Fleet speed will always be equal to the slowest ship in the fleet
+    /// <summary>
+    /// Update the speed of the fleet, which will be equal to the slowest ship in the fleet
+    /// </summary>
     public void UpdateFleetSpeed()
     {
         FleetSpeed = 5;                             //Fastest fleet speed possible
-        foreach (ShipScript s in Ships)
+        foreach (Ship s in Ships)
         {
             if (s.Speed < FleetSpeed)
                 FleetSpeed = s.Speed;
         }
     }
 
+    /// <summary>
+    /// Spawn a new fleet across the network
+    /// </summary>
+    /// <param name="fleet_name">The name of the new fleet</param>
+    /// <param name="initial_tile_name">The name of the initial position tile for the fleet</param>
     [BRPC]
     public void SpawnFleet(string fleet_name, string initial_tile_name)
     {
@@ -104,9 +108,14 @@ public class FleetScript : NetworkedMonoBehavior
         new_ship.transform.SetParent(transform);
         new_ship.transform.localPosition = Vector3.zero;
         new_ship.RPC("SpawnShip", string.Format("{0}Ship{1}", Networking.PrimarySocket.Me.Name, (++NewShipID).ToString()), this.name);
-        AddShip(new_ship.GetComponent<ShipScript>());
+        AddShip(new_ship.GetComponent<Ship>());
     }
 
+    /// <summary>
+    /// Move the fleet
+    /// </summary>
+    /// <param name="new_tile">The tile to move the fleet to</param>
+    /// <returns>If the movement was successful</returns>
     public bool MoveFleet(HexTile new_tile)
     {
         if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))

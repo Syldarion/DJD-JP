@@ -25,6 +25,9 @@ public class PanCamera : MonoBehaviour
 	
 	void Update()
     {
+        if (GameConsole.console_open)
+            return;
+
         //100-500
         forward_ray = new Ray(transform.position, transform.forward);
         if (Physics.Raycast(forward_ray, out hit))

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ChatMessageScript : MonoBehaviour
+public class ChatMessage : MonoBehaviour
 {
     public ChatFilter Filter;
     public string Sender;
