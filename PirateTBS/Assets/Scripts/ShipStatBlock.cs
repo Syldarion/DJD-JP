@@ -21,7 +21,7 @@ public class ShipStatBlock : MonoBehaviour
 
         Transform ship_stats_transform = transform.FindChild("ShipStats");
         ship_stats_transform.FindChild("HealthText").GetComponent<Text>().text = string.Format("{0} | {1}", ship.HullHealth, ship.SailHealth);
-        ship_stats_transform.FindChild("CargoText").GetComponent<Text>().text = string.Format("{0}/{1}", ship.Cargo.Size().ToString(), ship.CargoSpace.ToString());
+        ship_stats_transform.FindChild("CargoText").GetComponent<Text>().text = string.Format("{0}/{1}", ship.Cargo.Size().ToString("F1"), ship.CargoSpace.ToString());
         ship_stats_transform.FindChild("SpeedText").GetComponent<Text>().text = ship.FullSpeed.ToString();
         ship_stats_transform.FindChild("CannonText").GetComponent<Text>().text = ship.Cannons.ToString();
     }

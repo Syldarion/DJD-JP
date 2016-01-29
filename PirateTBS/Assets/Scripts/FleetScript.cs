@@ -107,13 +107,16 @@ public class FleetScript : NetworkedMonoBehavior
         AddShip(new_ship.GetComponent<ShipScript>());
     }
 
-    public void MoveFleet(HexTile new_tile)
+    public bool MoveFleet(HexTile new_tile)
     {
         if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))
         {
             transform.SetParent(new_tile.transform, false);
             transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
             CurrentPosition = new_tile;
+
+            return true;
         }
+        return false;
     }
 }

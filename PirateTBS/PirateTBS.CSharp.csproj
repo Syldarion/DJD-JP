@@ -157,12 +157,14 @@
     <Compile Include="Assets\Scripts\LandHex.cs" />
     <Compile Include="Assets\Scripts\LobbyPlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
+    <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\PortScript.cs" />
+    <Compile Include="Assets\Scripts\PortShopManager.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\ShipScript.cs" />
     <Compile Include="Assets\Scripts\ShipStatBlock.cs" />

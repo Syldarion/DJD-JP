@@ -23,15 +23,6 @@ public class WaterHex : HexTile
     {
         float lerp = Mathf.PingPong(Time.time, hoverTimer) / hoverTimer;
         MeshRenderer.material.color = Color.Lerp(baseColor, Color.yellow, lerp);
-
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            foreach (HexTile ht in HexGrid.MovementHex(this, 5))
-            {
-                ht.GetComponent<SkinnedMeshRenderer>().material.color = Color.red;
-                ht.StartCoroutine("SwitchToBaseColor", 2.0f);
-            }
-        }
     }
 
     void OnMouseDown()
@@ -44,17 +35,25 @@ public class WaterHex : HexTile
             if (player.ActiveFleet != null)
             {
                 if (tile_fleet == null)
-                    player.ActiveFleet.MoveFleet(this);
+                {
+                    if (!player.ActiveFleet.MoveFleet(this))
+                        player.ActiveFleet = null;
+                }
                 else
                 {
-                    if (tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
+                    if (tile_fleet != player.ActiveFleet && tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
                     {
-                        FleetManager manager = GameObject.Find("FleetManagementPanel").GetComponent<FleetManager>();
-                        manager.GetComponent<CanvasGroup>().alpha = 1;
-                        manager.GetComponent<CanvasGroup>().interactable = true;
-                        manager.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                        if (HexGrid.MovementHex(player.ActiveFleet.GetComponentInParent<HexTile>(), player.ActiveFleet.FleetSpeed).Contains(this))
+                        {
+                            FleetManager manager = GameObject.Find("FleetManagementPanel").GetComponent<FleetManager>();
+                            manager.GetComponent<CanvasGroup>().alpha = 1;
+                            manager.GetComponent<CanvasGroup>().interactable = true;
+                            manager.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-                        manager.PopulateFleetManager(player.ActiveFleet, tile_fleet);
+                            manager.PopulateFleetManager(player.ActiveFleet, tile_fleet);
+
+                            player.ActiveFleet = null;
+                        }
                     }
                     else
                     {

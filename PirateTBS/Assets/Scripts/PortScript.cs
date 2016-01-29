@@ -29,4 +29,10 @@ public class PortScript : NetworkedMonoBehavior
     {
         PortName = new_name;
     }
+
+    void OnMouseDown()
+    {
+        GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().CurrentPort = this;
+        GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().OpenShop();
+    }
 }

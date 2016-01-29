@@ -13,14 +13,23 @@ public class Cargo
     public int Sugar;
     public int Gold;
 
-    public Cargo()
+    /// <summary>
+    /// Creates a new Cargo object
+    /// </summary>
+    /// <param name="food">1 food = 1/10 cargo</param>
+    /// <param name="gold">1 gold = 1/100 cargo</param>
+    /// <param name="goods">1 goods = 1/10 cargo</param>
+    /// <param name="sugar">1 sugar = 1/10 cargo</param>
+    /// <param name="spice">1 spice = 1/10 cargo</param>
+    /// <param name="luxuries">1 luxuries = 1 cargo</param>
+    public Cargo(int food = 0, int gold = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
     {
-        Food = 0;
-        Goods = 0;
-        Luxuries = 0;
-        Spice = 0;
-        Sugar = 0;
-        Gold = 0;
+        Food = food;
+        Goods = goods;
+        Luxuries = luxuries;
+        Spice = spice;
+        Sugar = sugar;
+        Gold = gold;
     }
 
     public void MergeCargo(Cargo cargo)
@@ -33,9 +42,9 @@ public class Cargo
         Gold += cargo.Gold;
     }
 
-    public int Size()
+    public double Size()
     {
-        return Food + Goods + Luxuries + Spice + Sugar + Gold;
+        return (Food * 0.1) + (Goods + 0.1) + Luxuries + (Spice + 0.1) + (Sugar * 0.1) + (Gold * 0.01);
     }
 }
 
@@ -71,6 +80,7 @@ public class ShipScript : NetworkedMonoBehavior
 	void Start()
     {
         SetClass((ShipClass)Random.Range(0, 7));
+        Cargo = new Cargo(50, 500);
 	}
 	
 	void Update()

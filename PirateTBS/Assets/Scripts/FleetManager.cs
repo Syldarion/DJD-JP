@@ -37,6 +37,21 @@ public class FleetManager : MonoBehaviour
         }
     }
 
+    public void CloseFleetManager()
+    {
+        Transform FleetAContent = GameObject.Find("FleetAShipsContent").transform;
+        Transform FleetBContent = GameObject.Find("FleetBShipsContent").transform;
+
+        for (int i = 0; i < FleetAContent.childCount; i++)
+            Destroy(FleetAContent.GetChild(i).gameObject);
+        for (int i = 0; i < FleetBContent.childCount; i++)
+            Destroy(FleetBContent.GetChild(i).gameObject);
+
+        GetComponent<CanvasGroup>().alpha = 0;
+        GetComponent<CanvasGroup>().interactable = false;
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
     public void TransferShip(FleetScript fleet_from, FleetScript fleet_to, ShipScript ship)
     {
         if(fleet_from.Ships.Contains(ship))
