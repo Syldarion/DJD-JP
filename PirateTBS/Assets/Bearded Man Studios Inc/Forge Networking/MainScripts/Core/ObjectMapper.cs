@@ -184,7 +184,7 @@ namespace BeardedManStudios.Network
 			string obj = Encoding.UTF8.GetString(stream.Read(length), 0, length);
 			if (obj.Length == 12 && obj != "Hello World!")
 			{
-				int x = 0;
+				//int x = 0;
 			}
 			return obj;
 #endif

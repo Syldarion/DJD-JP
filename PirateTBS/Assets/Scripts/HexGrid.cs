@@ -2,12 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using BeardedManStudios.Network;
 
-public class HexGrid : MonoBehaviour
+public class HexGrid : SimpleNetworkedMonoBehavior
 {
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
+    public List<Port> ports;
 
     float hexWidth;
 
@@ -15,6 +17,8 @@ public class HexGrid : MonoBehaviour
     int gridHeight;
 
     List<HexTile> tiles;
+
+    string parent_port;
 
 	void Start()
     {
@@ -51,9 +55,15 @@ public class HexGrid : MonoBehaviour
                 Transform new_hex;
 
                 if (generated_grid[j + half_grid_y][i + half_grid_x] == 0)
+                {
                     new_hex = Instantiate(WaterHexPrefab).transform;
+                    new_hex.GetComponent<WaterHex>()._TileType = HexTile.TileType.Water;
+                }
                 else
+                {
                     new_hex = Instantiate(LandHexPrefab).transform;
+                    new_hex.GetComponent<LandHex>()._TileType = HexTile.TileType.Land;
+                }
 
                 new_hex.parent = this.transform;
                 new_hex.localPosition = new Vector3(i * (hexWidth * 0.76f), 0.0f, j * (0.876f * hexWidth));
@@ -72,7 +82,8 @@ public class HexGrid : MonoBehaviour
             }
         }
 
-        CreatePorts(gridWidth / 4);
+        if (NetworkingManager.Instance.OwnerId == 0)
+            CreatePorts(gridWidth / 4);
     }
     //i = x + width * y
     void CreatePorts(int number_of_ports)
@@ -98,13 +109,31 @@ public class HexGrid : MonoBehaviour
         {
             selected_tile = Random.Range(0, coastal_tiles.Count);
 
-            GameObject new_port = Instantiate(PortPrefab);
-            new_port.transform.SetParent(coastal_tiles[selected_tile].transform);
-            new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+            parent_port = coastal_tiles[selected_tile].name;
+            Networking.Instantiate(PortPrefab, NetworkReceivers.All, callback: SpawnPortCallback);
 
             coastal_tiles[selected_tile].Has_Port = true;
             coastal_tiles.RemoveAt(selected_tile);
         }
+    }
+
+    void SpawnPortCallback(SimpleNetworkedMonoBehavior new_port)
+    {
+        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
+        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        ports.Add(new_port.GetComponent<Port>());
+
+        RPC("SpawnPortOthers", NetworkReceivers.Others, new_port.name);
+    }
+
+    [BRPC]
+    void SpawnPortOthers(string port_name)
+    {
+        GameObject new_port = GameObject.Find(port_name);
+
+        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
+        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        ports.Add(new_port.GetComponent<Port>());
     }
 
     struct Point
@@ -200,15 +229,38 @@ public class HexGrid : MonoBehaviour
                 for (int j = 0; j < 6; j++)
                 {
                     HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
-                    if(!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
-                    {
-                        visited.Add(neighbor_tile);
-                        fringes[i].Add(neighbor_tile);
-                    }
+                    if (neighbor_tile != null)
+                        if (!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
+                        {
+                            visited.Add(neighbor_tile);
+                            fringes[i].Add(neighbor_tile);
+                        }
                 }
             }
         }
 
         return visited;
+    }
+
+    public void SetTile(int x_pos, int y_pos, HexTile.TileType new_type)
+    {
+        Color new_color = Color.white;
+        switch(new_type)
+        {
+            case HexTile.TileType.Fort:
+                new_color = Color.gray;
+                break;
+            case HexTile.TileType.Land:
+                new_color = Color.green;
+                break;
+            case HexTile.TileType.Port:
+                new_color = Color.yellow;
+                break;
+            case HexTile.TileType.Water:
+            default:
+                new_color = Color.blue;
+                break;
+        }
+        transform.FindChild(string.Format("{0},{1}", x_pos, y_pos)).GetComponent<SkinnedMeshRenderer>().material.color = new_color;
     }
 }

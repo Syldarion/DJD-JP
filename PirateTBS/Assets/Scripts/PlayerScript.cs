@@ -10,24 +10,78 @@ public class PlayerScript : NetworkedMonoBehavior
     public int TotalGold { get; private set; }
     public int TotalShips { get; private set; }
     public int TotalCrew { get; private set; }
-    public List<FleetScript> Fleets { get; private set; }
+    public List<Fleet> Fleets { get; private set; }
 
     //english, spanish, dutch, french
     public int[] Reputation { get; private set; }
+
+    public GameObject FleetPrefab;
+
+    public Port SpawnPort;
+    public Fleet ActiveFleet;
+
+    public int NewFleetID;
 
     void Start()
     {
         TotalGold = 0;
         TotalShips = 0;
         TotalCrew = 0;
-        Fleets = new List<FleetScript>();
+        Fleets = new List<Fleet>();
         Reputation = new int[4]{ 50, 50, 50, 50};
-	}
-	
-	void Update()
-    {
 
+        NewFleetID = 0;
+
+        StartCoroutine("WaitForPortList");
 	}
+
+    public void Initialize()
+    {
+        Port[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
+        SpawnPort = ports[Random.Range(0, ports.Length - 1)];
+
+        if (Networking.PrimarySocket.Connected)
+            SpawnFleet();
+        else
+            Networking.PrimarySocket.connected += SpawnFleet;
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (ActiveFleet != null)
+                ActiveFleet = null;
+            else
+            {
+                //Open menu
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+            Initialize();
+	}
+
+    void SpawnFleet()
+    {
+        Networking.PrimarySocket.connected -= SpawnFleet;
+        if (IsOwner)
+            Networking.Instantiate(FleetPrefab, NetworkReceivers.AllBuffered, callback: OnFleetSpawn);
+    }
+
+    void OnFleetSpawn(SimpleNetworkedMonoBehavior new_fleet)
+    {
+        //new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
+
+        Fleets.Add(new_fleet.GetComponent<Fleet>());
+        Fleets[Fleets.Count - 1].RPC("SpawnFleet", string.Format("{0}Fleet{1}", Networking.PrimarySocket.Me.Name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
+    }
+
+    IEnumerator WaitForPortList()
+    {
+        while (GameObject.Find("Grid").GetComponent<HexGrid>().ports.Count == 0)
+            yield return null;
+        Initialize();
+    }
 
     //new_nation should actually be set to a nation that already exists in game
     public void ChangeNationality(Nation new_nation)

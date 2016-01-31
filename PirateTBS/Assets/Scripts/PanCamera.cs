@@ -4,39 +4,61 @@ using System.Collections;
 [AddComponentMenu("Camera Controls/Pan Camera")]
 public class PanCamera : MonoBehaviour
 {
-    float cameraSpeed;
+    float drag_speed;
+    float zoom_speed;
 
-	void Start()
+    Vector3 translation;
+    bool flag;
+
+    Ray forward_ray;
+    RaycastHit hit;
+
+    Vector3 current_offset;
+
+    void Start()
     {
-        cameraSpeed = 2.0f;
+        drag_speed = 200f;
+        zoom_speed = 100f;
+        translation = Vector3.zero;
+        flag = false;
 	}
 	
 	void Update()
     {
-        /*
-        if (Input.GetMouseButton(2))
+        if (GameConsole.console_open)
+            return;
+
+        //100-500
+        forward_ray = new Ray(transform.position, transform.forward);
+        if (Physics.Raycast(forward_ray, out hit))
         {
-            float left_right = Input.GetAxis("Mouse X");
-            float up_down = Input.GetAxis("Mouse Y");
+            if (hit.distance <= 500.0f && hit.distance >= 100.0f)
+                translation += transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoom_speed;
+            else if (hit.distance > 500.0f)
+                translation += transform.forward;
+            else if (hit.distance < 100.0f)
+                translation += -transform.forward;
 
-            transform.Translate(left_right, up_down, 0.0f, Space.Self);
+            current_offset = transform.position - hit.transform.position;
         }
-        else if (Input.GetMouseButton(1))
+
+        if (Input.GetMouseButton(1))
+            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime * (hit.distance / 100));
+        else
+            translation += new Vector3(Input.GetAxis("Horizontal") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Vertical") * drag_speed * Time.deltaTime * (hit.distance / 100));
+
+        transform.position += translation;
+        translation = Vector3.zero;
+    }
+
+    IEnumerator MoveToPosition(Vector3 new_pos)
+    {
+        Vector3 target = new_pos + current_offset;
+        while(Vector3.Distance(transform.position, target) > 0.1f)
         {
-            float left_right = Input.GetAxis("Mouse X");
-            float up_down = -Input.GetAxis("Mouse Y");
-
-            transform.Rotate(up_down, 0.0f, 0.0f, Space.Self);
-            transform.Rotate(0.0f, left_right, 0.0f, Space.World);
+            transform.position = Vector3.Lerp(transform.position, target, 0.25f);
+            yield return null;
         }
-        */
-
-        transform.Translate((Input.GetAxis("Horizontal") * transform.right + 
-            Input.GetAxis("Vertical") * -transform.forward) * Time.deltaTime * cameraSpeed);
-
-        if (Input.GetKey(KeyCode.LeftShift))
-            transform.Translate(transform.up * Time.deltaTime * cameraSpeed);
-        else if (Input.GetKey(KeyCode.LeftControl))
-            transform.Translate(-transform.up * Time.deltaTime * cameraSpeed);
-	}
+        transform.position = target;
+    }
 }

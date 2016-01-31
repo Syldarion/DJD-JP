@@ -10,21 +10,21 @@ public class LobbyPlayerSpawner : NetworkedMonoBehavior
 	void Start()
     {
         if (Networking.PrimarySocket.Connected)
-            RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
+            RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.Name);
         else
         {
             Networking.PrimarySocket.connected += SpawnPlayer;
         }
         Networking.PrimarySocket.disconnected += delegate
         {
-            RPC("DestroyPanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
+            RPC("DestroyPanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.Name);
         };
     }
     
     void SpawnPlayer()
     {
         Networking.PrimarySocket.connected -= SpawnPlayer;
-        RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.NetworkId.ToString());
+        RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.Name);
     }
 
     [BRPC]

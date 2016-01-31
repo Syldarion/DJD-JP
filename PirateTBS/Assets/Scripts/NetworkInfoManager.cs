@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using UnityEngine.SceneManagement;
 using BeardedManStudios.Network;
 
@@ -8,11 +7,23 @@ public class NetworkInfoManager : MonoBehaviour
 {
     bool IsHosting;
     string ServerIP;
-    int ServerPort;
-    string Password;
+    //string Password;
     int MaxPlayers;
+    string PlayerName;
 
     NetWorker Socket;
+
+    void Start()
+    {
+        MaxPlayers = 2;
+    }
+
+    public void UpdateMaxPlayerCount(int modifier)
+    {
+        MaxPlayers = Mathf.Clamp(MaxPlayers + modifier, 2, 16);
+        GameObject.Find("PlayerCountBackText").GetComponent<Text>().text = MaxPlayers.ToString();
+        GameObject.Find("PlayerCountFrontText").GetComponent<Text>().text = MaxPlayers.ToString();
+    }
 
     public void UpdateServerAndRun(bool hosting)
     {
@@ -23,38 +34,47 @@ public class NetworkInfoManager : MonoBehaviour
             if (hosting)
             {
                 ServerIP = "127.0.0.1";
-                ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-                //Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
-                MaxPlayers = (int)GameObject.Find("PlayerCountSlider").GetComponent<Slider>().value;
+                //Password = GameObject.Find("HostServerPasswordInput").GetComponent<InputField>().text;
+                PlayerName = GameObject.Find("HostPlayerNameInput").GetComponent<InputField>().text;
             }
             else
             {
-                ServerIP = GameObject.Find("ServerIPInput").GetComponent<InputField>().text;
+                ServerIP = GameObject.Find("JoinServerIPInput").GetComponent<InputField>().text;
                 if (ServerIP == "localhost")
                     ServerIP = "127.0.0.1";
-                ServerPort = int.Parse(GameObject.Find("ServerPortInput").GetComponent<InputField>().text);
-                //Password = GameObject.Find("ServerPasswordInput").GetComponent<InputField>().text;
+                //Password = GameObject.Find("JoinServerPasswordInput").GetComponent<InputField>().text;
+                PlayerName = GameObject.Find("JoinPlayerNameInput").GetComponent<InputField>().text;
             }
 
-            LoadLobbyScene();
+            ConnectToNetwork();
         }
     }
 
-    void LoadLobbyScene()
+    void ConnectToNetwork()
     {
         if (SceneManager.GetSceneByName("lobby").IsValid())
             SceneManager.SetActiveScene(SceneManager.GetSceneByName("lobby"));
         else
             SceneManager.LoadScene("lobby");
 
-        if(IsHosting)
-            Socket = Networking.Host((ushort)ServerPort, Networking.TransportationProtocolType.UDP, MaxPlayers);
+        if (IsHosting)
+            Socket = Networking.Host(5666, Networking.TransportationProtocolType.UDP, MaxPlayers);
         else
-            Socket = Networking.Connect(ServerIP, (ushort)ServerPort, Networking.TransportationProtocolType.UDP);
+            Socket = Networking.Connect(ServerIP, 5666, Networking.TransportationProtocolType.UDP);
 
         Networking.SetPrimarySocket(Socket);
 
-        if (Socket.Connected && Socket.IsServer)
+        if (Networking.PrimarySocket.Connected)
+            SetNameAndChangeScene();
+        else
+            Networking.PrimarySocket.connected += SetNameAndChangeScene;
+    }
+
+    void SetNameAndChangeScene()
+    {
+        Networking.PrimarySocket.connected -= SetNameAndChangeScene;
+        Networking.PrimarySocket.Me.SetName(PlayerName);
+        if (Socket.IsServer)
             Networking.ChangeClientScene(Socket, "lobby");
     }
 
