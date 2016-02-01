@@ -8,7 +8,6 @@ public class PanCamera : MonoBehaviour
     float zoom_speed;
 
     Vector3 translation;
-    bool flag;
 
     Ray forward_ray;
     RaycastHit hit;
@@ -20,7 +19,6 @@ public class PanCamera : MonoBehaviour
         drag_speed = 200f;
         zoom_speed = 100f;
         translation = Vector3.zero;
-        flag = false;
 	}
 	
 	void Update()

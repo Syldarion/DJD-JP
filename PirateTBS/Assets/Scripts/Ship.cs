@@ -82,6 +82,8 @@ public enum ShipClass
 
 public class Ship : NetworkedMonoBehavior
 {
+    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
+    public string Name;
     [NetSync] public int HullHealth;
     [NetSync] public int SailHealth;
     [NetSync] public int CargoSpace;
@@ -96,11 +98,11 @@ public class Ship : NetworkedMonoBehavior
     public int CrewMorale;
     public ShipClass Class;
     public Cargo Cargo;
+    public int Price;
 
 	void Start()
     {
-        SetClass((ShipClass)Random.Range(0, 7));
-        Cargo = new Cargo(50, 500);
+        
 	}
 	
 	void Update()
@@ -277,10 +279,19 @@ public class Ship : NetworkedMonoBehavior
     [BRPC]
     public void SpawnShip(string ship_name, string fleet_parent_name)
     {
-        this.name = ship_name;
+        Name = ship_name;
 
         Fleet parent_fleet = GameObject.Find(fleet_parent_name).GetComponent<Fleet>();
         transform.SetParent(parent_fleet.transform);
         transform.localPosition = Vector3.zero;
+
+        SetClass((ShipClass)Random.Range(0, 7));
+        Cargo = new Cargo(50, 500);
+    }
+
+    void OnNameChanged()
+    {
+        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
+        name = Name;
     }
 }

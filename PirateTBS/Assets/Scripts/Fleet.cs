@@ -6,6 +6,8 @@ using BeardedManStudios.Network;
 
 public class Fleet : NetworkedMonoBehavior
 {
+    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
+    public string Name;
     public List<Ship> Ships;            //Ships in the fleet
     public int FleetSpeed;              //Current speed of the fleet
     public HexTile CurrentPosition;     //HexTile that the fleet is a child of
@@ -92,7 +94,7 @@ public class Fleet : NetworkedMonoBehavior
     [BRPC]
     public void SpawnFleet(string fleet_name, string initial_tile_name)
     {
-        this.name = fleet_name;
+        Name = fleet_name;
 
         HexTile initial_tile = GameObject.Find(initial_tile_name).GetComponent<HexTile>();
         transform.SetParent(initial_tile.transform, false);
@@ -100,7 +102,7 @@ public class Fleet : NetworkedMonoBehavior
         CurrentPosition = initial_tile;
 
         if (IsOwner)
-            Networking.Instantiate(ShipPrefab, NetworkReceivers.AllBuffered, callback: OnShipCreated);
+            Networking.Instantiate(ShipPrefab, NetworkReceivers.All, callback: OnShipCreated);
     }
 
     void OnShipCreated(SimpleNetworkedMonoBehavior new_ship)
@@ -127,5 +129,22 @@ public class Fleet : NetworkedMonoBehavior
             return true;
         }
         return false;
+    }
+
+    void OnMouseEnter()
+    {
+        Tooltip.EnableTooltip(true);
+        Tooltip.UpdateTooltip(name);
+    }
+
+    void OnMouseExit()
+    {
+        Tooltip.EnableTooltip(false);
+    }
+
+    void OnNameChanged()
+    {
+        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
+        name = Name;
     }
 }

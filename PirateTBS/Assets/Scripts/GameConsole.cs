@@ -27,11 +27,11 @@ public class GameConsole : MonoBehaviour
         RegisterCommand("ListPorts", ListPorts);
         RegisterCommand("ListInventory", ListInventory);
 
-        HelpText.Add("Help", "Help <command>");
-        HelpText.Add("ListFleets", "ListFleets");
-        HelpText.Add("ListShips", "ListShips <fleet>");
-        HelpText.Add("ListPorts", "ListPorts");
-        HelpText.Add("ListInventory", "ListInventory <container>");
+        HelpText.Add("Help", "Usage: Help <command>");
+        HelpText.Add("ListFleets", "Usage: ListFleets");
+        HelpText.Add("ListShips", "Usage: ListShips <fleet>");
+        HelpText.Add("ListPorts", "Usage: ListPorts");
+        HelpText.Add("ListInventory", "Usage: ListInventory <container>");
 	}
 	
 	void Update()
@@ -83,19 +83,28 @@ public class GameConsole : MonoBehaviour
     {
         base_input = input;
 
-        string[] tokens = base_input.Split(' ', '\t');
+        string command = base_input.Split(' ', '\t')[0];
 
-        if(!Commands.ContainsKey(tokens[0]))
+        if(!Commands.ContainsKey(command))
         {
-            AddToLog(base_input, "Command Not Defined");
+            AddToLog("Command Not Defined");
             return;
         }
 
-        string args = string.Empty;
-        for (int i = 1; i < tokens.Length; i++)
-            args += tokens[i];
+        string args = base_input.Substring(base_input.IndexOfAny(new char[] { ' ', '\t' }) + 1);
+        Debug.Log(args);
 
-        Commands[tokens[0]].Invoke(args);
+        Commands[command].Invoke(args);
+    }
+
+    public void GenericLog(string message)
+    {
+        GameObject new_log_item = Instantiate(LogItemPrefab);
+        new_log_item.GetComponentInChildren<Text>().text = message;
+        new_log_item.transform.SetParent(ContentPanel.transform, false);
+
+        if (ContentPanel.transform.childCount > 20)
+            Destroy(ContentPanel.transform.GetChild(0).gameObject);
     }
 
     void AddToLog(string message)
@@ -110,10 +119,14 @@ public class GameConsole : MonoBehaviour
 
     void Help(string input)
     {
-        string[] tokens = input.Split(' ', '\t');
-        if(tokens.Length == 0)
+        if (HelpText.ContainsKey(input))
+            AddToLog(HelpText[input]);
+        else
         {
-            
+            string all_commands = "Commands\n";
+            foreach (string key in HelpText.Keys)
+                all_commands += string.Format("{0}\n\t", key);
+            AddToLog(all_commands);
         }
     }
 
@@ -179,6 +192,16 @@ public class GameConsole : MonoBehaviour
                 AddToLog("Ship not found");
                 return;
             }
+
+            string ship_cargo_str = string.Empty;
+            ship_cargo_str += string.Format("Food - {0}\n\t", ship.Cargo.Food);
+            ship_cargo_str += string.Format("Gold - {0}\n\t", ship.Cargo.Gold);
+            ship_cargo_str += string.Format("Goods - {0}\n\t", ship.Cargo.Goods);
+            ship_cargo_str += string.Format("Sugar - {0}\n\t", ship.Cargo.Sugar);
+            ship_cargo_str += string.Format("Spice - {0}\n\t", ship.Cargo.Spice);
+            ship_cargo_str += string.Format("Luxuries - {0}\n\t", ship.Cargo.Luxuries);
+
+            AddToLog(ship_cargo_str);
         }
         else if(tokens[0].ToLower() == "port")
         {
@@ -188,8 +211,18 @@ public class GameConsole : MonoBehaviour
                 AddToLog("Port not found");
                 return;
             }
+
+            string port_inventory_str = string.Empty;
+            port_inventory_str += string.Format("Food - {0}\n\t", port.Market.Food);
+            port_inventory_str += string.Format("Gold - {0}\n\t", port.Market.Gold);
+            port_inventory_str += string.Format("Goods - {0}\n\t", port.Market.Goods);
+            port_inventory_str += string.Format("Sugar - {0}\n\t", port.Market.Sugar);
+            port_inventory_str += string.Format("Spice - {0}\n\t", port.Market.Spice);
+            port_inventory_str += string.Format("Luxuries - {0}\n\t", port.Market.Luxuries);
+
+            AddToLog(port_inventory_str);
         }
         else
-            AddToLog("Invalid cargo container (arg 1)");
+            AddToLog(string.Format("{0} - Invalid cargo container (arg 1)", tokens[0].ToLower()));
     }
 }

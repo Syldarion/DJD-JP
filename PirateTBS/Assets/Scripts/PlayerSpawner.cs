@@ -29,5 +29,6 @@ public class PlayerSpawner : NetworkedMonoBehavior
     void SpawnController(SimpleNetworkedMonoBehavior new_controller)
     {
         new_controller.name = Networking.PrimarySocket.Me.Name + "Controller";
+        new_controller.GetComponent<PlayerScript>().Name = new_controller.name;
     }
 }
