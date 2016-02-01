@@ -5,15 +5,17 @@ using BeardedManStudios.Network;
 
 public class PlayerScript : NetworkedMonoBehavior
 {
+    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
     public string Name;
-    public Nation Nationality { get; private set; }
-    public int TotalGold { get; private set; }
-    public int TotalShips { get; private set; }
-    public int TotalCrew { get; private set; }
-    public List<Fleet> Fleets { get; private set; }
+
+    public Nation Nationality;
+    public int TotalGold;
+    public int TotalShips;
+    public int TotalCrew;
+    public List<Fleet> Fleets;
 
     //english, spanish, dutch, french
-    public int[] Reputation { get; private set; }
+    public int[] Reputation;
 
     public GameObject FleetPrefab;
 
@@ -28,16 +30,16 @@ public class PlayerScript : NetworkedMonoBehavior
         TotalShips = 0;
         TotalCrew = 0;
         Fleets = new List<Fleet>();
-        Reputation = new int[4]{ 50, 50, 50, 50};
+        Reputation = new int[4] { 50, 50, 50, 50 };
 
         NewFleetID = 0;
 
         StartCoroutine("WaitForPortList");
-	}
+    }
 
     public void Initialize()
     {
-        Port[] ports = GameObject.Find("Grid").GetComponent<HexGrid>().ports.ToArray();
+        Port[] ports = HexGrid.ports.ToArray();
         SpawnPort = ports[Random.Range(0, ports.Length - 1)];
 
         if (Networking.PrimarySocket.Connected)
@@ -48,7 +50,10 @@ public class PlayerScript : NetworkedMonoBehavior
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (GameConsole.console_open)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (ActiveFleet != null)
                 ActiveFleet = null;
@@ -59,26 +64,25 @@ public class PlayerScript : NetworkedMonoBehavior
         }
         if (Input.GetKeyDown(KeyCode.I))
             Initialize();
-	}
+    }
 
     void SpawnFleet()
     {
         Networking.PrimarySocket.connected -= SpawnFleet;
         if (IsOwner)
-            Networking.Instantiate(FleetPrefab, NetworkReceivers.AllBuffered, callback: OnFleetSpawn);
+            Networking.Instantiate(FleetPrefab, NetworkReceivers.All, callback: OnFleetSpawn);
     }
 
     void OnFleetSpawn(SimpleNetworkedMonoBehavior new_fleet)
     {
-        //new_fleet.GetComponent<FleetScript>().AddShip(new ShipScript());
-
         Fleets.Add(new_fleet.GetComponent<Fleet>());
-        Fleets[Fleets.Count - 1].RPC("SpawnFleet", string.Format("{0}Fleet{1}", Networking.PrimarySocket.Me.Name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
+        string player_name = Networking.PrimarySocket.Me.Name;
+        new_fleet.GetComponent<Fleet>().RPC("SpawnFleet", string.Format("{0}Fleet{1}", player_name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
     }
 
     IEnumerator WaitForPortList()
     {
-        while (GameObject.Find("Grid").GetComponent<HexGrid>().ports.Count == 0)
+        while (HexGrid.ports.Count == 0)
             yield return null;
         Initialize();
     }
@@ -88,7 +92,7 @@ public class PlayerScript : NetworkedMonoBehavior
     {
         //make sure you aren't trying to join your own nation and that you aren't trying to join a nation that your current nation is at war with
         //maybe you should be able to join nations at war, but for now, whatever
-        if(new_nation != Nationality && !Nationality.Enemies.Contains(new_nation))
+        if (new_nation != Nationality && !Nationality.Enemies.Contains(new_nation))
         {
             Nationality = new_nation;
             foreach (Nation n in new_nation.Allies)
@@ -101,5 +105,11 @@ public class PlayerScript : NetworkedMonoBehavior
     public void ModifyReputation(Nationality nation, int modifier)
     {
         Reputation[(int)nation] = Mathf.Clamp(Reputation[(int)nation] + modifier, 0, 100);
+    }
+
+    void OnNameChanged()
+    {
+        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
+        name = Name;
     }
 }

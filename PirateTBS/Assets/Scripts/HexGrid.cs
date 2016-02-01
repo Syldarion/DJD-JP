@@ -4,12 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using BeardedManStudios.Network;
 
-public class HexGrid : SimpleNetworkedMonoBehavior
+public class HexGrid : MonoBehaviour
 {
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
-    public List<Port> ports;
+    public static List<Port> ports;
 
     float hexWidth;
 
@@ -18,10 +18,12 @@ public class HexGrid : SimpleNetworkedMonoBehavior
 
     List<HexTile> tiles;
 
-    string parent_port;
+    string parent_tile;
 
 	void Start()
     {
+        ports = new List<Port>();
+
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
         gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
@@ -81,8 +83,8 @@ public class HexGrid : SimpleNetworkedMonoBehavior
                 tiles.Add(new_hex.GetComponent<HexTile>());
             }
         }
-
-        if (NetworkingManager.Instance.OwnerId == 0)
+        
+        if (NetworkingManager.Instance.OwningNetWorker.IsServer)
             CreatePorts(gridWidth / 4);
     }
     //i = x + width * y
@@ -109,7 +111,7 @@ public class HexGrid : SimpleNetworkedMonoBehavior
         {
             selected_tile = Random.Range(0, coastal_tiles.Count);
 
-            parent_port = coastal_tiles[selected_tile].name;
+            parent_tile = coastal_tiles[selected_tile].name;
             Networking.Instantiate(PortPrefab, NetworkReceivers.All, callback: SpawnPortCallback);
 
             coastal_tiles[selected_tile].Has_Port = true;
@@ -119,21 +121,7 @@ public class HexGrid : SimpleNetworkedMonoBehavior
 
     void SpawnPortCallback(SimpleNetworkedMonoBehavior new_port)
     {
-        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
-        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        ports.Add(new_port.GetComponent<Port>());
-
-        RPC("SpawnPortOthers", NetworkReceivers.Others, new_port.name);
-    }
-
-    [BRPC]
-    void SpawnPortOthers(string port_name)
-    {
-        GameObject new_port = GameObject.Find(port_name);
-
-        new_port.transform.SetParent(GameObject.Find(parent_port).transform);
-        new_port.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        ports.Add(new_port.GetComponent<Port>());
+        new_port.RPC("SpawnPortOthers", NetworkReceivers.All, parent_tile);
     }
 
     struct Point

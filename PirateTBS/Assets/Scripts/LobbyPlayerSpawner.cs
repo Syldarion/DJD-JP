@@ -10,11 +10,9 @@ public class LobbyPlayerSpawner : NetworkedMonoBehavior
 	void Start()
     {
         if (Networking.PrimarySocket.Connected)
-            RPC("CreatePanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.Name);
+            SpawnPlayer();
         else
-        {
             Networking.PrimarySocket.connected += SpawnPlayer;
-        }
         Networking.PrimarySocket.disconnected += delegate
         {
             RPC("DestroyPanel", NetworkReceivers.AllBuffered, Networking.PrimarySocket.Me.Name);

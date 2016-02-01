@@ -1,3 +1,10 @@
+Mono path[0] = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Managed'
+Mono path[1] = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Mono'
+Mono config path = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Mono/etc'
+PlayerConnection initialized from E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55373
+Broadcasting "[IP] 169.254.142.73 [Port] 55373 [Flags] 2 [Guid] 355864035 [EditorId] 1166850284 [Version] 1048832 [Id] WindowsPlayer(Caleb-PC) [Debug] 0" to [169.254.255.255:54997]...
+PlayerConnection already initialized - listening to [169.254.142.73:55373]
 Initialize engine version: 5.3.1f1 (cc9cbbcc37b4)
 GfxDevice: creating device client; threaded=1
 Direct3D:
@@ -14,21 +21,21 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.109 seconds
+- Completed reload, in  0.041 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+desktop: 1920x1080 60Hz; virtual: 4920x1924 at -1080,-844
 <RI> Initializing input.
 <RI> Input initialized.
-desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+desktop: 1920x1080 60Hz; virtual: 4920x1924 at -1080,-844
 <RI> Initialized touch support.
-UnloadTime: 36.811451 ms
-No connection has been established for this network scene, preparing offline play...
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-Setting up 1 worker threads for Enlighten.
-  Thread -> id: 4580 -> priority: 1 
+Mono path[0] = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Managed'
+Mono path[1] = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Mono'
+Mono config path = 'E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data/Mono/etc'
+PlayerConnection initialized from E:/Repos/DJD-JP/PirateTBS/PirateTBS_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55442
+Broadcasting "[IP] 169.254.142.73 [Port] 55442 [Flags] 2 [Guid] 3870881045 [EditorId] 1166850284 [Version] 1048832 [Id] WindowsPlayer(Caleb-PC) [Debug] 0" to [169.254.255.255:54997]...
+PlayerConnection already initialized - listening to [169.254.142.73:55442]
 Initialize engine version: 5.3.1f1 (cc9cbbcc37b4)
 GfxDevice: creating device client; threaded=1
 Direct3D:
@@ -45,355 +52,118 @@ Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.039 seconds
+- Completed reload, in  0.042 seconds
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Repos\DJD-JP\PirateTBS\PirateTBS_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+desktop: 1920x1080 60Hz; virtual: 4920x1924 at -1080,-844
 <RI> Initializing input.
 <RI> Input initialized.
-desktop: 1920x1080 60Hz; virtual: 4920x1920 at -1080,-688
+desktop: 1920x1080 60Hz; virtual: 4920x1924 at -1080,-844
 <RI> Initialized touch support.
-UnloadTime: 0.436517 ms
+UnloadTime: 0.522532 ms
 No connection has been established for this network scene, preparing offline play...
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:LogWarning(Object)
+BeardedManStudios.Network.NetworkingManager:Populate(NetWorker) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:242)
+BeardedManStudios.Network.SimpleNetworkedMonoBehavior:Initialize(NetWorker) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs:382)
+BeardedManStudios.Network.NetworkingManager:OnLevelWasLoaded(Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:599)
  
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Bearded Man Studios Inc/Forge Networking/MainScripts/Unity/NetworkingManager.cs Line: 242)
 
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 2804 -> priority: 1 
+  Thread -> id: 3e6c -> priority: 1 
+UnloadTime: 0.475136 ms
+No connection has been established for this network scene, preparing offline play...
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:LogWarning(Object)
+BeardedManStudios.Network.NetworkingManager:Populate(NetWorker) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:242)
+BeardedManStudios.Network.SimpleNetworkedMonoBehavior:Initialize(NetWorker) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs:382)
+BeardedManStudios.Network.NetworkingManager:OnLevelWasLoaded(Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:599)
+ 
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Bearded Man Studios Inc/Forge Networking/MainScripts/Unity/NetworkingManager.cs Line: 242)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 2cc8 -> priority: 1 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.377760 ms
+UnloadTime: 4.848790 ms
 NullReferenceException: Object reference not set to an instance of an object
-  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
-  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
-  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00000] in <filename unknown>:0 
+  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x000bc] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:251 
+  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x0003c] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs:382 
+  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00037] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:599 
  
-(Filename:  Line: -1)
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Bearded Man Studios Inc/Forge Networking/MainScripts/Unity/NetworkingManager.cs Line: 251)
 
+System memory in use before: 40.2 MB.
+System memory in use after: 40.2 MB.
 
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 588.
-Total: 0.548573 ms (FindLiveObjects: 0.050907 ms CreateObjectMapping: 0.017846 ms MarkObjects: 0.470163 ms  DeleteObjects: 0.009069 ms)
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 600.
+Total: 0.621714 ms (FindLiveObjects: 0.027209 ms CreateObjectMapping: 0.021065 ms MarkObjects: 0.466359 ms  DeleteObjects: 0.106203 ms)
 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 5.114749 ms
+UnloadTime: 4.667103 ms
 NullReferenceException: Object reference not set to an instance of an object
-  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
-  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x00000] in <filename unknown>:0 
-  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-
-Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 588.
-Total: 0.479526 ms (FindLiveObjects: 0.027501 ms CreateObjectMapping: 0.018432 ms MarkObjects: 0.423937 ms  DeleteObjects: 0.009069 ms)
-
-Unloading 4 Unused Uerilaldzed filin ( 4erinulized filesdnoweri lloedaded: e)
- (Serialized files now loaded: 0)
-UnloadTime: 2.027233 ms
-UnloadTime: 2.026941 ms
-
-Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 323.
-Total: 0.431836 ms (FindLiveObjects: 0.020480 ms CreateObjectMapping: 0.012288 ms MarkObjects: 0.377125 ms  DeleteObjects: 0.021357 ms)
-
-
-Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 323.
-Total: 0.443247 ms (FindLiveObjects: 0.021357 ms CreateObjectMapping: 0.011995 ms MarkObjects: 0.389121 ms  DeleteObjects: 0.020187 ms)
-
-195 coastal tiles
- 
-(Filename: C:/buildslave/u1i9y/build/artifa5ts/generated/co mcna/runttime/Un
- tEnginename:ebC:/buildinlave/gsity/build/Lirne: c3s/g
-
-nerated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at WaterHex.OnMouseOver () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SendMessage(String, Object, SendMessageOptions)
-UnityEngine.HitInfo:SendMessage(String)
-UnityEngine.SendMouseEvents:SendEvents(Int32, HitInfo)
-UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at WaterHex.OnMouseOver () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SendMessage(String, Object, SendMessageOptions)
-UnityEngine.HitInfo:SendMessage(String)
-UnityEngine.SendMouseEvents:SendEvents(Int32, HitInfo)
-UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
-  at ShipScript.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
-  at ShipScript.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
-  at ShipScript.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
-  at ShipScript.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at ShipScript.SetClass (ShipClass new_class) [0x00000] in <filename unknown>:0 
-  at ShipScript.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-0
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-1
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+  at BeardedManStudios.Network.NetworkingManager.Populate (BeardedManStudios.Network.NetWorker socket) [0x000bc] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:251 
+  at BeardedManStudios.Network.SimpleNetworkedMonoBehavior.Initialize (BeardedManStudios.Network.NetWorker socket) [0x0003c] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs:382 
+  at BeardedManStudios.Network.NetworkingManager.OnLevelWasLoaded (Int32 level) [0x00037] in E:\Repos\DJD-JP\PirateTBS\Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs:599 
+ 
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Bearded Man Studios Inc/Forge Networking/MainScripts/Unity/NetworkingManager.cs Line: 251)
+
+System memory in use before: 40.3 MB.
+System memory in use after: 40.3 MB.
+
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 600.
+Total: 0.542135 ms (FindLiveObjects: 0.026624 ms CreateObjectMapping: 0.019602 ms MarkObjects: 0.456996 ms  DeleteObjects: 0.038326 ms)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.915466 ms
+UnloadTime: 2.307805 ms
+System memory in use before: 21.8 MB.
+System memory in use after: 21.9 MB.
+
+Unloading 24 unused Assets to reduce memory usage. Loaded Objects now: 2056.
+Total: 1.965203 ms (FindLiveObjects: 0.086601 ms CreateObjectMapping: 0.031890 ms MarkObjects: 1.822428 ms  DeleteObjects: 0.023113 ms)
+
+System memory in use before: 21.6 MB.
+System memory in use after: 21.7 MB.
+
+Unloading 24 unused Assets to reduce memory usage. Loaded Objects now: 2056.
+Total: 2.246950 ms (FindLiveObjects: 0.091867 ms CreateObjectMapping: 0.041252 ms MarkObjects: 2.088376 ms  DeleteObjects: 0.024576 ms)
+
+168 coastal tiles
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+HexGrid:CreatePorts(Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\HexGrid.cs:106)
+HexGrid:GenerateGrid(Int32, Int32, Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\HexGrid.cs:88)
+HexGrid:Start() (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\HexGrid.cs:36)
+ 
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Scripts/HexGrid.cs Line: 106)
+
+168 coastal tiles
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+MiniMap:CreatePorts(Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:102)
+MiniMap:GenerateGrid(Int32, Int32, Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:84)
+MiniMap:Start() (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:32)
+ 
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Scripts/MiniMap.cs Line: 102)
+
+168 coastal tiles
+UnityEngine.DebugLogHandler:Internal_Log(LogType, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+MiniMap:CreatePorts(Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:102)
+MiniMap:GenerateGrid(Int32, Int32, Int32) (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:84)
+MiniMap:Start() (at E:\Repos\DJD-JP\PirateTBS\Assets\Scripts\MiniMap.cs:32)
+ 
+(Filename: E:/Repos/DJD-JP/PirateTBS/Assets/Scripts/MiniMap.cs Line: 102)
 
