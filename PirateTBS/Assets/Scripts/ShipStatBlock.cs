@@ -4,6 +4,8 @@ using System.Collections;
 
 public class ShipStatBlock : MonoBehaviour
 {
+    public Ship ReferenceShip;
+
 	void Start()
 	{
 
@@ -20,6 +22,8 @@ public class ShipStatBlock : MonoBehaviour
     /// <param name="ship">Ship to make a stat block for</param>
     public void PopulateStatBlock(Ship ship)
     {
+        ReferenceShip = ship;
+
         transform.FindChild("ShipNameText").GetComponent<Text>().text = ship.name;
         transform.FindChild("ShipTypeText").GetComponent<Text>().text = ship.ShipType;
 

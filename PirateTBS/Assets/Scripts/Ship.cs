@@ -80,6 +80,13 @@ public enum ShipClass
     Frigate
 }
 
+public enum ShotType
+{
+    Normal,
+    Cluster,
+    Chain
+}
+
 public class Ship : NetworkedMonoBehavior
 {
     [NetSync("OnNameChanged", NetworkCallers.Everyone)]

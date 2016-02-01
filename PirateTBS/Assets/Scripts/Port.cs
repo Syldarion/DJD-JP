@@ -12,9 +12,9 @@ public class Port : NetworkedMonoBehavior
     public Cargo Market;
     public List<Ship> Shipyard;
 
-	void Start()
+    void Start()
     {
-        
+
     }
 
     void InitializePort()
@@ -26,8 +26,8 @@ public class Port : NetworkedMonoBehavior
                 break;
             }
     }
-	
-	void Update()
+
+    void Update()
     {
 
     }
@@ -58,5 +58,12 @@ public class Port : NetworkedMonoBehavior
     void OnMouseExit()
     {
         Tooltip.EnableTooltip(false);
+    }
+
+    [BRPC]
+    void SendSystemMessage(string message)
+    {
+        //global message box
+        //append message
     }
 }
