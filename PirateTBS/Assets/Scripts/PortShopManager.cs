@@ -42,7 +42,7 @@ public class PortShopManager : MonoBehaviour
 
     public void SwitchTo(RectTransform new_panel)
     {
-        if (ActivePanel == new_panel || !new_panel.GetComponent<CanvasGroup>())
+        if (!ActivePanel || ActivePanel == new_panel || !new_panel.GetComponent<CanvasGroup>())
             return;
 
         ActivePanel.GetComponent<CanvasGroup>().alpha = 0;
