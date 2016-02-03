@@ -2388,7 +2388,18 @@ MonoBehaviour:
   - eventID: 1
     callback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 600725168}
+          m_MethodName: SwitchTo
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 600725165}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
@@ -3205,7 +3216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6438,9 +6449,9 @@ CanvasGroup:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 562761103}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &562761107
 MonoBehaviour:
@@ -6674,7 +6685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6710,6 +6721,7 @@ GameObject:
   - 224: {fileID: 600725165}
   - 222: {fileID: 600725167}
   - 114: {fileID: 600725166}
+  - 114: {fileID: 600725169}
   - 114: {fileID: 600725168}
   m_Layer: 5
   m_Name: PlayerInfoPanel
@@ -6776,6 +6788,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8142a46edcf8524db2bba25dde76c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &600725169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 600725164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902a702525f11e447ae3dd70df355065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OwningPlayer: {fileID: 0}
+  StatBlockPrefab: {fileID: 0}
+  CaptainNameText: {fileID: 0}
+  GoldCountText: {fileID: 0}
+  AverageMoraleText: {fileID: 0}
+  PlayerInfoShipList: {fileID: 0}
+  PlayerInfoIncomeList: {fileID: 0}
+  PlayerInfoMoraleList: {fileID: 0}
 --- !u!1 &606265577
 GameObject:
   m_ObjectHideFlags: 0
@@ -19401,7 +19432,18 @@ MonoBehaviour:
   - eventID: 1
     callback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 600725168}
+          m_MethodName: SwitchTo
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 600725165}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
@@ -23102,7 +23144,18 @@ MonoBehaviour:
   - eventID: 1
     callback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 600725168}
+          m_MethodName: SwitchTo
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 600725165}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []

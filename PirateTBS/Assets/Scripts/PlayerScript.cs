@@ -37,6 +37,14 @@ public class PlayerScript : NetworkedMonoBehavior
         StartCoroutine("WaitForPortList");
     }
 
+    protected override void NetworkStart()
+    {
+        base.NetworkStart();
+
+        if (IsOwner)
+            FindObjectOfType<PlayerInfoManager>().SetOwningPlayer(this);
+    }
+
     public void Initialize()
     {
         Port[] ports = HexGrid.ports.ToArray();
@@ -111,5 +119,8 @@ public class PlayerScript : NetworkedMonoBehavior
     {
         GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
         name = Name;
+
+        if (IsOwner)
+            FindObjectOfType<PlayerInfoManager>().UpdateCaptainName(Name);
     }
 }

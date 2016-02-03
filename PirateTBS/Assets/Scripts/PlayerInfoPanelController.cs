@@ -18,17 +18,28 @@ public class PlayerInfoPanelController : MonoBehaviour
 
     public void SwitchTo(RectTransform new_panel)
     {
-        if (!ActivePanel || ActivePanel == new_panel || !new_panel.GetComponent<CanvasGroup>())
-            return;
+        Debug.Log("PlayerSwitchTo");
 
-        ActivePanel.GetComponent<CanvasGroup>().alpha = 0;
-        ActivePanel.GetComponent<CanvasGroup>().interactable = false;
-        ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        if (ActivePanel)
+        {
+            if (ActivePanel == new_panel)
+                return;
+
+            if (ActivePanel.GetComponent<CanvasGroup>())
+            {
+                ActivePanel.GetComponent<CanvasGroup>().alpha = 0;
+                ActivePanel.GetComponent<CanvasGroup>().interactable = false;
+                ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            }
+        }
 
         ActivePanel = new_panel;
 
-        ActivePanel.GetComponent<CanvasGroup>().alpha = 1;
-        ActivePanel.GetComponent<CanvasGroup>().interactable = true;
-        ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        if (ActivePanel.GetComponent<CanvasGroup>())
+        {
+            ActivePanel.GetComponent<CanvasGroup>().alpha = 1;
+            ActivePanel.GetComponent<CanvasGroup>().interactable = true;
+            ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
     }
 }
