@@ -57,6 +57,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -151,6 +157,7 @@
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />
     <Compile Include="Assets\Scripts\DropObject.cs" />
+    <Compile Include="Assets\Scripts\FeedbackManager.cs" />
     <Compile Include="Assets\Scripts\Fleet.cs" />
     <Compile Include="Assets\Scripts\FleetManager.cs" />
     <Compile Include="Assets\Scripts\GameConsole.cs" />
@@ -164,6 +171,7 @@
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
     <Compile Include="Assets\Scripts\NumericUpDown.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
+    <Compile Include="Assets\Scripts\PlayerInfoManager.cs" />
     <Compile Include="Assets\Scripts\PlayerInfoPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />

@@ -10,6 +10,10 @@ public class CombatManager : MonoBehaviour
     public Ship SelectedEnemyShip;
     public ShotType SelectedShotType;
 
+    public Text PlayerFleetName;
+    public Text EnemyFleetName;
+    public RectTransform PlayerShipList;
+    public RectTransform EnemyShipList;
     public Text HitChanceText;
     public Text SailDamageText;
     public Text HullDamageText;

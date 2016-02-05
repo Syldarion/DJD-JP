@@ -11,6 +11,7 @@ public class PlayerInfoManager : MonoBehaviour
     public ShipStatBlock StatBlockPrefab;
 
     public Text CaptainNameText;
+    public Text ShipCountText;
     public Text GoldCountText;
     public Text AverageMoraleText;
 
@@ -43,6 +44,11 @@ public class PlayerInfoManager : MonoBehaviour
         //This is meant to be called whenever the player's name changes
         //Which shouldn't ever happen, but we should have it just in case
         //So just update the text of the relevant UI (CaptainNameText) here.
+    }
+
+    public void UpdateShipCount()
+    {
+
     }
 
     /// <summary>
