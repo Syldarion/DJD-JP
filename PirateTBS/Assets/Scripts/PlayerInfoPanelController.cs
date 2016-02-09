@@ -18,8 +18,6 @@ public class PlayerInfoPanelController : MonoBehaviour
 
     public void SwitchTo(RectTransform new_panel)
     {
-        Debug.Log("PlayerSwitchTo");
-
         if (ActivePanel)
         {
             if (ActivePanel == new_panel)

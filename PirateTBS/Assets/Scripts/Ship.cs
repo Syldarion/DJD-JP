@@ -46,6 +46,27 @@ public class Cargo
         Gold += cargo.Gold;
     }
 
+    public void TransferCargo(Cargo cargo, int food = 0, int gold = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
+    {
+        cargo.Food += Mathf.Clamp(food, 0, Food);
+        Food = Mathf.Clamp(Food, 0, Food - food);
+
+        cargo.Gold += Mathf.Clamp(gold, 0, Gold);
+        Gold = Mathf.Clamp(Gold, 0, Gold - gold);
+
+        cargo.Goods += Mathf.Clamp(goods, 0, Goods);
+        Goods = Mathf.Clamp(Goods, 0, Goods - goods);
+
+        cargo.Sugar += Mathf.Clamp(sugar, 0, Sugar);
+        Sugar = Mathf.Clamp(Sugar, 0, Sugar - sugar);
+
+        cargo.Spice += Mathf.Clamp(spice, 0, Spice);
+        Spice = Mathf.Clamp(Spice, 0, Spice - spice);
+
+        cargo.Luxuries += Mathf.Clamp(luxuries, 0, Luxuries);
+        Luxuries = Mathf.Clamp(Luxuries, 0, Luxuries - luxuries);
+    }
+
     /// <summary>
     /// The amount of cargo space taken by the cargo
     /// </summary>

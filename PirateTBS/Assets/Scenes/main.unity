@@ -1434,7 +1434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 0
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
@@ -3279,7 +3279,7 @@ GameObject:
   - 114: {fileID: 281698980}
   - 114: {fileID: 281698979}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3341,7 +3341,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 281698980}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferRightToLeft
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Sugar
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &281698980
@@ -3893,7 +3904,6 @@ GameObject:
   - 114: {fileID: 346275682}
   - 114: {fileID: 346275681}
   - 114: {fileID: 346275680}
-  - 114: {fileID: 346275679}
   m_Layer: 5
   m_Name: PortShipList
   m_TagString: Untagged
@@ -3955,18 +3965,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 346275675}
---- !u!114 &346275679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 346275675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b5762b24b6fbd4599cb7c7e54280e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DropParent: {fileID: 1638103276}
 --- !u!114 &346275680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4261,7 +4259,7 @@ GameObject:
   - 114: {fileID: 372642617}
   - 114: {fileID: 372642616}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4323,7 +4321,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 372642617}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferLeftToRight
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Sugar
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &372642617
@@ -4837,7 +4846,7 @@ GameObject:
   - 114: {fileID: 407600997}
   - 114: {fileID: 407600996}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4899,7 +4908,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 407600997}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferRightToLeft
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Goods
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &407600997
@@ -6097,7 +6117,7 @@ GameObject:
   - 114: {fileID: 512316241}
   - 114: {fileID: 512316240}
   m_Layer: 5
-  m_Name: FleetBGold
+  m_Name: ShipBGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6335,7 +6355,7 @@ GameObject:
   - 114: {fileID: 514912187}
   - 114: {fileID: 514912186}
   m_Layer: 5
-  m_Name: FleetAName
+  m_Name: ShipAName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6705,7 +6725,7 @@ GameObject:
   - 114: {fileID: 551232066}
   - 114: {fileID: 551232065}
   m_Layer: 5
-  m_Name: FleetAGold
+  m_Name: ShipAGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7903,6 +7923,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21316367a12887d4f81f5ebe1c5a9af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShipA: {fileID: 0}
+  ShipB: {fileID: 0}
+  LefthandShips: {fileID: 2037468500}
+  RighthandShips: {fileID: 2049471333}
+  LefthandCargo: {fileID: 195919716}
+  RighthandCargo: {fileID: 211383167}
 --- !u!225 &633543569
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8211,7 +8237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 0
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
@@ -10331,7 +10357,7 @@ GameObject:
   - 114: {fileID: 881483482}
   - 114: {fileID: 881483481}
   m_Layer: 5
-  m_Name: FleetBName
+  m_Name: ShipBName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11636,7 +11662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 0
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
@@ -16068,7 +16094,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1358488146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16252,7 +16278,7 @@ GameObject:
   - 114: {fileID: 1390542904}
   - 114: {fileID: 1390542903}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16314,7 +16340,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1390542904}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferLeftToRight
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Goods
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1390542904
@@ -16491,10 +16528,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1418374844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b5762b24b6fbd4599cb7c7e54280e2, type: 3}
+  m_Script: {fileID: 11500000, guid: dae71b95d36727240a8fb038139cf0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropParent: {fileID: 997280112}
+  AllowMultipleSelection: 1
+  BorderImage: {fileID: 21300000, guid: 1443af5b695627c419c8c597cf16d8d2, type: 3}
+  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  SelectedObjects: []
 --- !u!1 &1423172909
 GameObject:
   m_ObjectHideFlags: 0
@@ -16507,7 +16547,7 @@ GameObject:
   - 114: {fileID: 1423172912}
   - 114: {fileID: 1423172911}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16569,7 +16609,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1423172912}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferRightToLeft
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Spice
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1423172912
@@ -17269,7 +17320,7 @@ GameObject:
   - 114: {fileID: 1504830395}
   - 114: {fileID: 1504830394}
   m_Layer: 5
-  m_Name: FleetBPanel
+  m_Name: ShipBPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17760,7 +17811,7 @@ GameObject:
   - 114: {fileID: 1540987691}
   - 114: {fileID: 1540987690}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17822,7 +17873,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1540987691}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferRightToLeft
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Luxuries
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1540987691
@@ -18019,7 +18081,6 @@ GameObject:
   - 114: {fileID: 1554916700}
   - 114: {fileID: 1554916699}
   - 114: {fileID: 1554916698}
-  - 114: {fileID: 1554916697}
   m_Layer: 5
   m_Name: FleetShipList
   m_TagString: Untagged
@@ -18081,18 +18142,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1554916693}
---- !u!114 &1554916697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1554916693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b5762b24b6fbd4599cb7c7e54280e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DropParent: {fileID: 2136630637}
 --- !u!114 &1554916698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19286,7 +19335,7 @@ GameObject:
   - 114: {fileID: 1659038494}
   - 114: {fileID: 1659038493}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19348,7 +19397,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1659038494}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferLeftToRight
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Spice
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1659038494
@@ -21353,7 +21413,7 @@ GameObject:
   - 114: {fileID: 1809471481}
   - 114: {fileID: 1809471480}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21415,7 +21475,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1809471481}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferRightToLeft
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Food
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1809471481
@@ -22404,7 +22475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 0
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
@@ -23561,7 +23632,7 @@ GameObject:
   - 114: {fileID: 1976092423}
   - 114: {fileID: 1976092422}
   m_Layer: 5
-  m_Name: FleetAPanel
+  m_Name: ShipAPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24579,10 +24650,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2044820402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b5762b24b6fbd4599cb7c7e54280e2, type: 3}
+  m_Script: {fileID: 11500000, guid: dae71b95d36727240a8fb038139cf0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropParent: {fileID: 2044792142}
+  AllowMultipleSelection: 1
+  BorderImage: {fileID: 21300000, guid: 1443af5b695627c419c8c597cf16d8d2, type: 3}
+  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  SelectedObjects: []
 --- !u!1 &2047311794
 GameObject:
   m_ObjectHideFlags: 0
@@ -24595,7 +24669,7 @@ GameObject:
   - 114: {fileID: 2047311797}
   - 114: {fileID: 2047311796}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24657,7 +24731,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2047311797}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferLeftToRight
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Food
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2047311797
@@ -25947,7 +26032,7 @@ GameObject:
   - 114: {fileID: 2144038721}
   - 114: {fileID: 2144038720}
   m_Layer: 5
-  m_Name: SellButton
+  m_Name: TransferButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26009,7 +26094,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2144038721}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 633543568}
+        m_MethodName: TransferLeftToRight
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Luxuries
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2144038721

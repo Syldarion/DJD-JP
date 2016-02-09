@@ -18,6 +18,7 @@
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
     <RootNamespace></RootNamespace>
+    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,12 +57,6 @@
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -153,6 +148,7 @@
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\ChatMessage.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
+    <Compile Include="Assets\Scripts\ControlPoint.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />
@@ -177,6 +173,7 @@
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\Port.cs" />
     <Compile Include="Assets\Scripts\PortShopManager.cs" />
+    <Compile Include="Assets\Scripts\SelectionGroup.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
     <Compile Include="Assets\Scripts\ShipStatBlock.cs" />

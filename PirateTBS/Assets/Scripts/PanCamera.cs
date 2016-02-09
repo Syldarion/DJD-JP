@@ -12,6 +12,7 @@ public class PanCamera : MonoBehaviour
     Ray forward_ray;
     RaycastHit hit;
 
+    Transform current_target;
     Vector3 current_offset;
 
     void Start()
@@ -25,6 +26,9 @@ public class PanCamera : MonoBehaviour
     {
         if (GameConsole.console_open)
             return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            CenterOnTarget(current_target);
 
         //100-500
         forward_ray = new Ray(transform.position, transform.forward);
@@ -47,6 +51,12 @@ public class PanCamera : MonoBehaviour
 
         transform.position += translation;
         translation = Vector3.zero;
+    }
+
+    public void CenterOnTarget(Transform target)
+    {
+        current_target = target;
+        MoveToPosition(target.position);
     }
 
     IEnumerator MoveToPosition(Vector3 new_pos)

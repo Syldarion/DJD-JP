@@ -36,6 +36,12 @@ public class HexTile : MonoBehaviour
     }
     public TileType _TileType;
 
+    public void CopyTile(HexTile other)
+    {
+        HexCoord = other.HexCoord;
+        Directions = other.Directions;
+    }
+
     float DistanceToTile(HexTile dest)
     {
         return (Mathf.Abs(HexCoord.Q - dest.HexCoord.Q)

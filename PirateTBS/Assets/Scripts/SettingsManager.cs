@@ -15,6 +15,7 @@ public class SettingsManager : NetworkedMonoBehavior
     public int MapSeed;
     public int MapWidth = 40;
     public int MapHeight = 24;
+    public int MapControlPoints = 64;
 
     void Awake()
     {
@@ -76,26 +77,32 @@ public class SettingsManager : NetworkedMonoBehavior
             case 0://Duel
                 MapWidth = 40;
                 MapHeight = 24;
+                MapControlPoints = 32;
                 break;
             case 1://Tiny
                 MapWidth = 56;
                 MapHeight = 36;
+                MapControlPoints = 32;
                 break;
             case 2://Small
                 MapWidth = 66;
                 MapHeight = 42;
+                MapControlPoints = 64;
                 break;
             case 3://Standard
                 MapWidth = 80;
                 MapHeight = 52;
+                MapControlPoints = 64;
                 break;
             case 4://Large
                 MapWidth = 104;
                 MapHeight = 64;
+                MapControlPoints = 128;
                 break;
             case 5://Huge
                 MapWidth = 128;
                 MapHeight = 80;
+                MapControlPoints = 128;
                 break;
         }
     }

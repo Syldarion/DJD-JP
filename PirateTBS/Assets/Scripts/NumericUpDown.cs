@@ -10,7 +10,6 @@ public class NumericUpDown : MonoBehaviour, IScrollHandler
 
 	void Start()
 	{
-        SetMaxValue(1000);
         UpdateValue(0);
 	}
 

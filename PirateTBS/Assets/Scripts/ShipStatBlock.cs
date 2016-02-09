@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
-public class ShipStatBlock : MonoBehaviour
+public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
 {
     public Ship ReferenceShip;
 
@@ -32,5 +34,18 @@ public class ShipStatBlock : MonoBehaviour
         ship_stats_transform.FindChild("CargoText").GetComponent<Text>().text = string.Format("{0}/{1}", ship.Cargo.Size().ToString("F1"), ship.CargoSpace.ToString());
         ship_stats_transform.FindChild("SpeedText").GetComponent<Text>().text = ship.FullSpeed.ToString();
         ship_stats_transform.FindChild("CannonText").GetComponent<Text>().text = ship.Cannons.ToString();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        SelectionGroup parent_group = GetComponentInParent<SelectionGroup>();
+
+        if (!parent_group)
+            return;
+
+        if (parent_group.SelectedObjects.Contains(gameObject))
+            parent_group.RemoveSelection(gameObject);
+        else
+            parent_group.AddSelection(gameObject);
     }
 }

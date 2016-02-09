@@ -15,6 +15,7 @@ public class HexGrid : MonoBehaviour
 
     int gridWidth;
     int gridHeight;
+    int controlPoints;
 
     List<HexTile> tiles;
 
@@ -23,17 +24,18 @@ public class HexGrid : MonoBehaviour
 	void Start()
     {
         ports = new List<Port>();
+        tiles = new List<HexTile>();
 
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
-        gridWidth = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapWidth;
-        gridHeight = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapHeight;
+        SettingsManager settings = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
 
-        tiles = new List<HexTile>();
+        gridWidth = settings.MapWidth;
+        gridHeight = settings.MapHeight;
+        Random.seed = settings.MapSeed;
+        controlPoints = settings.MapControlPoints;
 
-        Random.seed = GameObject.Find("SettingsManager").GetComponent<SettingsManager>().MapSeed;
-
-        GenerateGrid(gridWidth, gridHeight, 64);
+        GenerateGrid(gridWidth, gridHeight, controlPoints);
 	}
 	
 	void Update()
@@ -45,8 +47,6 @@ public class HexGrid : MonoBehaviour
     //odd x-values are offset
     void GenerateGrid(int x, int y, int control_points)
     {
-        int[][] generated_grid = VoronoiGrid(x, y, control_points);
-
         int half_grid_x = x / 2;
         int half_grid_y = y / 2;
 
@@ -54,18 +54,7 @@ public class HexGrid : MonoBehaviour
         {
             for (int j = -half_grid_y; j < half_grid_y; j++)
             {
-                Transform new_hex;
-
-                if (generated_grid[j + half_grid_y][i + half_grid_x] == 0)
-                {
-                    new_hex = Instantiate(WaterHexPrefab).transform;
-                    new_hex.GetComponent<WaterHex>()._TileType = HexTile.TileType.Water;
-                }
-                else
-                {
-                    new_hex = Instantiate(LandHexPrefab).transform;
-                    new_hex.GetComponent<LandHex>()._TileType = HexTile.TileType.Land;
-                }
+                Transform new_hex = Instantiate(WaterHexPrefab).transform;
 
                 new_hex.parent = this.transform;
                 new_hex.localPosition = new Vector3(i * (hexWidth * 0.76f), 0.0f, j * (0.876f * hexWidth));
@@ -83,10 +72,89 @@ public class HexGrid : MonoBehaviour
                 tiles.Add(new_hex.GetComponent<HexTile>());
             }
         }
-        
+
+        DropControlPoints(control_points);
+
         if (NetworkingManager.Instance.OwningNetWorker.IsServer)
             CreatePorts(gridWidth / 4);
     }
+
+    void DropControlPoints(int control_points)
+    {
+        int grid_total_width = (int)((gridWidth - 2) * hexWidth);
+        int grid_total_height = (int)((gridHeight - 2) * hexWidth);
+
+        bool water_point = false;
+        int sphere_radius = 0;
+        Vector3 sphere_position = Vector3.zero;
+
+        bool new_hex_made = false;
+
+        for(int i = 0; i < control_points; i++)
+        {
+            //60% chance for water control point
+            if (Random.Range(0, 11) > 4)
+                water_point = true;
+
+            sphere_radius = Random.Range(1, 6) * 50;
+            sphere_position = new Vector3(Random.Range(-grid_total_height / 2, grid_total_height / 2), 0, Random.Range(-grid_total_width / 2, grid_total_width / 2));
+
+            //Debug.Log(string.Format("Sphere: {0} @ <{1},{2},{3}>", sphere_radius, sphere_position.x, sphere_position.y, sphere_position.z));
+            //Debug.Log(Physics.OverlapSphere(sphere_position, sphere_radius).Length);
+
+            if(Physics.OverlapSphere(sphere_position, sphere_radius).Length == 0)
+            {
+                Debug.Log("Overlap Empty");
+                Debug.Log(string.Format("Sphere: {0} @ <{1},{2},{3}>", sphere_radius, sphere_position.x, sphere_position.y, sphere_position.z));
+            }
+
+            foreach(Collider other in Physics.OverlapSphere(sphere_position, sphere_radius))
+            {
+                if (other.GetComponent<HexTile>())
+                {
+                    //Transform new_hex = null;
+
+                    if (water_point && other.GetComponent<LandHex>())
+                    {
+                        other.gameObject.AddComponent<WaterHex>();
+                        other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
+                        Destroy(other.GetComponent<LandHex>());
+                        other.GetComponent<SkinnedMeshRenderer>().material.color = Color.cyan;
+
+                        //new_hex = Instantiate(WaterHexPrefab, other.transform.position, other.transform.rotation) as Transform;
+                        //new_hex.GetComponent<HexTile>()._TileType = HexTile.TileType.Water;
+                        //new_hex_made = true;
+                    }
+                    else if (!water_point && other.GetComponent<WaterHex>())
+                    {
+                        other.gameObject.AddComponent<LandHex>();
+                        other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
+                        Destroy(other.GetComponent<WaterHex>());
+                        other.GetComponent<SkinnedMeshRenderer>().material.color = Color.green;
+
+                        //new_hex = Instantiate(LandHexPrefab, other.transform.position, other.transform.rotation) as Transform;
+                        //new_hex.GetComponent<HexTile>()._TileType = HexTile.TileType.Land;
+                        //new_hex_made = true;
+                    }
+
+                    //if (new_hex_made)
+                    //{
+                    //    new_hex.SetParent(other.transform.parent);
+                    //    new_hex.localPosition = other.transform.localPosition;
+
+                    //    new_hex.GetComponent<HexTile>().CopyTile(other.GetComponent<HexTile>());
+
+                    //    new_hex.name = other.name;
+
+                    //    Destroy(other.gameObject);
+                    //}
+
+                    new_hex_made = false;
+                }
+            }
+        }
+    }
+
     //i = x + width * y
     void CreatePorts(int number_of_ports)
     {
