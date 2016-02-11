@@ -17,14 +17,20 @@ public class HexGrid : MonoBehaviour
     int gridHeight;
     int controlPoints;
 
-    List<HexTile> tiles;
+    //List<HexTile> tiles;
+
+    List<LandHex> land_tiles;
+    List<WaterHex> water_tiles;
 
     string parent_tile;
 
 	void Start()
     {
         ports = new List<Port>();
-        tiles = new List<HexTile>();
+        //tiles = new List<HexTile>();
+
+        land_tiles = new List<LandHex>();
+        water_tiles = new List<WaterHex>();
 
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
@@ -69,8 +75,6 @@ public class HexGrid : MonoBehaviour
                 new_hex.name = string.Format("{0},{1}", i, j);
 
                 new_hex.GetComponent<HexTile>().SetDirections(i % 2 == 0);
-
-                tiles.Add(new_hex.GetComponent<HexTile>());
             }
         }
 
@@ -123,31 +127,40 @@ public class HexGrid : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        PopulateTileLists();
+
         yield return new WaitForSeconds(1.0f);
 
         if (NetworkingManager.Instance.OwningNetWorker.IsServer)
-            CreatePorts(gridWidth / 4);
+            StartCoroutine("CreatePorts", gridWidth / 4);
+    }
+
+    void PopulateTileLists()
+    {
+        for(int i = -gridWidth / 2; i < gridWidth / 2; i++)
+        {
+            for(int j = -gridHeight / 2; j < gridHeight / 2; j++)
+            {
+                Transform tile = transform.FindChild(string.Format("{0},{1}", i, j));
+
+                if (tile.GetComponent<LandHex>())
+                    land_tiles.Add(tile.GetComponent<LandHex>());
+                else if (tile.GetComponent<WaterHex>())
+                    water_tiles.Add(tile.GetComponent<WaterHex>());
+            }
+        }
     }
 
     //i = x + width * y
-    void CreatePorts(int number_of_ports)
+    IEnumerator CreatePorts(int number_of_ports)
     {
         List<LandHex> coastal_tiles = new List<LandHex>();
 
-        for (int i = 0; i < gridWidth; i++)
+        foreach(LandHex lh in land_tiles)
         {
-            for(int j = 0; j < gridHeight; j++)
+            if(lh.IsCoastal())
             {
-                try {
-                    if (tiles[i + gridWidth * j].GetComponent<LandHex>() && tiles[i + gridWidth * j].GetComponent<LandHex>().IsCoastal())
-                    {
-                        coastal_tiles.Add(tiles[i + gridWidth * j].GetComponent<LandHex>());
-                    }
-                }
-                catch(MissingReferenceException ex)
-                {
-                    Debug.Log(tiles[i + gridWidth * j].name);
-                }
+                coastal_tiles.Add(lh);
             }
         }
 
@@ -164,6 +177,8 @@ public class HexGrid : MonoBehaviour
 
             coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
+
+            yield return new WaitForEndOfFrame();
         }
     }
 
