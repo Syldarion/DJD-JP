@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Reflection;
 
 public class CargoManager : MonoBehaviour
 {
@@ -71,76 +72,27 @@ public class CargoManager : MonoBehaviour
 
     public void UpdateResourceList(Ship ship, RectTransform resource_list)
     {
-        resource_list.FindChild("Food\\Text").GetComponent<Text>().text = string.Format("Food\n{0}", ship.Cargo.Food);
-        resource_list.FindChild("Food").GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-        resource_list.FindChild("Food").GetComponentInChildren<NumericUpDown>().SetMaxValue(ship.Cargo.Food);
+        string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
 
-        resource_list.FindChild("Goods\\Text").GetComponent<Text>().text = string.Format("Goods\n{0}", ship.Cargo.Goods);
-        resource_list.FindChild("Goods").GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-        resource_list.FindChild("Goods").GetComponentInChildren<NumericUpDown>().SetMaxValue(ship.Cargo.Goods);
-
-        resource_list.FindChild("Sugar\\Text").GetComponent<Text>().text = string.Format("Sugar\n{0}", ship.Cargo.Sugar);
-        resource_list.FindChild("Sugar").GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-        resource_list.FindChild("Sugar").GetComponentInChildren<NumericUpDown>().SetMaxValue(ship.Cargo.Sugar);
-
-        resource_list.FindChild("Spice\\Text").GetComponent<Text>().text = string.Format("Spice\n{0}", ship.Cargo.Spice);
-        resource_list.FindChild("Spice").GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-        resource_list.FindChild("Spice").GetComponentInChildren<NumericUpDown>().SetMaxValue(ship.Cargo.Spice);
-
-        resource_list.FindChild("Luxuries\\Text").GetComponent<Text>().text = string.Format("Luxuries\n{0}", ship.Cargo.Luxuries);
-        resource_list.FindChild("Luxuries").GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-        resource_list.FindChild("Luxuries").GetComponentInChildren<NumericUpDown>().SetMaxValue(ship.Cargo.Luxuries);
+        foreach(string s in resource_types)
+        {
+            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponent<Text>().text = string.Format("{0}\n{1}", s, typeof(Cargo).GetType().GetField(s).GetValue(ship.Cargo));
+            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponentInChildren<NumericUpDown>().UpdateValue(0);
+            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponentInChildren<NumericUpDown>().SetMaxValue((int)typeof(Cargo).GetType().GetField(s).GetValue(ship.Cargo));
+        }
     }
 
     public void TransferLeftToRight(string cargo_type)
     {
         int transfer_amount = LefthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
 
-        switch(cargo_type)
-        {
-            case "Food":
-                ShipA.Cargo.TransferCargo(ShipB.Cargo, transfer_amount);
-                break;
-            case "Goods":
-                ShipA.Cargo.TransferCargo(ShipB.Cargo, 0, 0, transfer_amount);
-                break;
-            case "Sugar":
-                ShipA.Cargo.TransferCargo(ShipB.Cargo, 0, 0, 0, transfer_amount);
-                break;
-            case "Spice":
-                ShipA.Cargo.TransferCargo(ShipB.Cargo, 0, 0, 0, 0, transfer_amount);
-                break;
-            case "Luxuries":
-                ShipA.Cargo.TransferCargo(ShipB.Cargo, 0, 0, 0, 0, 0, transfer_amount);
-                break;
-            default:
-                break;
-        }
+        ShipA.Cargo.TransferTo(ShipB.Cargo, cargo_type, transfer_amount);
     }
 
     public void TransferRightToLeft(string cargo_type)
     {
         int transfer_amount = RighthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
 
-        switch (cargo_type)
-        {
-            case "Food":
-                ShipB.Cargo.TransferCargo(ShipA.Cargo, transfer_amount);
-                break;
-            case "Goods":
-                ShipB.Cargo.TransferCargo(ShipA.Cargo, 0, 0, transfer_amount);
-                break;
-            case "Sugar":
-                ShipB.Cargo.TransferCargo(ShipA.Cargo, 0, 0, 0, transfer_amount);
-                break;
-            case "Spice":
-                ShipB.Cargo.TransferCargo(ShipA.Cargo, 0, 0, 0, 0, transfer_amount);
-                break;
-            case "Luxuries":
-                ShipB.Cargo.TransferCargo(ShipA.Cargo, 0, 0, 0, 0, 0, transfer_amount);
-                break;
-            default:
-                break;
-        }
+        ShipB.Cargo.TransferTo(ShipA.Cargo, cargo_type, transfer_amount);
     }
 }

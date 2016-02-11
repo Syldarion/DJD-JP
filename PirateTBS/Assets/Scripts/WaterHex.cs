@@ -4,14 +4,12 @@ using BeardedManStudios.Network;
 
 public class WaterHex : HexTile
 {
+    float hover_timer = 0.5f;
     float double_click_start = 0;
 
 	void Start()
     {
-        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
-        baseColor = Color.cyan;
-
-        MeshRenderer.material.color = baseColor;
+        InitializeTile();
     }
 
 	void Update()
@@ -19,10 +17,24 @@ public class WaterHex : HexTile
 
     }
 
+    public override void InitializeTile()
+    {
+        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
+        base_color = Color.cyan;
+        MeshRenderer.material.color = base_color;
+
+        IsWater = true;
+    }
+
     void OnMouseOver()
     {
-        float lerp = Mathf.PingPong(Time.time, hoverTimer) / hoverTimer;
-        MeshRenderer.material.color = Color.Lerp(baseColor, Color.yellow, lerp);
+        float lerp = Mathf.PingPong(Time.time, hover_timer) / hover_timer;
+        MeshRenderer.material.color = Color.Lerp(base_color, Color.yellow, lerp);
+    }
+
+    void OnMouseExit()
+    {
+        MeshRenderer.material.color = base_color;
     }
 
     void OnMouseDown()

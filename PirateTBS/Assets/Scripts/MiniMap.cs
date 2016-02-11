@@ -55,12 +55,12 @@ public class MiniMap : SimpleNetworkedMonoBehavior
                 if (generated_grid[j + half_grid_y][i + half_grid_x] == 0)
                 {
                     new_hex = Instantiate(WaterHexPrefab).transform;
-                    new_hex.GetComponent<WaterHex>()._TileType = HexTile.TileType.Water;
+                    new_hex.GetComponent<WaterHex>().IsWater = true;
                 }
                 else
                 {
                     new_hex = Instantiate(LandHexPrefab).transform;
-                    new_hex.GetComponent<LandHex>()._TileType = HexTile.TileType.Land;
+                    new_hex.GetComponent<LandHex>().IsWater = false;
                 }
 
                 new_hex.parent = this.transform;
@@ -109,7 +109,7 @@ public class MiniMap : SimpleNetworkedMonoBehavior
 
             RPC("SpawnPort", NetworkReceivers.AllBuffered, coastal_tiles[selected_tile].name);
 
-            coastal_tiles[selected_tile].Has_Port = true;
+            coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
         }
     }
@@ -217,7 +217,7 @@ public class MiniMap : SimpleNetworkedMonoBehavior
                 {
                     HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
                     if (neighbor_tile != null)
-                        if (!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
+                        if (!visited.Contains(neighbor_tile) && neighbor_tile.IsWater)
                         {
                             visited.Add(neighbor_tile);
                             fringes[i].Add(neighbor_tile);

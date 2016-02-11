@@ -148,7 +148,6 @@
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\ChatMessage.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
-    <Compile Include="Assets\Scripts\ControlPoint.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DragObject.cs" />

@@ -19,8 +19,8 @@ public class Port : NetworkedMonoBehavior
 
     void InitializePort()
     {
-        foreach (HexTile.HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
-            if (GetComponentInParent<HexTile>().GetNeighbor(hc)._TileType == HexTile.TileType.Water)
+        foreach (HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
+            if (GetComponentInParent<HexTile>().GetNeighbor(hc).IsWater)
             {
                 SpawnTile = GetComponentInParent<HexTile>().GetNeighbor(hc);
                 break;

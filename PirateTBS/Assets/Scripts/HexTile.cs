@@ -3,43 +3,35 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+public struct HexCoordinate
+{
+    public int Q;
+    public int R;
+
+    public HexCoordinate(int q, int r)
+    {
+        Q = q;
+        R = r;
+    }
+}
+
 public class HexTile : MonoBehaviour
 {
-    public struct HexCoordinate
-    {
-        public int Q;
-        public int R;
-
-        public HexCoordinate(int q, int r)
-        {
-            Q = q;
-            R = r;
-        }
-    }
-
     public HexCoordinate HexCoord;
-
-    protected float hoverTimer = 0.5f;
-
     public HexCoordinate[] Directions = new HexCoordinate[6];
-
     [HideInInspector]
     public SkinnedMeshRenderer MeshRenderer;
-    protected Color baseColor;
+    public bool IsWater;
 
-    public enum TileType
-    {
-        Water,
-        Land,
-        Port,
-        Fort
-    }
-    public TileType _TileType;
+    protected Color base_color;
+
+    public virtual void InitializeTile() { }
 
     public void CopyTile(HexTile other)
     {
-        HexCoord = other.HexCoord;
-        Directions = other.Directions;
+        HexCoord = new HexCoordinate(other.HexCoord.Q, other.HexCoord.R);
+        for(int i = 0; i < other.Directions.Length; i++)
+            Directions[i] = new HexCoordinate(other.Directions[i].Q, other.Directions[i].R);
     }
 
     float DistanceToTile(HexTile dest)
@@ -79,15 +71,6 @@ public class HexTile : MonoBehaviour
     public IEnumerator SwitchToBaseColor(float wait_time)
     {
         yield return new WaitForSeconds(wait_time);
-        MeshRenderer.material.color = baseColor;
-    }
-
-    void OnMouseEnter()
-    {
-    }
-
-    void OnMouseExit()
-    {
-        MeshRenderer.material.color = baseColor;
+        MeshRenderer.material.color = base_color;
     }
 }
