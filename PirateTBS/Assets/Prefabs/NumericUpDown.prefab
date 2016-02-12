@@ -98,7 +98,6 @@ GameObject:
   - 222: {fileID: 22277212}
   - 114: {fileID: 11461920}
   - 114: {fileID: 11432758}
-  - 114: {fileID: 11480128}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -133,6 +132,7 @@ GameObject:
   - 224: {fileID: 22471422}
   - 222: {fileID: 22235820}
   - 114: {fileID: 11472784}
+  - 114: {fileID: 11442222}
   m_Layer: 5
   m_Name: NumericUpDown
   m_TagString: Untagged
@@ -233,7 +233,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11480128}
+      - m_Target: {fileID: 11442222}
         m_MethodName: IncreaseValue
         m_Mode: 1
         m_Arguments:
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11480128}
+      - m_Target: {fileID: 11442222}
         m_MethodName: UpdateValue
         m_Mode: 0
         m_Arguments:
@@ -374,6 +374,19 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11442222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 194856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d15b4a1968dae49bc7ee1717d6db80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 0
+  MaxValue: 0
 --- !u!114 &11461920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -494,19 +507,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11480128
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 162714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11d15b4a1968dae49bc7ee1717d6db80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Value: 0
-  MaxValue: 0
 --- !u!114 &11492250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11480128}
+      - m_Target: {fileID: 11442222}
         m_MethodName: DecreaseValue
         m_Mode: 1
         m_Arguments:

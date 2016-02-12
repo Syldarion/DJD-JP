@@ -17,14 +17,20 @@ public class HexGrid : MonoBehaviour
     int gridHeight;
     int controlPoints;
 
-    List<HexTile> tiles;
+    //List<HexTile> tiles;
+
+    List<LandHex> land_tiles;
+    List<WaterHex> water_tiles;
 
     string parent_tile;
 
 	void Start()
     {
         ports = new List<Port>();
-        tiles = new List<HexTile>();
+        //tiles = new List<HexTile>();
+
+        land_tiles = new List<LandHex>();
+        water_tiles = new List<WaterHex>();
 
         hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
@@ -55,6 +61,7 @@ public class HexGrid : MonoBehaviour
             for (int j = -half_grid_y; j < half_grid_y; j++)
             {
                 Transform new_hex = Instantiate(WaterHexPrefab).transform;
+                new_hex.GetComponent<WaterHex>().InitializeTile();
 
                 new_hex.parent = this.transform;
                 new_hex.localPosition = new Vector3(i * (hexWidth * 0.76f), 0.0f, j * (0.876f * hexWidth));
@@ -68,106 +75,92 @@ public class HexGrid : MonoBehaviour
                 new_hex.name = string.Format("{0},{1}", i, j);
 
                 new_hex.GetComponent<HexTile>().SetDirections(i % 2 == 0);
-
-                tiles.Add(new_hex.GetComponent<HexTile>());
             }
         }
 
-        DropControlPoints(control_points);
-
-        if (NetworkingManager.Instance.OwningNetWorker.IsServer)
-            CreatePorts(gridWidth / 4);
+        StartCoroutine("DropControlPoints", control_points);
     }
 
-    void DropControlPoints(int control_points)
+    IEnumerator DropControlPoints(int control_points)
     {
-        int grid_total_width = (int)((gridWidth - 2) * hexWidth);
-        int grid_total_height = (int)((gridHeight - 2) * hexWidth);
+        float total_width = hexWidth * (gridWidth - 4);
+        float total_height = hexWidth * (gridHeight - 4);
 
         bool water_point = false;
+
         int sphere_radius = 0;
         Vector3 sphere_position = Vector3.zero;
 
-        bool new_hex_made = false;
-
-        for(int i = 0; i < control_points; i++)
+        for (int i = 0; i < control_points; i++)
         {
-            //60% chance for water control point
-            if (Random.Range(0, 11) > 4)
+            //75% chance for water control point
+            if (Random.Range(0, 4) > 0)
                 water_point = true;
+            else
+                water_point = false;
 
-            sphere_radius = Random.Range(1, 6) * 50;
-            sphere_position = new Vector3(Random.Range(-grid_total_height / 2, grid_total_height / 2), 0, Random.Range(-grid_total_width / 2, grid_total_width / 2));
-
-            //Debug.Log(string.Format("Sphere: {0} @ <{1},{2},{3}>", sphere_radius, sphere_position.x, sphere_position.y, sphere_position.z));
-            //Debug.Log(Physics.OverlapSphere(sphere_position, sphere_radius).Length);
-
-            if(Physics.OverlapSphere(sphere_position, sphere_radius).Length == 0)
-            {
-                Debug.Log("Overlap Empty");
-                Debug.Log(string.Format("Sphere: {0} @ <{1},{2},{3}>", sphere_radius, sphere_position.x, sphere_position.y, sphere_position.z));
-            }
-
+            sphere_radius = Random.Range(1, 6) * 100;
+            sphere_position = new Vector3(Random.Range(-total_width / 2, total_width / 2), 0, Random.Range(-total_height / 2, total_height / 2));
+            
             foreach(Collider other in Physics.OverlapSphere(sphere_position, sphere_radius))
             {
-                if (other.GetComponent<HexTile>())
+                if(water_point && !other.GetComponent<HexTile>().IsWater)
                 {
-                    //Transform new_hex = null;
-
-                    if (water_point && other.GetComponent<LandHex>())
-                    {
+                    if (!other.GetComponent<WaterHex>())
                         other.gameObject.AddComponent<WaterHex>();
-                        other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
-                        Destroy(other.GetComponent<LandHex>());
-                        other.GetComponent<SkinnedMeshRenderer>().material.color = Color.cyan;
-
-                        //new_hex = Instantiate(WaterHexPrefab, other.transform.position, other.transform.rotation) as Transform;
-                        //new_hex.GetComponent<HexTile>()._TileType = HexTile.TileType.Water;
-                        //new_hex_made = true;
-                    }
-                    else if (!water_point && other.GetComponent<WaterHex>())
-                    {
-                        other.gameObject.AddComponent<LandHex>();
-                        other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
-                        Destroy(other.GetComponent<WaterHex>());
-                        other.GetComponent<SkinnedMeshRenderer>().material.color = Color.green;
-
-                        //new_hex = Instantiate(LandHexPrefab, other.transform.position, other.transform.rotation) as Transform;
-                        //new_hex.GetComponent<HexTile>()._TileType = HexTile.TileType.Land;
-                        //new_hex_made = true;
-                    }
-
-                    //if (new_hex_made)
-                    //{
-                    //    new_hex.SetParent(other.transform.parent);
-                    //    new_hex.localPosition = other.transform.localPosition;
-
-                    //    new_hex.GetComponent<HexTile>().CopyTile(other.GetComponent<HexTile>());
-
-                    //    new_hex.name = other.name;
-
-                    //    Destroy(other.gameObject);
-                    //}
-
-                    new_hex_made = false;
+                    other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
+                    other.GetComponent<LandHex>().enabled = false;
+                    Destroy(other.GetComponent<LandHex>());
+                    other.GetComponent<WaterHex>().InitializeTile();
                 }
+                else if(!water_point && other.GetComponent<HexTile>().IsWater)
+                {
+                    if (!other.GetComponent<LandHex>())
+                        other.gameObject.AddComponent<LandHex>();
+                    other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
+                    other.GetComponent<WaterHex>().enabled = false;
+                    Destroy(other.GetComponent<WaterHex>());
+                    other.GetComponent<LandHex>().InitializeTile();
+                }
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        PopulateTileLists();
+
+        yield return new WaitForSeconds(1.0f);
+
+        if (NetworkingManager.Instance.OwningNetWorker.IsServer)
+            StartCoroutine("CreatePorts", gridWidth / 4);
+    }
+
+    void PopulateTileLists()
+    {
+        for(int i = -gridWidth / 2; i < gridWidth / 2; i++)
+        {
+            for(int j = -gridHeight / 2; j < gridHeight / 2; j++)
+            {
+                Transform tile = transform.FindChild(string.Format("{0},{1}", i, j));
+
+                if (tile.GetComponent<LandHex>())
+                    land_tiles.Add(tile.GetComponent<LandHex>());
+                else if (tile.GetComponent<WaterHex>())
+                    water_tiles.Add(tile.GetComponent<WaterHex>());
             }
         }
     }
 
     //i = x + width * y
-    void CreatePorts(int number_of_ports)
+    IEnumerator CreatePorts(int number_of_ports)
     {
         List<LandHex> coastal_tiles = new List<LandHex>();
 
-        for (int i = 0; i < gridWidth; i++)
+        foreach(LandHex lh in land_tiles)
         {
-            for(int j = 0; j < gridHeight; j++)
+            if(lh.IsCoastal())
             {
-                if(tiles[i + gridWidth * j].GetComponent<LandHex>() && tiles[i + gridWidth * j].GetComponent<LandHex>().IsCoastal())
-                {
-                    coastal_tiles.Add(tiles[i + gridWidth * j].GetComponent<LandHex>());
-                }
+                coastal_tiles.Add(lh);
             }
         }
 
@@ -182,8 +175,10 @@ public class HexGrid : MonoBehaviour
             parent_tile = coastal_tiles[selected_tile].name;
             Networking.Instantiate(PortPrefab, NetworkReceivers.All, callback: SpawnPortCallback);
 
-            coastal_tiles[selected_tile].Has_Port = true;
+            coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
+
+            yield return new WaitForEndOfFrame();
         }
     }
 
@@ -286,7 +281,7 @@ public class HexGrid : MonoBehaviour
                 {
                     HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
                     if (neighbor_tile != null)
-                        if (!visited.Contains(neighbor_tile) && neighbor_tile._TileType == HexTile.TileType.Water)
+                        if (!visited.Contains(neighbor_tile) && neighbor_tile.IsWater)
                         {
                             visited.Add(neighbor_tile);
                             fringes[i].Add(neighbor_tile);
@@ -298,25 +293,33 @@ public class HexGrid : MonoBehaviour
         return visited;
     }
 
-    public void SetTile(int x_pos, int y_pos, HexTile.TileType new_type)
+    public static List<HexTile> HexesWithinRange(HexTile start, int range)
     {
-        Color new_color = Color.white;
-        switch(new_type)
+        List<HexTile> visited = new List<HexTile>();
+        visited.Add(start);
+
+        List<List<HexTile>> fringes = new List<List<HexTile>>();
+        fringes.Add(new List<HexTile>());
+        fringes[0].Add(start);
+        for (int i = 1; i <= range; i++)
         {
-            case HexTile.TileType.Fort:
-                new_color = Color.gray;
-                break;
-            case HexTile.TileType.Land:
-                new_color = Color.green;
-                break;
-            case HexTile.TileType.Port:
-                new_color = Color.yellow;
-                break;
-            case HexTile.TileType.Water:
-            default:
-                new_color = Color.blue;
-                break;
+            fringes.Add(new List<HexTile>());
+
+            foreach (HexTile ht in fringes[i - 1])
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
+                    if (neighbor_tile != null)
+                        if (!visited.Contains(neighbor_tile))
+                        {
+                            visited.Add(neighbor_tile);
+                            fringes[i].Add(neighbor_tile);
+                        }
+                }
+            }
         }
-        transform.FindChild(string.Format("{0},{1}", x_pos, y_pos)).GetComponent<SkinnedMeshRenderer>().material.color = new_color;
+
+        return visited;
     }
 }

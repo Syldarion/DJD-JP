@@ -9,7 +9,9 @@ public enum ResourceType
 
 public class LandHex : HexTile
 {
-    public bool Has_Port;
+    public bool CoastalTile;
+
+    public bool HasPort;
     public Cargo TileResources;
     public ResourceType ResourceType;
     public PlayerScript Owner;
@@ -17,24 +19,38 @@ public class LandHex : HexTile
 
     void Start()
     {
-        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
-        baseColor = Color.green;
-
-        MeshRenderer.material.color = baseColor;
-
-        TileResources = new Cargo();
+        InitializeTile();
     }
 
     void Update()
     {
+        
+    }
 
+    public override void InitializeTile()
+    {
+        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
+        base_color = Color.green;
+        MeshRenderer.material.color = base_color;
+
+        IsWater = false;
+
+        TileResources = new Cargo();
     }
 
     public bool IsCoastal()
     {
+        HexTile neighbor = null;
         foreach (HexCoordinate hc in Directions)
-            if (GetNeighbor(hc).GetComponent<WaterHex>())
+        {
+            neighbor = GetNeighbor(hc);
+            if (neighbor && neighbor.GetComponent<HexTile>().IsWater)
+            {
+                CoastalTile = true;
                 return true;
+            }
+        }
+        CoastalTile = false;
         return false;
     }
 

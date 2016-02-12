@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using BeardedManStudios.Network;
 
 public class Cargo
@@ -65,6 +66,18 @@ public class Cargo
 
         cargo.Luxuries += Mathf.Clamp(luxuries, 0, Luxuries);
         Luxuries = Mathf.Clamp(Luxuries, 0, Luxuries - luxuries);
+    }
+
+    public void TransferTo(Cargo cargo, string cargo_type, int quantity)
+    {
+        int cargo_amount = (int)GetType().GetField(cargo_type).GetValue(this);
+        int other_cargo_amount = (int)GetType().GetField(cargo_type).GetValue(cargo);
+
+        other_cargo_amount += Mathf.Clamp(quantity, 0, cargo_amount);
+        cargo_amount = Mathf.Clamp(cargo_amount, 0, cargo_amount - quantity);
+
+        GetType().GetField(cargo_type).SetValue(this, cargo_amount);
+        GetType().GetField(cargo_type).SetValue(cargo, other_cargo_amount);
     }
 
     /// <summary>
