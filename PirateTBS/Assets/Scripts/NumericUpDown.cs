@@ -32,7 +32,7 @@ public class NumericUpDown : MonoBehaviour, IScrollHandler
     public void UpdateValue(int value)
     {
         Value = Mathf.Clamp(value, 0, MaxValue);
-        GetComponent<InputField>().text = Value.ToString();
+        GetComponentInChildren<InputField>().text = Value.ToString();
     }
 
     public void IncreaseValue()

@@ -72,6 +72,13 @@ public class PlayerScript : NetworkedMonoBehavior
         }
         if (Input.GetKeyDown(KeyCode.I))
             Initialize();
+        if(Input.GetKeyDown(KeyCode.O))
+            Networking.Instantiate(ActiveFleet.ShipPrefab, NetworkReceivers.All, callback: ActiveFleet.OnShipCreated);
+        if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
+        {
+            GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().PopulateShipList(ActiveFleet);
+            GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().OpenCargoManager();
+        }
     }
 
     void SpawnFleet()

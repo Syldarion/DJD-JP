@@ -22,7 +22,6 @@ public class Fleet : NetworkedMonoBehavior
 
 	void Update()
     {
-
 	}
 
     /// <summary>
@@ -105,7 +104,7 @@ public class Fleet : NetworkedMonoBehavior
             Networking.Instantiate(ShipPrefab, NetworkReceivers.All, callback: OnShipCreated);
     }
 
-    void OnShipCreated(SimpleNetworkedMonoBehavior new_ship)
+    public void OnShipCreated(SimpleNetworkedMonoBehavior new_ship)
     {
         new_ship.transform.SetParent(transform);
         new_ship.transform.localPosition = Vector3.zero;

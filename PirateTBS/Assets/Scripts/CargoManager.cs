@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Reflection;
 
@@ -66,19 +67,21 @@ public class CargoManager : MonoBehaviour
         ShipA = ship_a;
         ShipB = ship_b;
 
-        UpdateResourceList(ShipA, LefthandCargo);
-        UpdateResourceList(ShipB, RighthandCargo);
+        UpdateResourceList(ShipA, LefthandCargo, new string[]{ "Food", "Goods", "Sugar", "Spice", "Luxuries" });
+        UpdateResourceList(ShipB, RighthandCargo, new string[]{ "Food", "Goods", "Sugar", "Spice", "Luxuries" });
     }
 
-    public void UpdateResourceList(Ship ship, RectTransform resource_list)
+    public void UpdateResourceList(Ship ship, RectTransform resource_list, string[] resource_types)
     {
-        string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
-
         foreach(string s in resource_types)
         {
-            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponent<Text>().text = string.Format("{0}\n{1}", s, typeof(Cargo).GetType().GetField(s).GetValue(ship.Cargo));
-            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponentInChildren<NumericUpDown>().UpdateValue(0);
-            resource_list.FindChild(string.Format("{0}\\Text", s)).GetComponentInChildren<NumericUpDown>().SetMaxValue((int)typeof(Cargo).GetType().GetField(s).GetValue(ship.Cargo));
+            Type cargo_type = typeof(Cargo);
+            FieldInfo field = cargo_type.GetField(s);
+            int value = (int)field.GetValue(ship.Cargo);
+            
+            resource_list.FindChild(string.Format("{0}/Text", s)).GetComponent<Text>().text = string.Format("{0}\n{1}", s, value);
+            resource_list.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().UpdateValue(0);
+            resource_list.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().SetMaxValue(value);
         }
     }
 
@@ -87,6 +90,8 @@ public class CargoManager : MonoBehaviour
         int transfer_amount = LefthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
 
         ShipA.Cargo.TransferTo(ShipB.Cargo, cargo_type, transfer_amount);
+
+        UpdateResourceList(ShipA, LefthandCargo, new string[] { cargo_type });
     }
 
     public void TransferRightToLeft(string cargo_type)
@@ -94,5 +99,7 @@ public class CargoManager : MonoBehaviour
         int transfer_amount = RighthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
 
         ShipB.Cargo.TransferTo(ShipA.Cargo, cargo_type, transfer_amount);
+
+        UpdateResourceList(ShipB, RighthandCargo, new string[] { cargo_type });
     }
 }
