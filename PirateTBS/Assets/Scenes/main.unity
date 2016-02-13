@@ -7144,6 +7144,7 @@ MonoBehaviour:
   PortResourceList: {fileID: 1650941207}
   FleetShipyardList: {fileID: 2136630637}
   PortShipyardList: {fileID: 1638103276}
+  FleetShipDropdown: {fileID: 1662398248}
 --- !u!225 &562761106
 CanvasGroup:
   m_ObjectHideFlags: 0

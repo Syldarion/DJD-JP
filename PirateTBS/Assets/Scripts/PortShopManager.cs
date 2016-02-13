@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PortShopManager : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class PortShopManager : MonoBehaviour
     public RectTransform PortResourceList;
     public RectTransform FleetShipyardList;
     public RectTransform PortShipyardList;
+
+    public Dropdown FleetShipDropdown;
 
 	void Start()
 	{
@@ -30,6 +34,7 @@ public class PortShopManager : MonoBehaviour
         GetComponent<CanvasGroup>().interactable = true;
         GetComponent<CanvasGroup>().blocksRaycasts = true;
 
+        PopulateShipDropdown();
         PopulatePortMarket();
     }
 
@@ -64,6 +69,13 @@ public class PortShopManager : MonoBehaviour
         //Use the ship list on DockedFleet to populate the list of ships
         //Make sure the dropdown is filled with the names of the ships
         //This is because PopulateShipResources will use the name of the ship to find its info
+
+        FleetShipDropdown.ClearOptions();
+
+        List<Dropdown.OptionData> dropdown_options = new List<Dropdown.OptionData>();
+        foreach (Ship s in DockedFleet.Ships)
+            dropdown_options.Add(new Dropdown.OptionData(s.Name));
+        FleetShipDropdown.AddOptions(dropdown_options);
     }
 
     /// <summary>
