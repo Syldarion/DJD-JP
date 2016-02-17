@@ -77,69 +77,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\ForgeUtilities\Chat\Scripts\ForgeChat.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\ArbiterServer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothAdapterWrapper.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothDeviceWrapper.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothServerSocketWrapper.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Bluetooth\BluetoothSocketWrapper.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\BMSByte.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\BeardedMath.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\CrossPlatformUDP.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\HostInfo.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\INetworkingSerialized.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\MessageInfo.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetRef.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetWorker.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkException.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkSerialized.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\Networking.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingPlayer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingSerialized.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingStream.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\NetworkingStreamRPC.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\ObjectMapper.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\Task.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\ClientManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\Header.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\UDP\PacketManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Core\WriteCustomMapping.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\DataStore\Cache.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\CachedUdpClient.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\DefaultClientTCP.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\DefaultServerTCP.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\SocketPolicyServer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\TCPProcess.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\UnityHandle.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileClient.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileServer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Default\WinMobileWorker.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Enums\NetworkCallers.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Enums\NetworkReceivers.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\API.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\ArbiterAPI.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\Encryptor.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\HTTP.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\HTTP\ServerAPI.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\MasterServer\ForgeMasterServer.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\MasterServer\ForgeMasterServerPing.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Security\IBRPCIntercept.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\TransportObject\ForgeTransportObject.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\MainThreadManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetWorkerKiller.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkedMonoBehavior.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\NetworkingManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\SimpleNetworkedMonoBehavior.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\UnityEventObject.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\MainScripts\Unity\UnitySceneManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\Autostart.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\HeadlessLinuxTest\StartHeadlessLinux.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\Logo\PoweredByForge.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickServerBrowser\ServerListItem.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickServerBrowser\ServerListManager.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\ForgeClickToRegister.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\Scripts\QuickStartMenu\StartGame.cs" />
-    <Compile Include="Assets\Bearded Man Studios Inc\Forge Networking\SimpleJSON.cs" />
     <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
     <Compile Include="Assets\Scripts\CargoManager.cs" />
@@ -163,6 +100,7 @@
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInfoManager.cs" />
+    <Compile Include="Assets\Scripts\NetworkInitializer.cs" />
     <Compile Include="Assets\Scripts\NumericUpDown.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
     <Compile Include="Assets\Scripts\PlayerInfoManager.cs" />
@@ -180,9 +118,6 @@
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Changelog.txt" />
-    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\NMB.txt" />
-    <None Include="Assets\Bearded Man Studios Inc\Forge Networking\Editor\Resources\SNMB.txt" />
     <None Include="Assets\ConsolePro\Readme.txt" />
     <None Include="Assets\PirateFilterList.txt" />
   </ItemGroup>

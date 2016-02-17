@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
-using BeardedManStudios.Network;
+using UnityEngine.Networking;
 
-public class ChatManager : NetworkedMonoBehavior
+public class ChatManager : NetworkBehaviour
 {
     public GameObject ChatMessagePrefab;
     
-    public void NewMessage(string message)
+    [Command]
+    public void CmdNewMessage(string sender, string message)
     {
-        RPC("SendChatMessage", Networking.PrimarySocket.Me.Name, message);
+        RpcSendChatMessage(sender, message);
     }
-    
-    [BRPC]
-    public void SendChatMessage(string sender, string message)
+
+    [ClientRpc]
+    public void RpcSendChatMessage(string sender, string message)
     {
         ChatMessage newChatMessage = Instantiate(ChatMessagePrefab).GetComponent<ChatMessage>();
 

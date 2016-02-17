@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
-using BeardedManStudios.Network;
 
-public class CustomLobbyPlayer : NetworkedMonoBehavior
+public class CustomLobbyPlayer : NetworkLobbyPlayer
 {
-    
     public string PlayerName = "";
     public int NationalityIndex = 0;
     public bool IsReady = false;
@@ -12,21 +11,25 @@ public class CustomLobbyPlayer : NetworkedMonoBehavior
     ColorBlock NotReadyColorBlock;
     ColorBlock ReadyColorBlock;
 
-    void Awake()
+    public override void OnClientEnterLobby()
     {
+        base.OnClientEnterLobby();
+
+        CmdUpdateName(GameObject.Find("NetworkManager").GetComponent<NetworkInitializer>().PlayerName);
     }
 
-    public void UpdateName(string name)
+    [Command]
+    public void CmdUpdateName(string name)
     {
-        RPC("OnNameChange", NetworkReceivers.AllBuffered, name);
+        RpcOnNameChange(name);
     }
 
-    [BRPC]
-    void OnNameChange(string name)
+    [ClientRpc]
+    void RpcOnNameChange(string name)
     {
         Debug.Log(name);
         PlayerName = name;
 
-        OwningNetWorker.Me.SetName(name);
+        GetComponentInChildren<Text>().text = name;
     }
 }
