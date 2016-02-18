@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Reflection;
 using System.Collections;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class PortShopManager : MonoBehaviour
 {
     public Port CurrentPort;
     public Fleet DockedFleet;
+    public Ship SelectedShip;
+    public Dropdown ShipSelection;
+    public ShipStatBlock StatBlockPrefab;
 
     public RectTransform ActivePanel;
     public RectTransform FleetResourceList;
@@ -14,21 +20,21 @@ public class PortShopManager : MonoBehaviour
     public RectTransform FleetShipyardList;
     public RectTransform PortShipyardList;
 
-    public Dropdown FleetShipDropdown;
+    public void Start()
+    {
 
-	void Start()
-	{
+    }
 
-	}
-	
-	void Update()
-	{
+    void Update()
+    {
 
-	}
+    }
 
     public void OpenShop(Fleet fleet_to_dock)
     {
         DockedFleet = fleet_to_dock;
+        SelectedShip = DockedFleet.Ships[0];
+        PopulatePlayerShipyard(fleet_to_dock);
 
         GetComponent<CanvasGroup>().alpha = 1;
         GetComponent<CanvasGroup>().interactable = true;
@@ -36,6 +42,9 @@ public class PortShopManager : MonoBehaviour
 
         PopulateShipDropdown();
         PopulatePortMarket();
+        PopulateShipResources();
+        PopulatePortShipyard();
+
     }
 
     public void CloseShop()
@@ -61,38 +70,49 @@ public class PortShopManager : MonoBehaviour
         ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
 
+    public void OnShipDropdownChange(int new_value)
+    {
+        foreach (Ship PlayerFleetShip in DockedFleet.Ships)
+            if (PlayerFleetShip.Name == ShipSelection.options[new_value].text)
+                SelectedShip = PlayerFleetShip.GetComponent<Ship>();
+
+        PopulateShipResources();
+    }
+
     /// <summary>
     /// Populates the ship list
     /// </summary>
     public void PopulateShipDropdown()
     {
-        //Use the ship list on DockedFleet to populate the list of ships
-        //Make sure the dropdown is filled with the names of the ships
-        //This is because PopulateShipResources will use the name of the ship to find its info
-
-        FleetShipDropdown.ClearOptions();
+        ShipSelection.ClearOptions();
 
         List<Dropdown.OptionData> dropdown_options = new List<Dropdown.OptionData>();
-        foreach (Ship s in DockedFleet.Ships)
-            dropdown_options.Add(new Dropdown.OptionData(s.Name));
-        FleetShipDropdown.AddOptions(dropdown_options);
+
+        foreach (Ship PlayerFleetShips in DockedFleet.Ships)
+        {
+            dropdown_options.Add(new Dropdown.OptionData(PlayerFleetShips.name));
+        }
+
+        ShipSelection.AddOptions(dropdown_options);
     }
 
     /// <summary>
     /// Populates ship side of market
     /// </summary>
     /// <param name="ship_name">Ship to sell resources from</param>
-    public void PopulateShipResources(string ship_name)
+    public void PopulateShipResources()
     {
-        //This function will probably be called when the ship dropdown value changes
-        //Find ship in DockedFleet ships that has the given name, get the Ship component, and use the cargo from it
-        //For the text that says how much the port has, probably use something like this
-        //string.Format("Food\n{0}", ship.Cargo.Food);
-        //Call SetMaxValue(int value) on the associated NumericUpDown control, passing the amount that the ship has
+        string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
+        foreach(string s in resource_types)
+        {
+            Type cargo_type = typeof(Cargo);
+            FieldInfo field = cargo_type.GetField(s);
+            int value = (int)field.GetValue(SelectedShip.Cargo);
 
-        //If you want to access the text of the section to set it with the above string, all you have to do is this
-        //FleetResourceList.transform.FindChild("Food").GetComponentInChildren<Text>().text
-        //Just assign the string to that for each of the resources types
+            FleetResourceList.FindChild(string.Format("{0}/Text", s)).GetComponent<Text>().text = string.Format("{0}\n{1}", s, value);
+            FleetResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().UpdateValue(0);
+            FleetResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().SetMaxValue(value);
+        }
     }
 
     /// <summary>
@@ -100,15 +120,17 @@ public class PortShopManager : MonoBehaviour
     /// </summary>
     public void PopulatePortMarket()
     {
-        //Use CurrentPort
-        //Just grab the values inside the port's inventory
-        //Text values should be like this
-        //string.Format("Food\n{0}", port.Market.Food);
-        //Call SetMaxValue(int value) on the associated NumericUpDown control, passing the amount that the port has
+        string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
+        foreach (string s in resource_types)
+        {
+            Type cargo_type = typeof(Cargo);
+            FieldInfo field = cargo_type.GetField(s);
+            int value = (int)field.GetValue(CurrentPort.Market);
 
-        //If you want to access the text of the section to set it with the above string, all you have to do is this
-        //PortResourceList.transform.FindChild("Food").GetComponentInChildren<Text>().text
-        //Just assign the string to that for each of the resources types
+            PortResourceList.FindChild(string.Format("{0}/Text", s)).GetComponent<Text>().text = string.Format("{0}\n{1}", s, value);
+            PortResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().UpdateValue(0);
+            PortResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().SetMaxValue(value);
+        }
     }
 
     /// <summary>
@@ -117,23 +139,40 @@ public class PortShopManager : MonoBehaviour
     /// <param name="fleet">Fleet to populate the list with</param>
     public void PopulatePlayerShipyard(Fleet fleet)
     {
-        //Instantiate a new ShipStatBlock for each ship in the fleet
-        //Set the block's parent to the player ship list content panel
+        foreach (Ship playerShip in fleet.Ships)
+        {
+            ShipStatBlock playerShipStatBlock = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
 
-        //The parent to set to is just
-        //FleetShipyardList.transform
+            playerShipStatBlock.PopulateStatBlock(playerShip);
+            playerShipStatBlock.transform.SetParent(FleetShipyardList.transform, false);
+        }
     }
-
-    /// <summary>
-    /// Populates the port ship list with the ships inside CurrentPort
-    /// </summary>
     public void PopulatePortShipyard()
     {
-        //Use CurrentPort
-        //Instantiate a new ShipStatBlock for each ship the port has
-        //Set the block's parent to the port ship list content panel
+        foreach (Ship forsale in CurrentPort.Shipyard)
+        {
+            ShipStatBlock portShipStatBlock = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
 
-        //The parent to set to is just
-        //PortShipyardList.transform
+            portShipStatBlock.PopulateStatBlock(forsale);
+            portShipStatBlock.transform.SetParent(FleetShipyardList.transform, false);
+        }
+    }
+
+    public void SellResources(string resource)
+    {
+        int sell_amount = FleetResourceList.FindChild(string.Format("{0}/Quantity", resource)).GetComponent<NumericUpDown>().Value;
+        SelectedShip.Cargo.TransferTo(CurrentPort.Market, resource, sell_amount);
+
+        PopulateShipResources();
+        PopulatePortMarket();
+    }
+
+    public void BuyResources(string resource)
+    {
+        int buy_amount = PortResourceList.FindChild(string.Format("{0}/Quantity", resource)).GetComponent<NumericUpDown>().Value;
+        CurrentPort.Market.TransferTo(SelectedShip.Cargo, resource, buy_amount);
+
+        PopulateShipResources();
+        PopulatePortMarket();
     }
 }

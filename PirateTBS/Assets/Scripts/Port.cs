@@ -25,6 +25,8 @@ public class Port : NetworkBehaviour
                 SpawnTile = GetComponentInParent<HexTile>().GetNeighbor(hc);
                 break;
             }
+
+        Market = new Cargo(Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500));
     }
 
     void Update()

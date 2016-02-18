@@ -7116,12 +7116,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentPort: {fileID: 0}
   DockedFleet: {fileID: 0}
+  SelectedShip: {fileID: 0}
+  ShipSelection: {fileID: 0}
+  StatBlockPrefab: {fileID: 11448052, guid: 01639f1ced848ba4980280595b392715, type: 2}
   ActivePanel: {fileID: 932265117}
   FleetResourceList: {fileID: 1960041148}
   PortResourceList: {fileID: 1650941207}
   FleetShipyardList: {fileID: 2136630637}
   PortShipyardList: {fileID: 1638103276}
-  FleetShipDropdown: {fileID: 1662398248}
 --- !u!225 &562761106
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -19547,7 +19549,18 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 562761105}
+        m_MethodName: OnShipDropdownChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1662398249
