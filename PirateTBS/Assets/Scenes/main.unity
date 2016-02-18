@@ -6992,13 +6992,27 @@ GameObject:
   - 20: {fileID: 561835110}
   - 124: {fileID: 561835109}
   - 92: {fileID: 561835108}
+  - 114: {fileID: 561835107}
   m_Layer: 0
-  m_Name: MinimapCamera
+  m_Name: MiniMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &561835107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 561835106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db5db4589a91a0141b37b67674495eec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaterHexPrefab: {fileID: 11418764, guid: bda16bfca42f71847ada78c4938373cc, type: 2}
+  LandHexPrefab: {fileID: 11408560, guid: bab9da51a7cede34a986569ad5f78586, type: 2}
 --- !u!92 &561835108
 Behaviour:
   m_ObjectHideFlags: 0
@@ -16064,48 +16078,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1350757007}
---- !u!1 &1358488145
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1358488147}
-  - 114: {fileID: 1358488146}
-  m_Layer: 0
-  m_Name: MiniMap
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1358488146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1358488145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db5db4589a91a0141b37b67674495eec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MinimapCamera: {fileID: 561835110}
-  WaterHexPrefab: {fileID: 11495958, guid: aa976a50c19ec91419b0d2eb32db6c60, type: 2}
-  LandHexPrefab: {fileID: 11441244, guid: 3d815f2993a1ac14a8e123f0e6284828, type: 2}
---- !u!4 &1358488147
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1358488145}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5000, y: 0, z: -5000}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
 --- !u!1 &1387119523
 GameObject:
   m_ObjectHideFlags: 0

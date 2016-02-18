@@ -29,7 +29,7 @@ public class HexGrid : NetworkBehaviour
         LandTiles = new List<LandHex>();
         WaterTiles = new List<WaterHex>();
 
-        HexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
+        HexWidth = WaterHexPrefab.GetComponent<MeshRenderer>().bounds.size.x;
 
         SettingsManager settings = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
 
@@ -103,21 +103,45 @@ public class HexGrid : NetworkBehaviour
             {
                 if(water_point && !other.GetComponent<HexTile>().IsWater)
                 {
-                    if (!other.GetComponent<WaterHex>())
-                        other.gameObject.AddComponent<WaterHex>();
-                    other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
-                    other.GetComponent<LandHex>().enabled = false;
-                    Destroy(other.GetComponent<LandHex>());
-                    other.GetComponent<WaterHex>().InitializeTile();
+                    string new_name = other.name;
+
+                    GameObject new_hex = Instantiate(WaterHexPrefab).gameObject;
+
+                    new_hex.transform.SetParent(this.transform);
+                    new_hex.transform.localPosition = other.transform.localPosition;
+                    new_hex.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
+
+                    Destroy(other.gameObject);
+
+                    new_hex.name = new_name;
+
+                    //if (!other.GetComponent<WaterHex>())
+                    //    other.gameObject.AddComponent<WaterHex>();
+                    //other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
+                    //other.GetComponent<LandHex>().enabled = false;
+                    //Destroy(other.GetComponent<LandHex>());
+                    //other.GetComponent<WaterHex>().InitializeTile();
                 }
                 else if(!water_point && other.GetComponent<HexTile>().IsWater)
                 {
-                    if (!other.GetComponent<LandHex>())
-                        other.gameObject.AddComponent<LandHex>();
-                    other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
-                    other.GetComponent<WaterHex>().enabled = false;
-                    Destroy(other.GetComponent<WaterHex>());
-                    other.GetComponent<LandHex>().InitializeTile();
+                    string new_name = other.name;
+
+                    GameObject new_hex = Instantiate(LandHexPrefab).gameObject;
+
+                    new_hex.transform.SetParent(this.transform);
+                    new_hex.transform.localPosition = other.transform.localPosition;
+                    new_hex.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
+
+                    Destroy(other.gameObject);
+
+                    new_hex.name = new_name;
+
+                    //if (!other.GetComponent<LandHex>())
+                    //    other.gameObject.AddComponent<LandHex>();
+                    //other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
+                    //other.GetComponent<WaterHex>().enabled = false;
+                    //Destroy(other.GetComponent<WaterHex>());
+                    //other.GetComponent<LandHex>().InitializeTile();
                 }
             }
 

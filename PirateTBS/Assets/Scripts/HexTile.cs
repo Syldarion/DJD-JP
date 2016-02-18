@@ -20,10 +20,13 @@ public class HexTile : MonoBehaviour
     public HexCoordinate HexCoord;
     public HexCoordinate[] Directions = new HexCoordinate[6];
     [HideInInspector]
-    public SkinnedMeshRenderer MeshRenderer;
+    public MeshRenderer MeshRenderer;
     public bool IsWater;
 
-    protected Color base_color;
+    public Color BaseColor;
+    public Color FogColor;
+
+    public bool Fog = true;
 
     public virtual void InitializeTile() { }
 
@@ -66,11 +69,5 @@ public class HexTile : MonoBehaviour
             return GameObject.Find(hex_name).GetComponent<HexTile>();
         else
             return null;
-    }
-
-    public IEnumerator SwitchToBaseColor(float wait_time)
-    {
-        yield return new WaitForSeconds(wait_time);
-        MeshRenderer.material.color = base_color;
     }
 }

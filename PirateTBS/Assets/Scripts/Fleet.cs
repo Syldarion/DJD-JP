@@ -98,6 +98,14 @@ public class Fleet : NetworkBehaviour
             if (s.Speed < FleetSpeed)
                 FleetSpeed = s.Speed;
         }
+
+        RpcUpdateFogRange();
+    }
+
+    [ClientRpc]
+    void RpcUpdateFogRange()
+    {
+        GetComponent<SphereCollider>().radius = FleetSpeed * 2;
     }
     
     [Command]
@@ -110,6 +118,36 @@ public class Fleet : NetworkBehaviour
             transform.SetParent(new_tile.transform, false);
             transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
             CurrentPosition = new_tile; 
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        WaterHex water_hex = other.GetComponent<WaterHex>();
+
+        if (water_hex && water_hex.Fog)
+        {
+            water_hex.Fog = false;
+            water_hex.GetComponent<MeshRenderer>().material = water_hex.DefaultMaterial;
+
+            GameObject tile = GameObject.Find("MiniMap").transform.FindChild(other.name).gameObject;
+
+            tile.GetComponent<MeshRenderer>().material = water_hex.DefaultMaterial;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        WaterHex water_hex = other.GetComponent<WaterHex>();
+
+        if (water_hex && !water_hex.Fog)
+        {
+            water_hex.Fog = true;
+            water_hex.GetComponent<MeshRenderer>().material = water_hex.FogMaterial;
+
+            GameObject tile = GameObject.Find("MiniMap").transform.FindChild(other.name).gameObject;
+
+            tile.GetComponent<MeshRenderer>().material = water_hex.FogMaterial;
         }
     }
 

@@ -29,10 +29,6 @@ public class LandHex : HexTile
 
     public override void InitializeTile()
     {
-        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
-        base_color = Color.green;
-        MeshRenderer.material.color = base_color;
-
         IsWater = false;
 
         TileResources = new Cargo();

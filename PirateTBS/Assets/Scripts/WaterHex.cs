@@ -4,6 +4,9 @@ using System.Collections;
 
 public class WaterHex : HexTile
 {
+    public Material DefaultMaterial;
+    public Material FogMaterial;
+
     float hover_timer = 0.5f;
     float double_click_start = 0;
 
@@ -19,22 +22,9 @@ public class WaterHex : HexTile
 
     public override void InitializeTile()
     {
-        MeshRenderer = GetComponent<SkinnedMeshRenderer>();
-        base_color = Color.cyan;
-        MeshRenderer.material.color = base_color;
+        GetComponent<MeshRenderer>().sharedMaterial = FogMaterial;
 
         IsWater = true;
-    }
-
-    void OnMouseOver()
-    {
-        float lerp = Mathf.PingPong(Time.time, hover_timer) / hover_timer;
-        MeshRenderer.material.color = Color.Lerp(base_color, Color.yellow, lerp);
-    }
-
-    void OnMouseExit()
-    {
-        MeshRenderer.material.color = base_color;
     }
 
     //make movement manager
