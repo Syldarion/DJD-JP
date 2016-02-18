@@ -35,6 +35,13 @@ public class PlayerScript : NetworkBehaviour
         NewFleetID = 0;
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        GameObject.Find("PlayerInfoPanel").GetComponent<PlayerInfoManager>().SetOwningPlayer(this);
+    }
+
     void Update()
     {
         if (GameConsole.console_open)
@@ -67,8 +74,6 @@ public class PlayerScript : NetworkBehaviour
         new_fleet.Name = fleet_name;
 
         NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, connectionToClient);
-
-
     }
 
     //new_nation should actually be set to a nation that already exists in game

@@ -1792,7 +1792,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 734506906}
   m_Template: {fileID: 1096269370}
   m_CaptionText: {fileID: 1011971594}
@@ -2152,6 +2152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b41856b031c22458f875776ed943d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SettingsPanel: {fileID: 1450754131}
   MapTypeSelection: {fileID: 734506905}
   MapSizeSelection: {fileID: 2128256005}
   GamePaceSelection: {fileID: 956832398}
@@ -2364,7 +2365,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 956832399}
   m_Template: {fileID: 711590320}
   m_CaptionText: {fileID: 1603236634}
@@ -3519,7 +3520,7 @@ CanvasGroup:
   m_GameObject: {fileID: 1450754130}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
+  m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!1 &1461548346
@@ -5199,7 +5200,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 2128256006}
   m_Template: {fileID: 1122047995}
   m_CaptionText: {fileID: 235294312}

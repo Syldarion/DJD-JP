@@ -28,9 +28,19 @@ public class PlayerInfoManager : MonoBehaviour
 
 	}
 
+    public void Initialize()
+    {
+        UpdateCaptainName(OwningPlayer.Name);
+        UpdateShipCount();
+        UpdateGoldCount();
+        UpdateAverageMoraleLevel();
+    }
+
     public void SetOwningPlayer(PlayerScript player)
     {
         OwningPlayer = player;
+
+        Initialize();
     }
 
     /// <summary>
@@ -39,15 +49,17 @@ public class PlayerInfoManager : MonoBehaviour
     /// <param name="new_name">New name to display</param>
     public void UpdateCaptainName(string new_name)
     {
-        //The actual name of the player won't be changed here
-        //This is meant to be called whenever the player's name changes
-        //Which shouldn't ever happen, but we should have it just in case
-        //So just update the text of the relevant UI (CaptainNameText) here.
+        CaptainNameText.text = new_name;
     }
 
     public void UpdateShipCount()
     {
+        OwningPlayer.TotalShips = 0;
 
+        foreach (Fleet f in OwningPlayer.Fleets)
+            OwningPlayer.TotalShips += f.Ships.Count;
+
+        ShipCountText.text = OwningPlayer.TotalShips.ToString();
     }
 
     /// <summary>
@@ -55,15 +67,28 @@ public class PlayerInfoManager : MonoBehaviour
     /// </summary>
     public void UpdateGoldCount()
     {
-        //In here, just sum up the total gold on all of the player's ships
-        //Then just change the relevant UI (GoldCountText)
+        OwningPlayer.TotalGold = 0;
+
+        foreach (Fleet f in OwningPlayer.Fleets)
+            foreach (Ship s in f.Ships)
+                OwningPlayer.TotalGold += s.Cargo.Gold;
+
+        GoldCountText.text = OwningPlayer.TotalGold.ToString();
     }
 
     public void UpdateAverageMoraleLevel()
     {
-        //As with the previous function, just get the info from all of the ships
-        //And then take the average of the morale
-        //Update relevant UI (AverageMoraleText)
+        float average_morale = 0.0f;
+
+        foreach(Fleet f in OwningPlayer.Fleets)
+        {
+            float fleet_morale = 0.0f;
+            foreach (Ship s in f.Ships)
+                fleet_morale += s.CrewMorale;
+            average_morale += fleet_morale / f.Ships.Count;
+        }
+
+        AverageMoraleText.text = (average_morale / OwningPlayer.Fleets.Count).ToString();
     }
 
     /// <summary>
@@ -72,12 +97,11 @@ public class PlayerInfoManager : MonoBehaviour
     /// <param name="ship">Ship to be added</param>
     public void AddShipToList(Ship ship)
     {
-        //Instantiate a new shipstatblock
-        //Call PopulateStatBlock on it, passing the ship passed to this function
-        //Set the parent of the statblock to PlayerInfoShipList, like this
-        //new_stat_block.transform.SetParent(PlayerInfoShipList, false);
-        //The false there is to make sure it doesn't keep its default position when you set the parent
-        //If you didn't have that, the stat block would spawn in the middle of the screen and just have an offset relevant to the parent
+        ShipStatBlock new_block = Instantiate(StatBlockPrefab);
+        new_block.PopulateStatBlock(ship);
+        new_block.transform.SetParent(PlayerInfoShipList, false);
+
+        ShipCountText.text = (++OwningPlayer.TotalShips).ToString();
     }
 
     /// <summary>
@@ -86,24 +110,26 @@ public class PlayerInfoManager : MonoBehaviour
     /// <param name="ship">Ship to be removed</param>
     public void RemoveShipFromList(Ship ship)
     {
-        //Search through all of the stat blocks that are currently children of PlayerInfoShipList
-        //If stat_block.ReferenceShip is equal the ship parameter, delete the stat block
-
-        for(int i = 0; i < PlayerInfoShipList.childCount; i++)
+        for (int i = 0; i < PlayerInfoShipList.childCount; i++)
         {
             ShipStatBlock stat_block = PlayerInfoShipList.GetChild(i).GetComponent<ShipStatBlock>();
             if (stat_block && stat_block.ReferenceShip == ship)
+            {
                 Destroy(stat_block.gameObject);
+                break;
+            }
         }
+
+        ShipCountText.text = (--OwningPlayer.TotalShips).ToString();
     }
 
     public void PopulateIncomeList()
     {
-        //Don't worry about this one, the relevant code doesn't exist yet
+
     }
 
     public void PopulateMoraleList()
     {
-        //Same here
+
     }
 }

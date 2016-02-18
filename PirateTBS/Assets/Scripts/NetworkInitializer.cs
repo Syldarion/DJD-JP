@@ -39,7 +39,8 @@ public class NetworkInitializer : MonoBehaviour
 
     public void ConnectAsHost()
     {
-        IPAddress = "localhost";
+        NetworkManager.singleton.networkAddress = "localhost";
+        NetworkManager.singleton.networkPort = 5666;
         NetworkManager.singleton.StartHost();
 
         NetworkManager.singleton.ServerChangeScene("lobby");
@@ -47,6 +48,8 @@ public class NetworkInitializer : MonoBehaviour
 
     public void ConnectAsClient()
     {
-        Network.Connect(IPAddress, Port, Password);
+        NetworkManager.singleton.networkAddress = IPAddress;
+        NetworkManager.singleton.networkPort = Port;
+        NetworkManager.singleton.StartClient();
     }
 }

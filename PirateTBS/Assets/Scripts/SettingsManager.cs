@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SettingsManager : NetworkBehaviour
 {
+    public RectTransform SettingsPanel;
+
     public Dropdown MapTypeSelection;
     public Dropdown MapSizeSelection;
     public Dropdown GamePaceSelection;
@@ -25,11 +27,11 @@ public class SettingsManager : NetworkBehaviour
     {
         base.OnStartServer();
 
-        MapTypeSelection.interactable = true;
-        MapSizeSelection.interactable = true;
-        GamePaceSelection.interactable = true;
+        SettingsPanel.GetComponent<CanvasGroup>().interactable = true;
 
         MapSeed = Random.Range(0, 1000000);
+
+        DontDestroyOnLoad(this);
     }
     
     [Server]
@@ -108,6 +110,6 @@ public class SettingsManager : NetworkBehaviour
     [Server]
     public void StartGame()
     {
-
+        NetworkManager.singleton.ServerChangeScene("main");
     }
 }

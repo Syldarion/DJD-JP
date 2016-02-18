@@ -37,6 +37,13 @@ public class Fleet : NetworkBehaviour
         Ships = new List<Ship>();
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
+    }
+
     [Command]
     public void CmdSpawnShip(string name)
     {
