@@ -1071,6 +1071,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 95493925}
+  - 114: {fileID: 95493927}
   - 114: {fileID: 95493926}
   m_Layer: 0
   m_Name: Grid
@@ -1105,6 +1106,43 @@ MonoBehaviour:
   WaterHexPrefab: {fileID: 11418764, guid: bda16bfca42f71847ada78c4938373cc, type: 2}
   LandHexPrefab: {fileID: 11408560, guid: bab9da51a7cede34a986569ad5f78586, type: 2}
   PortPrefab: {fileID: 186392, guid: 7ef4acc4a946fd748896b8b132eaf6d9, type: 2}
+  HexWidth: 0
+  GridWidth: 0
+  GridHeight: 0
+  LandTiles: []
+  WaterTiles: []
+--- !u!114 &95493927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 95493924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &96742988
 GameObject:
   m_ObjectHideFlags: 0
@@ -6951,7 +6989,7 @@ GameObject:
   - 124: {fileID: 561835109}
   - 92: {fileID: 561835108}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: MinimapCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7013,71 +7051,6 @@ Transform:
   m_GameObject: {fileID: 561835106}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: -5000, y: 20, z: -5000}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
---- !u!1 &562603547
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 562603549}
-  - 114: {fileID: 562603548}
-  m_Layer: 0
-  m_Name: PlayerSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &562603548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 562603547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdc6b5d5e507984d9187a9c83f945f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 0
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 0
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 1
-  PlayerController: {fileID: 122198, guid: 7e5cf7d0b47eb09418b723c2823850bf, type: 2}
---- !u!4 &562603549
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 562603547}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -16095,7 +16068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1358488146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16107,15 +16080,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db5db4589a91a0141b37b67674495eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 0
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
+  MinimapCamera: {fileID: 561835110}
   WaterHexPrefab: {fileID: 11495958, guid: aa976a50c19ec91419b0d2eb32db6c60, type: 2}
   LandHexPrefab: {fileID: 11441244, guid: 3d815f2993a1ac14a8e123f0e6284828, type: 2}
-  PortPrefab: {fileID: 186392, guid: 7ef4acc4a946fd748896b8b132eaf6d9, type: 2}
-  ports: []
 --- !u!4 &1358488147
 Transform:
   m_ObjectHideFlags: 0
@@ -16127,7 +16094,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!1 &1387119523
 GameObject:
   m_ObjectHideFlags: 0
@@ -16534,7 +16501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowMultipleSelection: 1
   BorderImage: {fileID: 21300000, guid: 1443af5b695627c419c8c597cf16d8d2, type: 3}
-  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 3}
   SelectedObjects: []
 --- !u!1 &1423172909
 GameObject:
@@ -24656,7 +24623,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowMultipleSelection: 1
   BorderImage: {fileID: 21300000, guid: 1443af5b695627c419c8c597cf16d8d2, type: 3}
-  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  DefaultImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 3}
   SelectedObjects: []
 --- !u!1 &2047311794
 GameObject:

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
-using BeardedManStudios.Network;
 
 public class WaterHex : HexTile
 {
@@ -37,9 +37,15 @@ public class WaterHex : HexTile
         MeshRenderer.material.color = base_color;
     }
 
+    //make movement manager
+    //if you have an active fleet and click your own fleet, open fleet manager
+    //no active fleet and your fleet, set active fleet
+    //active fleet and click on enemy fleet, open combat
+    //active fleet and click on tile, move fleet
+
     void OnMouseDown()
     {
-        PlayerScript player = GameObject.Find(Networking.PrimarySocket.Me.Name + "Controller").GetComponent<PlayerScript>();
+        PlayerScript player = GameObject.Find("Controller").GetComponent<PlayerScript>();
         Fleet tile_fleet = GetComponentInChildren<Fleet>();
 
         if (Input.GetMouseButtonDown(0))
@@ -48,12 +54,11 @@ public class WaterHex : HexTile
             {
                 if (tile_fleet == null)
                 {
-                    if (!player.ActiveFleet.MoveFleet(this))
-                        player.ActiveFleet = null;
+
                 }
                 else
                 {
-                    if (tile_fleet != player.ActiveFleet && tile_fleet.OwnerId == player.ActiveFleet.OwnerId)
+                    if (tile_fleet != player.ActiveFleet)
                     {
                         if (HexGrid.MovementHex(player.ActiveFleet.GetComponentInParent<HexTile>(), player.ActiveFleet.FleetSpeed).Contains(this))
                         {
@@ -71,8 +76,7 @@ public class WaterHex : HexTile
             }
             else if (tile_fleet != null)
             {
-                if (player.OwnerId == tile_fleet.OwnerId)
-                    player.ActiveFleet = tile_fleet;
+
             }
         }
     }

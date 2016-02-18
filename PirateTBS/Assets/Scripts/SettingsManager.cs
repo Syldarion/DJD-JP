@@ -1,73 +1,66 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using BeardedManStudios.Network;
 
-public class SettingsManager : NetworkedMonoBehavior
+public class SettingsManager : NetworkBehaviour
 {
+    public RectTransform SettingsPanel;
+
     public Dropdown MapTypeSelection;
     public Dropdown MapSizeSelection;
     public Dropdown GamePaceSelection;
     
+    [SyncVar(hook = "RpcOnMapTypeChange")]
     public int MapTypeIndex = 0;
+    [SyncVar(hook = "RpcOnMapSizeChange")]
     public int MapSizeIndex = 0;
+    [SyncVar(hook = "RpcOnGamePaceChange")]
     public int GamePaceIndex = 0;
+    [SyncVar]
     public int MapSeed;
     public int MapWidth = 40;
     public int MapHeight = 24;
     public int MapControlPoints = 64;
 
-    void Awake()
+    public override void OnStartServer()
     {
-        AddNetworkVariable(() => MapTypeIndex, x => UpdateMapType((int)x));
-        AddNetworkVariable(() => MapSizeIndex, x => UpdateMapSize((int)x));
-        AddNetworkVariable(() => GamePaceIndex, x => UpdateGamePace((int)x));
-        AddNetworkVariable(() => MapSeed, x => MapSeed = (int)x);
-    }
+        base.OnStartServer();
 
-    void Start()
-    {
-        SetMapSeed();
-    }
-    
-    void SetMapSeed()
-    {
+        SettingsPanel.GetComponent<CanvasGroup>().interactable = true;
+
         MapSeed = Random.Range(0, 1000000);
+
+        DontDestroyOnLoad(this);
     }
     
+    [Server]
     public void UpdateMapType(int map_type_index)
     {
-        if (Networking.PrimarySocket.IsServer)
-            RPC("OnMapTypeChange", map_type_index);
-        else
-            MapTypeSelection.value = MapTypeIndex;
+        MapTypeIndex = map_type_index;
     }
 
+    [Server]
     public void UpdateMapSize(int map_size_index)
     {
-        if (Networking.PrimarySocket.IsServer)
-            RPC("OnMapSizeChange", map_size_index);
-        else
-            MapSizeSelection.value = MapSizeIndex;
+        MapSizeIndex = map_size_index;
     }
 
+    [Server]
     public void UpdateGamePace(int game_pace_index)
     {
-        if (Networking.PrimarySocket.IsServer)
-            RPC("OnGamePaceChange", game_pace_index);
-        else
-            GamePaceSelection.value = GamePaceIndex;
+        GamePaceIndex = game_pace_index;
     }
 
-    [BRPC]
-    void OnMapTypeChange(int map_type_index)
+    [ClientRpc]
+    void RpcOnMapTypeChange(int map_type_index)
     {
         MapTypeIndex = map_type_index;
         MapTypeSelection.value = MapTypeIndex;
     }
     
-    [BRPC]
-    void OnMapSizeChange(int map_size_index)
+    [ClientRpc]
+    void RpcOnMapSizeChange(int map_size_index)
     {
         MapSizeIndex = map_size_index;
         MapSizeSelection.value = MapSizeIndex;
@@ -107,19 +100,16 @@ public class SettingsManager : NetworkedMonoBehavior
         }
     }
     
-    [BRPC]
-    void OnGamePaceChange(int game_pace_index)
+    [ClientRpc]
+    void RpcOnGamePaceChange(int game_pace_index)
     {
         GamePaceIndex = game_pace_index;
         GamePaceSelection.value = GamePaceIndex;
     }
 
+    [Server]
     public void StartGame()
     {
-        if (SceneManager.GetSceneByName("main").IsValid())
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName("main"));
-        else
-            SceneManager.LoadScene("main");
-        Networking.ChangeClientScene(Networking.PrimarySocket.Port, "main");
+        NetworkManager.singleton.ServerChangeScene("main");
     }
 }

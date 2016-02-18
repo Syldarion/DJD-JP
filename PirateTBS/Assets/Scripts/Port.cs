@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Network;
 
-public class Port : NetworkedMonoBehavior
+public class Port : NetworkBehaviour
 {
     public string PortName;
     public Nationality PortNationality;
@@ -31,8 +31,7 @@ public class Port : NetworkedMonoBehavior
     {
 
     }
-
-    [BRPC]
+    
     void SpawnPortOthers(string parent_tile)
     {
         transform.SetParent(GameObject.Find(parent_tile).transform);
@@ -44,7 +43,7 @@ public class Port : NetworkedMonoBehavior
 
     void OnMouseDown()
     {
-        Fleet current_fleet = GameObject.Find(Networking.PrimarySocket.Me.Name + "Controller").GetComponent<PlayerScript>().ActiveFleet;
+        Fleet current_fleet = GameObject.Find("Controller").GetComponent<PlayerScript>().ActiveFleet;
         GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().CurrentPort = this;
         GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().OpenShop(current_fleet);
     }
@@ -59,8 +58,7 @@ public class Port : NetworkedMonoBehavior
     {
         Tooltip.EnableTooltip(false);
     }
-
-    [BRPC]
+    
     void SendSystemMessage(string message)
     {
         //global message box

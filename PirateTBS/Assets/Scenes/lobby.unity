@@ -1865,6 +1865,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 744726149}
+  - 114: {fileID: 744726148}
   - 114: {fileID: 744726147}
   m_Layer: 0
   m_Name: ChatManager
@@ -1884,32 +1885,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa20e2376cc6c2458815ec12a86a020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 0
-  allowOwnershipChange: 0
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 0
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 0
   ChatMessagePrefab: {fileID: 154570, guid: 2e046d9f30c9d98408eff461fcc22dbc, type: 2}
+--- !u!114 &744726148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 744726146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!4 &744726149
 Transform:
   m_ObjectHideFlags: 0
@@ -2124,6 +2132,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 828204421}
+  - 114: {fileID: 828204420}
   - 114: {fileID: 828204419}
   m_Layer: 0
   m_Name: SettingsManager
@@ -2143,31 +2152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b41856b031c22458f875776ed943d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 1
-  destroyOnDisconnect: 0
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 0
-  serverIsAuthority: 1
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 0
+  SettingsPanel: {fileID: 1450754131}
   MapTypeSelection: {fileID: 734506905}
   MapSizeSelection: {fileID: 2128256005}
   GamePaceSelection: {fileID: 956832398}
@@ -2177,6 +2162,39 @@ MonoBehaviour:
   MapSeed: 0
   MapWidth: 40
   MapHeight: 24
+  MapControlPoints: 64
+--- !u!114 &828204420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828204418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!4 &828204421
 Transform:
   m_ObjectHideFlags: 0
@@ -2189,71 +2207,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!1 &880448443
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 880448445}
-  - 114: {fileID: 880448444}
-  m_Layer: 0
-  m_Name: LobbySpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &880448444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 880448443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29da88de9c7ba854a8dfb99b1ee499bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 1
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 0
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 1
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 0
-  LobbyPlayer: {fileID: 179888, guid: 2d7a6f4cf17ef174e80e397b88e87ee7, type: 2}
---- !u!4 &880448445
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 880448443}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
 --- !u!1 &929360970
 GameObject:
   m_ObjectHideFlags: 0
@@ -3567,7 +3520,7 @@ CanvasGroup:
   m_GameObject: {fileID: 1450754130}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
+  m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!1 &1461548346

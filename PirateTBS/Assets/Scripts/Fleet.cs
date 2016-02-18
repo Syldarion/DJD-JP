@@ -2,13 +2,13 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Network;
 
-public class Fleet : NetworkedMonoBehavior
+public class Fleet : NetworkBehaviour
 {
-    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
+    [SyncVar(hook = "OnNameChanged")]
     public string Name;
     public List<Ship> Ships;            //Ships in the fleet
+    [SyncVar]
     public int FleetSpeed;              //Current speed of the fleet
     public HexTile CurrentPosition;     //HexTile that the fleet is a child of
     public GameObject ShipPrefab;
@@ -16,65 +16,80 @@ public class Fleet : NetworkedMonoBehavior
 
 	void Start()
     {
-        Ships = new List<Ship>();
-        FleetSpeed = 5;
+
 	}
 
 	void Update()
     {
 	}
 
-    /// <summary>
-    /// Add a ship to the fleet
-    /// </summary>
-    /// <param name="ship">The ship to add to the fleet</param>
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        FleetSpeed = 5;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        Ships = new List<Ship>();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
+    }
+
+    [Command]
+    public void CmdSpawnShip(string name)
+    {
+        Ship new_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
+        new_ship.Name = name;
+        new_ship.SetClass((ShipClass)Random.Range(0, 8));
+        new_ship.Cargo = new Cargo(50, 500);
+
+        NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, connectionToClient);
+
+        AddShip(new_ship);
+    }
+
+    [Server]
     public void AddShip(Ship ship)
     {
         if (!Ships.Contains(ship))
             Ships.Add(ship);
         UpdateFleetSpeed();
-
-        RPC("AddShipOthers", NetworkReceivers.Others, ship.name);
+        RpcAddShipOthers(ship.Name);   
     }
     
-    [BRPC]
-    void AddShipOthers(string ship_name)
+    [ClientRpc]
+    void RpcAddShipOthers(string ship_name)
     {
         Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
         if (!Ships.Contains(ship))
             Ships.Add(ship);
-        UpdateFleetSpeed();
     }
-
-    /// <summary>
-    /// Remove a ship from the fleet, if it exists
-    /// </summary>
-    /// <param name="ship">The ship to remove from the fleet</param>
-    public void RemoveShip(Ship ship)
+    
+    [Command]
+    public void CmdRemoveShip(string ship_name)
     {
+        Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
+
         if (Ships.Contains(ship))
+        {
             Ships.Remove(ship);
+            Network.Destroy(ship.gameObject);
+        }
         UpdateFleetSpeed();
         if (Ships.Count <= 0)
-            Destroy(this.gameObject);
-
-        RPC("RemoveShipOthers", NetworkReceivers.Others, ship.name);
+            Network.Destroy(this.gameObject);
     }
 
-    [BRPC]
-    void RemoveShipOthers(string ship_name)
-    {
-        Ship ship = transform.FindChild(ship_name).GetComponent<Ship>();
-        if (Ships.Contains(ship))
-            Ships.Remove(ship);
-        UpdateFleetSpeed();
-        if (Ships.Count <= 0)
-            Destroy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Update the speed of the fleet, which will be equal to the slowest ship in the fleet
-    /// </summary>
+    [Server]
     public void UpdateFleetSpeed()
     {
         FleetSpeed = 5;                             //Fastest fleet speed possible
@@ -84,50 +99,18 @@ public class Fleet : NetworkedMonoBehavior
                 FleetSpeed = s.Speed;
         }
     }
-
-    /// <summary>
-    /// Spawn a new fleet across the network
-    /// </summary>
-    /// <param name="fleet_name">The name of the new fleet</param>
-    /// <param name="initial_tile_name">The name of the initial position tile for the fleet</param>
-    [BRPC]
-    public void SpawnFleet(string fleet_name, string initial_tile_name)
+    
+    [Command]
+    public void CmdMoveFleet(int x, int y)
     {
-        Name = fleet_name;
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
-        HexTile initial_tile = GameObject.Find(initial_tile_name).GetComponent<HexTile>();
-        transform.SetParent(initial_tile.transform, false);
-        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        CurrentPosition = initial_tile;
-
-        if (IsOwner)
-            Networking.Instantiate(ShipPrefab, NetworkReceivers.All, callback: OnShipCreated);
-    }
-
-    public void OnShipCreated(SimpleNetworkedMonoBehavior new_ship)
-    {
-        new_ship.transform.SetParent(transform);
-        new_ship.transform.localPosition = Vector3.zero;
-        new_ship.RPC("SpawnShip", string.Format("{0}Ship{1}", Networking.PrimarySocket.Me.Name, (++NewShipID).ToString()), this.name);
-        AddShip(new_ship.GetComponent<Ship>());
-    }
-
-    /// <summary>
-    /// Move the fleet
-    /// </summary>
-    /// <param name="new_tile">The tile to move the fleet to</param>
-    /// <returns>If the movement was successful</returns>
-    public bool MoveFleet(HexTile new_tile)
-    {
         if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))
         {
             transform.SetParent(new_tile.transform, false);
             transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-            CurrentPosition = new_tile;
-
-            return true;
+            CurrentPosition = new_tile; 
         }
-        return false;
     }
 
     void OnMouseEnter()
@@ -141,9 +124,8 @@ public class Fleet : NetworkedMonoBehavior
         Tooltip.EnableTooltip(false);
     }
 
-    void OnNameChanged()
+    void OnNameChanged(string new_name)
     {
-        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
-        name = Name;
+        name = new_name;
     }
 }

@@ -75,7 +75,7 @@ public class FleetManager : MonoBehaviour
         if(fleet_from.Ships.Contains(ship))
         {
             fleet_to.AddShip(ship);
-            fleet_from.RemoveShip(ship);
+            fleet_from.CmdRemoveShip(ship.name);
         }
     }
 }

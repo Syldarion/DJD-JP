@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Network;
 
-public class PlayerScript : NetworkedMonoBehavior
+public class PlayerScript : NetworkBehaviour
 {
-    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
+    [SyncVar(hook = "OnNameChanged")]
     public string Name;
 
     public Nation Nationality;
@@ -33,27 +33,13 @@ public class PlayerScript : NetworkedMonoBehavior
         Reputation = new int[4] { 50, 50, 50, 50 };
 
         NewFleetID = 0;
-
-        StartCoroutine("WaitForPortList");
     }
 
-    protected override void NetworkStart()
+    public override void OnStartLocalPlayer()
     {
-        base.NetworkStart();
+        base.OnStartLocalPlayer();
 
-        if (IsOwner)
-            FindObjectOfType<PlayerInfoManager>().SetOwningPlayer(this);
-    }
-
-    public void Initialize()
-    {
-        Port[] ports = HexGrid.ports.ToArray();
-        SpawnPort = ports[Random.Range(0, ports.Length - 1)];
-
-        if (Networking.PrimarySocket.Connected)
-            SpawnFleet();
-        else
-            Networking.PrimarySocket.connected += SpawnFleet;
+        GameObject.Find("PlayerInfoPanel").GetComponent<PlayerInfoManager>().SetOwningPlayer(this);
     }
 
     void Update()
@@ -71,9 +57,9 @@ public class PlayerScript : NetworkedMonoBehavior
             }
         }
         if (Input.GetKeyDown(KeyCode.I))
-            Initialize();
-        if(Input.GetKeyDown(KeyCode.O))
-            Networking.Instantiate(ActiveFleet.ShipPrefab, NetworkReceivers.All, callback: ActiveFleet.OnShipCreated);
+            CmdSpawnFleet(string.Empty);
+        if (Input.GetKeyDown(KeyCode.O))
+            ActiveFleet.CmdSpawnShip(string.Empty);
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
         {
             GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().PopulateShipList(ActiveFleet);
@@ -81,25 +67,13 @@ public class PlayerScript : NetworkedMonoBehavior
         }
     }
 
-    void SpawnFleet()
+    [Command]
+    public void CmdSpawnFleet(string fleet_name)
     {
-        Networking.PrimarySocket.connected -= SpawnFleet;
-        if (IsOwner)
-            Networking.Instantiate(FleetPrefab, NetworkReceivers.All, callback: OnFleetSpawn);
-    }
+        Fleet new_fleet = Instantiate(FleetPrefab).GetComponent<Fleet>();
+        new_fleet.Name = fleet_name;
 
-    void OnFleetSpawn(SimpleNetworkedMonoBehavior new_fleet)
-    {
-        Fleets.Add(new_fleet.GetComponent<Fleet>());
-        string player_name = Networking.PrimarySocket.Me.Name;
-        new_fleet.GetComponent<Fleet>().RPC("SpawnFleet", string.Format("{0}Fleet{1}", player_name, (++NewFleetID).ToString()), SpawnPort.SpawnTile.name);
-    }
-
-    IEnumerator WaitForPortList()
-    {
-        while (HexGrid.ports.Count == 0)
-            yield return null;
-        Initialize();
+        NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, connectionToClient);
     }
 
     //new_nation should actually be set to a nation that already exists in game
@@ -122,12 +96,11 @@ public class PlayerScript : NetworkedMonoBehavior
         Reputation[(int)nation] = Mathf.Clamp(Reputation[(int)nation] + modifier, 0, 100);
     }
 
-    void OnNameChanged()
+    void OnNameChanged(string new_name)
     {
-        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
-        name = Name;
+        name = new_name;
 
-        if (IsOwner)
-            FindObjectOfType<PlayerInfoManager>().UpdateCaptainName(Name);
+        if (isLocalPlayer)
+            FindObjectOfType<PlayerInfoManager>().UpdateCaptainName(new_name);
     }
 }

@@ -1,47 +1,44 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Network;
 
-public class HexGrid : MonoBehaviour
+public class HexGrid : NetworkBehaviour
 {
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
     public static List<Port> ports;
 
-    float hexWidth;
+    public float HexWidth;
 
-    int gridWidth;
-    int gridHeight;
+    public int GridWidth;
+    public int GridHeight;
     int controlPoints;
 
-    //List<HexTile> tiles;
-
-    List<LandHex> land_tiles;
-    List<WaterHex> water_tiles;
+    public List<LandHex> LandTiles;
+    public List<WaterHex> WaterTiles;
 
     string parent_tile;
 
 	void Start()
     {
         ports = new List<Port>();
-        //tiles = new List<HexTile>();
 
-        land_tiles = new List<LandHex>();
-        water_tiles = new List<WaterHex>();
+        LandTiles = new List<LandHex>();
+        WaterTiles = new List<WaterHex>();
 
-        hexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
+        HexWidth = WaterHexPrefab.GetComponent<SkinnedMeshRenderer>().bounds.size.x;
 
         SettingsManager settings = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
 
-        gridWidth = settings.MapWidth;
-        gridHeight = settings.MapHeight;
+        GridWidth = settings.MapWidth;
+        GridHeight = settings.MapHeight;
         Random.seed = settings.MapSeed;
         controlPoints = settings.MapControlPoints;
 
-        GenerateGrid(gridWidth, gridHeight, controlPoints);
+        GenerateGrid(GridWidth, GridHeight, controlPoints);
 	}
 	
 	void Update()
@@ -64,10 +61,10 @@ public class HexGrid : MonoBehaviour
                 new_hex.GetComponent<WaterHex>().InitializeTile();
 
                 new_hex.parent = this.transform;
-                new_hex.localPosition = new Vector3(i * (hexWidth * 0.76f), 0.0f, j * (0.876f * hexWidth));
+                new_hex.localPosition = new Vector3(i * (HexWidth * 0.76f), 0.0f, j * (0.876f * HexWidth));
 
                 if (i % 2 != 0)
-                    new_hex.Translate(0.0f, 0.0f, 0.4325f * hexWidth, this.transform);
+                    new_hex.Translate(0.0f, 0.0f, 0.4325f * HexWidth, this.transform);
 
                 new_hex.GetComponent<HexTile>().HexCoord.Q = i;
                 new_hex.GetComponent<HexTile>().HexCoord.R = j;
@@ -83,8 +80,8 @@ public class HexGrid : MonoBehaviour
 
     IEnumerator DropControlPoints(int control_points)
     {
-        float total_width = hexWidth * (gridWidth - 4);
-        float total_height = hexWidth * (gridHeight - 4);
+        float total_width = HexWidth * (GridWidth - 4);
+        float total_height = HexWidth * (GridHeight - 4);
 
         bool water_point = false;
 
@@ -131,24 +128,26 @@ public class HexGrid : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        if (NetworkingManager.Instance.OwningNetWorker.IsServer)
-            StartCoroutine("CreatePorts", gridWidth / 4);
+        if (isServer)
+            StartCoroutine("CreatePorts", GridWidth / 4);
     }
 
     void PopulateTileLists()
     {
-        for(int i = -gridWidth / 2; i < gridWidth / 2; i++)
+        for(int i = -GridWidth / 2; i < GridWidth / 2; i++)
         {
-            for(int j = -gridHeight / 2; j < gridHeight / 2; j++)
+            for(int j = -GridHeight / 2; j < GridHeight / 2; j++)
             {
                 Transform tile = transform.FindChild(string.Format("{0},{1}", i, j));
 
                 if (tile.GetComponent<LandHex>())
-                    land_tiles.Add(tile.GetComponent<LandHex>());
+                    LandTiles.Add(tile.GetComponent<LandHex>());
                 else if (tile.GetComponent<WaterHex>())
-                    water_tiles.Add(tile.GetComponent<WaterHex>());
+                    WaterTiles.Add(tile.GetComponent<WaterHex>());
             }
         }
+
+        GameObject.Find("MiniMap").GetComponent<MiniMap>().CopyHexGridToMap();
     }
 
     //i = x + width * y
@@ -156,7 +155,7 @@ public class HexGrid : MonoBehaviour
     {
         List<LandHex> coastal_tiles = new List<LandHex>();
 
-        foreach(LandHex lh in land_tiles)
+        foreach(LandHex lh in LandTiles)
         {
             if(lh.IsCoastal())
             {
@@ -172,19 +171,15 @@ public class HexGrid : MonoBehaviour
         {
             selected_tile = Random.Range(0, coastal_tiles.Count);
 
-            parent_tile = coastal_tiles[selected_tile].name;
-            Networking.Instantiate(PortPrefab, NetworkReceivers.All, callback: SpawnPortCallback);
+            Port new_port = Instantiate(PortPrefab).GetComponent<Port>();
+            new_port.transform.SetParent(coastal_tiles[selected_tile].transform, false);
+            new_port.transform.localPosition = Vector3.zero;
 
             coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
 
             yield return new WaitForEndOfFrame();
         }
-    }
-
-    void SpawnPortCallback(SimpleNetworkedMonoBehavior new_port)
-    {
-        new_port.RPC("SpawnPortOthers", NetworkReceivers.All, parent_tile);
     }
 
     struct Point
