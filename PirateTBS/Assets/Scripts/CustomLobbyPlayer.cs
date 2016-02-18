@@ -8,14 +8,12 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     public int NationalityIndex = 0;
     public bool IsReady = false;
 
-    ColorBlock NotReadyColorBlock;
-    ColorBlock ReadyColorBlock;
-
-    public override void OnClientEnterLobby()
+    public override void OnStartLocalPlayer()
     {
-        base.OnClientEnterLobby();
+        base.OnStartLocalPlayer();
 
         CmdUpdateName(GameObject.Find("NetworkManager").GetComponent<NetworkInitializer>().PlayerName);
+        CmdMovePanel();
     }
 
     [Command]
@@ -27,9 +25,20 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     void RpcOnNameChange(string name)
     {
-        Debug.Log(name);
         PlayerName = name;
 
         GetComponentInChildren<Text>().text = name;
+    }
+
+    [Command]
+    void CmdMovePanel()
+    {
+        RpcMovePanel();
+    }
+
+    [ClientRpc]
+    void RpcMovePanel()
+    {
+        transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
     }
 }

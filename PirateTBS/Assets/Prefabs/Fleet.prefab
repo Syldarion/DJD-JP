@@ -8,9 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 468912}
+  - 114: {fileID: 11408524}
+  - 114: {fileID: 11460604}
   - 33: {fileID: 3335580}
   - 23: {fileID: 2370758}
-  - 114: {fileID: 11460604}
   - 65: {fileID: 6569410}
   m_Layer: 0
   m_Name: Fleet
@@ -76,6 +77,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &11408524
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 174
+    i1: 161
+    i2: 143
+    i3: 239
+    i4: 14
+    i5: 207
+    i6: 243
+    i7: 132
+    i8: 24
+    i9: 100
+    i10: 215
+    i11: 139
+    i12: 165
+    i13: 62
+    i14: 222
+    i15: 248
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11460604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,32 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c71af3cb56ae3a54d852916403db7d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 1
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 1
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 0
-  Flagship: {fileID: 0}
+  Name: 
   Ships: []
   FleetSpeed: 0
   CurrentPosition: {fileID: 0}

@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using BeardedManStudios.Network;
 
 public class PlayerInfoManager : MonoBehaviour
 {
@@ -89,6 +88,13 @@ public class PlayerInfoManager : MonoBehaviour
     {
         //Search through all of the stat blocks that are currently children of PlayerInfoShipList
         //If stat_block.ReferenceShip is equal the ship parameter, delete the stat block
+
+        for(int i = 0; i < PlayerInfoShipList.childCount; i++)
+        {
+            ShipStatBlock stat_block = PlayerInfoShipList.GetChild(i).GetComponent<ShipStatBlock>();
+            if (stat_block && stat_block.ReferenceShip == ship)
+                Destroy(stat_block.gameObject);
+        }
     }
 
     public void PopulateIncomeList()

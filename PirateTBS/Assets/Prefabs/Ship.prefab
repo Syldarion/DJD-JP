@@ -8,9 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 408968}
+  - 114: {fileID: 11462782}
+  - 114: {fileID: 11410432}
   - 33: {fileID: 3316682}
   - 23: {fileID: 2330716}
-  - 114: {fileID: 11410432}
   - 65: {fileID: 6527314}
   m_Layer: 0
   m_Name: Ship
@@ -87,31 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb44d59fb573844390dd053ecd6a214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 1
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 1
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 0
+  Name: 
   HullHealth: 0
   SailHealth: 0
   CargoSpace: 0
@@ -119,11 +96,44 @@ MonoBehaviour:
   FullSpeed: 0
   CrewNeeded: 0
   DodgeChance: 0
-  Name: 
+  ShipType: 
   MaxCannons: 0
   Speed: 0
   CrewMorale: 0
   Class: 0
+  Price: 0
+--- !u!114 &11462782
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 109258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 193
+    i1: 43
+    i2: 38
+    i3: 147
+    i4: 230
+    i5: 85
+    i6: 92
+    i7: 180
+    i8: 202
+    i9: 55
+    i10: 3
+    i11: 112
+    i12: 71
+    i13: 209
+    i14: 87
+    i15: 211
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -3,9 +3,8 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using BeardedManStudios.Network;
 
-public class Cargo
+public struct Cargo
 {
     public int Food;
     public int Goods;
@@ -121,24 +120,32 @@ public enum ShotType
     Chain
 }
 
-public class Ship : NetworkedMonoBehavior
+public class Ship : NetworkBehaviour
 {
-    [NetSync("OnNameChanged", NetworkCallers.Everyone)]
+    [SyncVar(hook = "OnNameChanged")]
     public string Name;
-    [NetSync] public int HullHealth;
-    [NetSync] public int SailHealth;
-    [NetSync] public int CargoSpace;
-    [NetSync] public int Cannons;
-    [NetSync] public int FullSpeed;
-    [NetSync] public int CrewNeeded;
-    [NetSync] public double DodgeChance;
+    [SyncVar]
+    public int HullHealth;
+    [SyncVar]
+    public int SailHealth;
+    [SyncVar]
+    public int CargoSpace;
+    [SyncVar]
+    public int Cannons;
+    [SyncVar]
+    public int FullSpeed;
+    [SyncVar]
+    public int CrewNeeded;
+    [SyncVar]
+    public double DodgeChance;
+    [SyncVar]
+    public Cargo Cargo;
 
     public string ShipType;
     public int MaxCannons;
     public int Speed;
     public int CrewMorale;
     public ShipClass Class;
-    public Cargo Cargo;
     public int Price;
 
 	void Start()
@@ -151,7 +158,8 @@ public class Ship : NetworkedMonoBehavior
 
 	}
     
-    void SetClass(ShipClass new_class)
+    [Server]
+    public void SetClass(ShipClass new_class)
     {
         Class = new_class;
         ShipType = new_class.ToString();
@@ -233,39 +241,29 @@ public class Ship : NetworkedMonoBehavior
                 DodgeChance = 0.1;
                 break;
         }
-
-        GetComponentInParent<Fleet>().UpdateFleetSpeed();
     }
 
-    public void ApplyModifiers()
+    [Command]
+    public void CmdApplyModifiers()
     {
         //apply modifiers from tech tree
     }
-
-    public void ClearModifiers()
+    
+    [Command]
+    public void CmdClearModifiers()
     {
-        //this is so bad but it works
         SetClass(Class);
     }
-
-    /// <summary>
-    /// Apply damage to the ship
-    /// </summary>
-    /// <param name="hdam">Hull damage</param>
-    /// <param name="sdam">Sail damage</param>
+    
     public void DamageShip(int hdam, int sdam)
     {
         HullHealth -= hdam;
         SailHealth -= sdam;
 
-        if (HullHealth <= 0) SinkShip();
+        if (HullHealth <= 0) CmdSinkShip();
         Speed = (int)(FullSpeed * (SailHealth / 100.0f));
     }
-
-    /// <summary>
-    /// Rename the ship, as long as a ship with that name doesn't exist
-    /// </summary>
-    /// <param name="new_name">The new name of the ship</param>
+    
     public void RenameShip(string new_name)
     {
         if (!GameObject.Find(new_name))
@@ -280,59 +278,31 @@ public class Ship : NetworkedMonoBehavior
             name = new_name;
         }
     }
-
-    /// <summary>
-    /// Add cargo to the ship, as long as the ship has room for it
-    /// </summary>
-    /// <param name="new_cargo">The cargo to add to the ship</param>
+    
     public void AddCargo(Cargo new_cargo)
     {
         if (Cargo.Size() + new_cargo.Size() <= CargoSpace)
             Cargo.MergeCargo(new_cargo);
     }
-
-    /// <summary>
-    /// Sinks the ship
-    /// </summary>
-    public void SinkShip()
+    
+    [Command]
+    public void CmdSinkShip()
     {
-        NetworkDestroy(this.NetworkedId);
+        Network.Destroy(this.gameObject);
     }
-
-    /// <summary>
-    /// Modify the morale of the ship
-    /// </summary>
-    /// <param name="modifier">Modifier to apply to the ship</param>
+    
     public void ModifyMorale(int modifier)
     {
         CrewMorale = Mathf.Clamp(CrewMorale + modifier, 0, 100);
         if (CrewMorale <= 30)
         {
-            GetComponentInParent<Fleet>().RemoveShip(this);
+            GetComponentInParent<Fleet>().CmdRemoveShip(this.name);
         }
     }
 
-    /// <summary>
-    /// Callback to provide information for a newly spawned ship
-    /// </summary>
-    /// <param name="ship_name">Name of the new ship</param>
-    /// <param name="fleet_parent_name">Name of the fleet the ship belongs to</param>
-    [BRPC]
-    public void SpawnShip(string ship_name, string fleet_parent_name)
-    {
-        Name = ship_name;
-
-        Fleet parent_fleet = GameObject.Find(fleet_parent_name).GetComponent<Fleet>();
-        transform.SetParent(parent_fleet.transform);
-        transform.localPosition = Vector3.zero;
-
-        SetClass((ShipClass)Random.Range(0, 7));
-        Cargo = new Cargo(50, 500);
-    }
-
-    void OnNameChanged()
+    void OnNameChanged(string new_name)
     {
         GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
-        name = Name;
+        name = new_name;
     }
 }

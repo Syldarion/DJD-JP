@@ -8,9 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 457854}
+  - 114: {fileID: 11409246}
+  - 114: {fileID: 11460192}
   - 33: {fileID: 3375132}
   - 23: {fileID: 2349288}
-  - 114: {fileID: 11460192}
   - 64: {fileID: 6483848}
   m_Layer: 0
   m_Name: Port
@@ -76,6 +77,38 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 0
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &11409246
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 186392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 126
+    i1: 244
+    i2: 172
+    i3: 196
+    i4: 169
+    i5: 70
+    i6: 253
+    i7: 116
+    i8: 136
+    i9: 150
+    i10: 184
+    i11: 177
+    i12: 50
+    i13: 234
+    i14: 246
+    i15: 217
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &11460192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,34 +120,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0e40050ec6238428e50017c623432b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneNetworkedId: 0
-  dontDestroyOnLoad: 0
-  destroyOnDisconnect: 0
-  allowOwnershipChange: 1
-  MaxRPCBatch: 10000
-  proximityBehaviors: 
-  serializePosition: 7
-  lerpPosition: 1
-  serializeRotation: 7
-  lerpRotation: 1
-  serializeScale: 0
-  lerpScale: 1
-  isReliable: 0
-  interpolateFloatingValues: 1
-  lerpT: 0.25
-  lerpStopOffset: 0.01
-  lerpAngleStopOffset: 1
-  networkTimeDelay: 0.1
-  isPlayer: 0
-  serverIsAuthority: 0
-  clientSidePrediction: 0
-  authoritativeSyncDistance: 0.25
-  authoritativeTeleportSyncDistance: 3
-  authoritativeSyncRotation: 5
-  teleportToInitialPositions: 1
   PortName: 
   PortNationality: 0
   SpawnTile: {fileID: 0}
+  Shipyard: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
