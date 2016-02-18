@@ -4,13 +4,16 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+public delegate void OnClickDelegate();
+
 public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
 {
+    public OnClickDelegate StatBlockDelegate;
     public Ship ReferenceShip;
 
 	void Start()
 	{
-
+        StatBlockDelegate = null;
 	}
 	
 	void Update()
@@ -37,6 +40,13 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
     }
 
     public void OnPointerClick(PointerEventData eventData)
+    {
+        AddToSelectionGroup();
+        if (StatBlockDelegate != null)
+            StatBlockDelegate.Invoke();
+    }
+
+    public void AddToSelectionGroup()
     {
         SelectionGroup parent_group = GetComponentInParent<SelectionGroup>();
 

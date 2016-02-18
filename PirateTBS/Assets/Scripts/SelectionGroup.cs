@@ -27,7 +27,12 @@ public class SelectionGroup : MonoBehaviour
         if (!selection.transform.IsChildOf(transform))
             return;
 
-        if (AllowMultipleSelection || SelectedObjects.Count == 0)
+        if (!AllowMultipleSelection && SelectedObjects.Count != 0)
+            RemoveSelection(SelectedObjects[0]);
+
+        if (SelectedObjects.Contains(selection))
+            RemoveSelection(selection);
+        else
         {
             selection.GetComponent<Image>().sprite = BorderImage;
             SelectedObjects.Add(selection);

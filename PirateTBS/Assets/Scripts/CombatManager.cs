@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class CombatManager : MonoBehaviour
 {
+    public ShipStatBlock StatBlockPrefab;
+
     public Fleet PlayerFleet;
     public Fleet EnemyFleet;
     public Ship SelectedPlayerShip;
     public Ship SelectedEnemyShip;
     public ShotType SelectedShotType;
 
+    public SelectionGroup PlayerSelectionGroup;
+    public SelectionGroup EnemySelectionGroup;
     public Text PlayerFleetName;
     public Text EnemyFleetName;
     public RectTransform PlayerShipList;
@@ -18,15 +25,15 @@ public class CombatManager : MonoBehaviour
     public Text SailDamageText;
     public Text HullDamageText;
 
-	void Start()
-	{
+    void Start()
+    {
 
-	}
-	
-	void Update()
-	{
+    }
 
-	}
+    void Update()
+    {
+
+    }
 
     public void OpenCombatPanel()
     {
@@ -49,6 +56,42 @@ public class CombatManager : MonoBehaviour
     /// <param name="enemy_fleet">enemy fleet to populate with</param>
     public void PopulateFleetLists(Fleet player_fleet, Fleet enemy_fleet)
     {
+        PlayerFleet = player_fleet;
+        EnemyFleet = enemy_fleet;
+        if (PlayerFleet.Ships.Count == 0)
+        { CloseCombatPanel(); }
+        else
+        {
+            PlayerSelectionGroup.SelectedObjects.Clear();
+            EnemySelectionGroup.SelectedObjects.Clear();
+
+            foreach (ShipStatBlock child in PlayerShipList.GetComponentsInChildren<ShipStatBlock>())
+            {
+                Destroy(child.gameObject);
+            }
+            foreach (ShipStatBlock child in EnemyShipList.GetComponentsInChildren<ShipStatBlock>())
+            {
+                Destroy(child.gameObject);
+            }
+            foreach (Ship player_ship in player_fleet.Ships)
+            {
+                ShipStatBlock stat_block = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
+                stat_block.PopulateStatBlock(player_ship);
+                stat_block.transform.SetParent(PlayerShipList, false);
+
+                stat_block.StatBlockDelegate = SelectPlayerShip;
+            }
+            foreach (Ship enemy_ship in enemy_fleet.Ships)
+            {
+                ShipStatBlock stat_block = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
+                stat_block.PopulateStatBlock(enemy_ship);
+                stat_block.transform.SetParent(EnemyShipList, false);
+
+                stat_block.StatBlockDelegate = SelectEnemyShip;
+            }
+        }
+
+
         //for each ship in fleet
         //create ship stat block
         //add listener to on click
@@ -66,21 +109,47 @@ public class CombatManager : MonoBehaviour
     /// <summary>
     /// Select player ship to use in combat
     /// </summary>
-    /// <param name="player_ship">Ship to be used</param>
-    public void SelectPlayerShip(Ship player_ship)
+    public void SelectPlayerShip()
     {
-        //Highlight the selected stat block or some shit
-        //Set SelectedPlayerShip to the passed ship
+        //Highlight the selected stat block
+
+        ShipStatBlock current_block = null;
+
+        Debug.Log(PlayerSelectionGroup.SelectedObjects.Count);
+        if (PlayerSelectionGroup.SelectedObjects.Count > 0)
+            current_block = PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>();
+
+        if (current_block)
+            SelectedPlayerShip = current_block.ReferenceShip;
+
+        RunCalculations();
     }
 
     /// <summary>
     /// Select enemy ship to use in combat
     /// </summary>
-    /// <param name="enemy_ship">Ship to be used</param>
-    public void SelectEnemyShip(Ship enemy_ship)
+    public void SelectEnemyShip()
     {
         //Highlight the selected stat block
-        //Set SelectedEnemyShip to the passed ship
+
+        ShipStatBlock current_block = null;
+
+        if (EnemySelectionGroup.SelectedObjects.Count > 0)
+            current_block = EnemySelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>();
+
+        if (current_block)
+            SelectedEnemyShip = current_block.ReferenceShip;
+
+        RunCalculations();
+    }
+
+    void RunCalculations()
+    {
+        if (SelectedPlayerShip && SelectedEnemyShip)
+        {
+            CalculateDamage(SelectedShotType);
+            CalculateHitChance();
+        }
     }
 
     /// <summary>
@@ -88,8 +157,7 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void CalculateHitChance()
     {
-        //Just subtract dodge chance of enemy ship from 100
-        //Set hit chance text
+        HitChanceText.text = (100 - SelectedEnemyShip.DodgeChance).ToString();
     }
 
     /// <summary>
@@ -98,13 +166,24 @@ public class CombatManager : MonoBehaviour
     /// <param name="type">Shot type being used</param>
     public void CalculateDamage(ShotType type)
     {
-        //Calculate damage depending on shot type
-        //Set damage text
-
-        //type - sail, hull
-        //normal - 2, 2
-        //chain - 3, 1
-        //cluster 1, 3
+        double hitmodifier = (100 - SelectedEnemyShip.DodgeChance) / 100;
+        switch (type)
+        {
+            case ShotType.Normal:
+                HullDamageText.text = ((SelectedPlayerShip.Cannons * 2) * hitmodifier).ToString();
+                SailDamageText.text = ((SelectedPlayerShip.Cannons * 2) * hitmodifier).ToString();
+                break;
+            case ShotType.Cluster:
+                HullDamageText.text = ((SelectedPlayerShip.Cannons * 3) * hitmodifier).ToString();
+                SailDamageText.text = ((SelectedPlayerShip.Cannons * 1) * hitmodifier).ToString();
+                break;
+            case ShotType.Chain:
+                HullDamageText.text = ((SelectedPlayerShip.Cannons * 1) * hitmodifier).ToString();
+                SailDamageText.text = ((SelectedPlayerShip.Cannons * 3) * hitmodifier).ToString();
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -113,8 +192,8 @@ public class CombatManager : MonoBehaviour
     /// <param name="type">New shot type to use</param>
     public void SwitchShotType(ShotType type)
     {
-        //Modify selectedshottype
-        //Call calculate damage
+        SelectedShotType = type;
+        CalculateDamage(type);
     }
 
     /// <summary>
@@ -122,6 +201,73 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
+        ApplyDamage();
+        if (SelectedPlayerShip.HullHealth == 0)
+        {
+            PlayerFleet.CmdRemoveShip(SelectedPlayerShip.Name);
 
+            ShipStatBlock to_destroy = PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>();
+
+            if (to_destroy)
+            {
+                PlayerSelectionGroup.RemoveSelection(to_destroy.gameObject);
+                Destroy(to_destroy);
+            }
+        }
+
+        if (PlayerSelectionGroup.SelectedObjects.Count > 0)
+            PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedPlayerShip);
+        if (EnemySelectionGroup.SelectedObjects.Count > 0)
+            EnemySelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedEnemyShip);
+    }
+
+    public void ApplyDamage()
+    {
+        switch (SelectedShotType)
+        {
+            case ShotType.Normal:
+                for (int i = 0; i < SelectedPlayerShip.Cannons; i++)
+                {
+                    int temp = Random.Range(1, 101);
+                    if (temp < (100 - SelectedEnemyShip.DodgeChance))
+                    {
+                        SelectedEnemyShip.HullHealth = SelectedEnemyShip.HullHealth - 2;
+                        SelectedEnemyShip.SailHealth = SelectedEnemyShip.SailHealth - 2;
+                    }
+                }
+                break;
+            case ShotType.Cluster:
+                for (int i = 0; i < SelectedPlayerShip.Cannons; i++)
+                {
+                    int temp = Random.Range(1, 101);
+                    if (temp < (100 - SelectedEnemyShip.DodgeChance))
+                    {
+                        SelectedEnemyShip.HullHealth = SelectedEnemyShip.HullHealth - 3;
+                        SelectedEnemyShip.SailHealth = SelectedEnemyShip.SailHealth - 1;
+                    }
+                }
+                break;
+            case ShotType.Chain:
+                for (int i = 0; i < SelectedPlayerShip.Cannons; i++)
+                {
+                    int temp = Random.Range(1, 101);
+                    if (temp < (100 - SelectedEnemyShip.DodgeChance))
+                    {
+                        SelectedEnemyShip.HullHealth = SelectedEnemyShip.HullHealth - 1;
+                        SelectedEnemyShip.SailHealth = SelectedEnemyShip.SailHealth - 3;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        if (SelectedEnemyShip.SailHealth < 0)
+        {
+            SelectedEnemyShip.SailHealth = 0;
+        }
+        if (SelectedEnemyShip.HullHealth < 0)
+        {
+            SelectedEnemyShip.HullHealth = 0;
+        }
     }
 }
