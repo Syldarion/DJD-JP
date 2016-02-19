@@ -110,6 +110,9 @@ public class SettingsManager : NetworkBehaviour
     [Server]
     public void StartGame()
     {
-        NetworkManager.singleton.ServerChangeScene("main");
+        foreach (CustomLobbyPlayer go in GameObject.FindObjectsOfType<CustomLobbyPlayer>())
+            go.transform.SetParent(null, false);
+
+        GameObject.Find("NetworkManager").GetComponent<NetworkLobbyManager>().CheckReadyToBegin();
     }
 }

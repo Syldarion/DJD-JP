@@ -14,6 +14,8 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
         CmdUpdateName(GameObject.Find("NetworkManager").GetComponent<NetworkInitializer>().PlayerName);
         CmdMovePanel();
+
+        readyToBegin = true;
     }
 
     [Command]

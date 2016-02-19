@@ -3081,8 +3081,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 787185043}
-  - 114: {fileID: 787185042}
   - 114: {fileID: 787185041}
+  - 114: {fileID: 787185042}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -3113,10 +3113,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 787185040}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -859942077, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 11500000, guid: fb43c826f6be36d4bb8afe0a5c4e25e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 5666
+  m_NetworkPort: 7777
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
@@ -3124,13 +3124,16 @@ MonoBehaviour:
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
-  m_LogLevel: 2
+  m_LogLevel: 0
   m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: lobby
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
+  - {fileID: 186392, guid: 7ef4acc4a946fd748896b8b132eaf6d9, type: 2}
+  - {fileID: 109258, guid: c12b2693e6555cb4ca37037047d157d3, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -3180,6 +3183,8 @@ MonoBehaviour:
   m_LobbyScene: lobby
   m_PlayScene: main
   lobbySlots: []
+  ServerPassword: 
+  ChatMessagePrefab: {fileID: 0}
 --- !u!4 &787185043
 Transform:
   m_ObjectHideFlags: 0

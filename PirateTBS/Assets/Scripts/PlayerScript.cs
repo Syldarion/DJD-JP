@@ -57,9 +57,9 @@ public class PlayerScript : NetworkBehaviour
             }
         }
         if (Input.GetKeyDown(KeyCode.I))
-            CmdSpawnFleet(string.Empty);
+            CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID));
         if (Input.GetKeyDown(KeyCode.O))
-            ActiveFleet.CmdSpawnShip(string.Empty);
+            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++Fleet.NewShipID));
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
         {
             GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().PopulateShipList(ActiveFleet);
