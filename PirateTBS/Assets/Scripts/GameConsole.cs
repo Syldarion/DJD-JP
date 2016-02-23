@@ -13,13 +13,11 @@ public class GameConsole : MonoBehaviour
     public GameObject ContentPanel;
 
     string base_input;
-    public static bool console_open;
 
 	void Start()
 	{
         Commands = new Dictionary<string, Action<string>>();
         HelpText = new Dictionary<string, string>();
-        console_open = false;
 
         RegisterCommand("Help", Help);
         RegisterCommand("ListFleets", ListFleets);
@@ -40,12 +38,12 @@ public class GameConsole : MonoBehaviour
         {
             StopAllCoroutines();
 
-            if (console_open)
+            if (PlayerScript.MyPlayer.UIOpen)
                 StartCoroutine("CloseConsole");
             else
                 StartCoroutine("OpenConsole");
 
-            console_open = !console_open;
+            PlayerScript.MyPlayer.UIOpen = !PlayerScript.MyPlayer.UIOpen;
         }
 	}
 

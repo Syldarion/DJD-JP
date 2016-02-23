@@ -32,6 +32,8 @@ public class PortShopManager : MonoBehaviour
 
     public void OpenShop(Fleet fleet_to_dock)
     {
+        PlayerScript.MyPlayer.UIOpen = true;
+
         DockedFleet = fleet_to_dock;
         SelectedShip = DockedFleet.Ships[0];
         PopulatePlayerShipyard(fleet_to_dock);
@@ -49,6 +51,8 @@ public class PortShopManager : MonoBehaviour
 
     public void CloseShop()
     {
+        PlayerScript.MyPlayer.UIOpen = false;
+
         GetComponent<CanvasGroup>().alpha = 0;
         GetComponent<CanvasGroup>().interactable = false;
         GetComponent<CanvasGroup>().blocksRaycasts = false;

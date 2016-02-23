@@ -5,6 +5,8 @@ using System.Collections;
 public class FleetManager : MonoBehaviour
 {
     public GameObject ShipStatBlockPrefab;
+    public RectTransform FleetAList;
+    public RectTransform FleetBList;
 
     Fleet FleetA, FleetB;
 
@@ -25,6 +27,8 @@ public class FleetManager : MonoBehaviour
     /// <param name="fleet_b">The fleet being moved onto</param>
     public void PopulateFleetManager(Fleet fleet_a, Fleet fleet_b)
     {
+        PlayerScript.MyPlayer.UIOpen = true;
+
         GetComponent<CanvasGroup>().alpha = 1;
         GetComponent<CanvasGroup>().interactable = true;
         GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -35,13 +39,13 @@ public class FleetManager : MonoBehaviour
         foreach(Ship s in fleet_a.Ships)
         {
             GameObject new_stat_block = Instantiate(ShipStatBlockPrefab);
-            new_stat_block.transform.SetParent(GameObject.Find("FleetAShipsContent").transform, false);
+            new_stat_block.transform.SetParent(FleetAList, false);
             new_stat_block.GetComponent<ShipStatBlock>().PopulateStatBlock(s);
         }
         foreach(Ship s in fleet_b.Ships)
         {
             GameObject new_stat_block = Instantiate(ShipStatBlockPrefab);
-            new_stat_block.transform.SetParent(GameObject.Find("FleetBShipsContent").transform, false);
+            new_stat_block.transform.SetParent(FleetBList, false);
             new_stat_block.GetComponent<ShipStatBlock>().PopulateStatBlock(s);
         }
     }
@@ -51,6 +55,8 @@ public class FleetManager : MonoBehaviour
     /// </summary>
     public void CloseFleetManager()
     {
+        PlayerScript.MyPlayer.UIOpen = false;
+
         Transform FleetAContent = GameObject.Find("FleetAShipsContent").transform;
         Transform FleetBContent = GameObject.Find("FleetBShipsContent").transform;
 

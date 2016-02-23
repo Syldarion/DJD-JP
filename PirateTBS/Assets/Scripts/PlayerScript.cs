@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class PlayerScript : NetworkBehaviour
 {
+    public static PlayerScript MyPlayer;
+    public bool UIOpen;
+
     [SyncVar(hook = "OnNameChanged")]
     public string Name;
 
@@ -39,12 +42,18 @@ public class PlayerScript : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
 
+        MyPlayer = this;
+
         GameObject.Find("PlayerInfoPanel").GetComponent<PlayerInfoManager>().SetOwningPlayer(this);
+        GameObject.Find("MovementManager").GetComponent<MovementManager>().ReferencePlayer = this;
     }
 
     void Update()
     {
-        if (GameConsole.console_open)
+        if (!isLocalPlayer)
+            return;
+
+        if (UIOpen)
             return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -57,7 +66,11 @@ public class PlayerScript : NetworkBehaviour
             }
         }
         if (Input.GetKeyDown(KeyCode.I))
-            CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID));
+        {
+            Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
+            SpawnPort = AllPorts[Random.Range(0, AllPorts.Length)];
+            CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
+        }
         if (Input.GetKeyDown(KeyCode.O))
             ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++Fleet.NewShipID));
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
@@ -68,12 +81,28 @@ public class PlayerScript : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSpawnFleet(string fleet_name)
+    public void CmdSpawnFleet(string fleet_name, int x, int y)
     {
         Fleet new_fleet = Instantiate(FleetPrefab).GetComponent<Fleet>();
         new_fleet.Name = fleet_name;
 
-        NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, connectionToClient);
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        new_fleet.transform.SetParent(new_tile.transform, false);
+        new_fleet.CurrentPosition = new_tile;
+
+        Fleets.Add(new_fleet);
+
+        NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, gameObject);
+
+        //RpcUpdateFleet(new_fleet.gameObject, new_tile.gameObject, new Vector3(0.0f, 0.25f, 0.0f));
+    }
+
+    [ClientRpc]
+    void RpcUpdateFleet(GameObject fleet, GameObject parent, Vector3 local_pos)
+    {
+        fleet.transform.SetParent(parent.transform);
+        fleet.transform.localPosition = local_pos;
     }
 
     //new_nation should actually be set to a nation that already exists in game

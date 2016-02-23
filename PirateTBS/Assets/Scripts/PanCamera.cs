@@ -24,7 +24,7 @@ public class PanCamera : MonoBehaviour
 	
 	void Update()
     {
-        if (GameConsole.console_open)
+        if (PlayerScript.MyPlayer.UIOpen)
             return;
 
         if (Input.GetKeyDown(KeyCode.Space))

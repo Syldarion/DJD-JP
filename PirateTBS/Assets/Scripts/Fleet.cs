@@ -52,7 +52,7 @@ public class Fleet : NetworkBehaviour
         new_ship.SetClass((ShipClass)Random.Range(0, 8));
         new_ship.Cargo = new Cargo(50, 500);
 
-        NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, PlayerScript.MyPlayer.gameObject);
 
         AddShip(new_ship);
     }
@@ -63,6 +63,7 @@ public class Fleet : NetworkBehaviour
         if (!Ships.Contains(ship))
             Ships.Add(ship);
         UpdateFleetSpeed();
+        ship.transform.SetParent(this.transform, false);
         RpcAddShipOthers(ship.Name);   
     }
     
@@ -71,7 +72,10 @@ public class Fleet : NetworkBehaviour
     {
         Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
         if (!Ships.Contains(ship))
+        {
             Ships.Add(ship);
+            ship.transform.SetParent(this.transform, false);
+        }
     }
     
     [Command]
@@ -117,7 +121,7 @@ public class Fleet : NetworkBehaviour
         {
             transform.SetParent(new_tile.transform, false);
             transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-            CurrentPosition = new_tile; 
+            CurrentPosition = new_tile;
         }
     }
 
@@ -149,6 +153,11 @@ public class Fleet : NetworkBehaviour
 
             tile.GetComponent<MeshRenderer>().material = water_hex.FogMaterial;
         }
+    }
+
+    void OnMouseDown()
+    {
+        GameObject.Find("MovementManager").GetComponent<MovementManager>().SelectFleet(this);
     }
 
     void OnMouseEnter()

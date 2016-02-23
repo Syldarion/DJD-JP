@@ -199,6 +199,8 @@ public class HexGrid : NetworkBehaviour
             new_port.transform.SetParent(coastal_tiles[selected_tile].transform, false);
             new_port.transform.localPosition = Vector3.zero;
 
+            new_port.InitializePort();
+
             coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
 

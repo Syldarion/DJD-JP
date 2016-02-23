@@ -17,7 +17,7 @@ public class Port : NetworkBehaviour
 
     }
 
-    void InitializePort()
+    public void InitializePort()
     {
         foreach (HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
             if (GetComponentInParent<HexTile>().GetNeighbor(hc).IsWater)

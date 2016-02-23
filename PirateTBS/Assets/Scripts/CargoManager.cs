@@ -27,6 +27,8 @@ public class CargoManager : MonoBehaviour
 
     public void OpenCargoManager()
     {
+        PlayerScript.MyPlayer.UIOpen = true;
+
         GetComponent<CanvasGroup>().alpha = 1;
         GetComponent<CanvasGroup>().interactable = true;
         GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -34,6 +36,8 @@ public class CargoManager : MonoBehaviour
 
     public void CloseCargoManager()
     {
+        PlayerScript.MyPlayer.UIOpen = false;
+
         GetComponent<CanvasGroup>().alpha = 0;
         GetComponent<CanvasGroup>().interactable = false;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
