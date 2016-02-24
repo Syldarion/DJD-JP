@@ -15,7 +15,9 @@ public class CargoManager : MonoBehaviour
     public RectTransform LefthandCargo;
     public RectTransform RighthandCargo;
 
-	void Start()
+    string[] AllResources = new string[] { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
+
+    void Start()
 	{
 		
 	}
@@ -71,13 +73,13 @@ public class CargoManager : MonoBehaviour
         ShipA = ship_a;
         ShipB = ship_b;
 
-        UpdateResourceList(ShipA, LefthandCargo, new string[]{ "Food", "Goods", "Sugar", "Spice", "Luxuries" });
-        UpdateResourceList(ShipB, RighthandCargo, new string[]{ "Food", "Goods", "Sugar", "Spice", "Luxuries" });
+        UpdateResourceList(ShipA, LefthandCargo);
+        UpdateResourceList(ShipB, RighthandCargo);
     }
 
-    public void UpdateResourceList(Ship ship, RectTransform resource_list, string[] resource_types)
+    public void UpdateResourceList(Ship ship, RectTransform resource_list)
     {
-        foreach(string s in resource_types)
+        foreach(string s in AllResources)
         {
             Type cargo_type = typeof(Cargo);
             FieldInfo field = cargo_type.GetField(s);
@@ -89,21 +91,25 @@ public class CargoManager : MonoBehaviour
         }
     }
 
-    public void TransferLeftToRight(string cargo_type)
+    public void TransferLeftToRight()
     {
-        int transfer_amount = LefthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
+        foreach (string s in AllResources)
+        {
+            int transfer_amount = LefthandCargo.FindChild(s).GetComponentInChildren<NumericUpDown>().Value;
+            ShipA.Cargo.TransferTo(ShipB.Cargo, s, transfer_amount);
+        }
 
-        ShipA.Cargo.TransferTo(ShipB.Cargo, cargo_type, transfer_amount);
-
-        UpdateResourceList(ShipA, LefthandCargo, new string[] { cargo_type });
+        UpdateResourceList(ShipA, LefthandCargo);
     }
 
-    public void TransferRightToLeft(string cargo_type)
+    public void TransferRightToLeft()
     {
-        int transfer_amount = RighthandCargo.FindChild(cargo_type).GetComponentInChildren<NumericUpDown>().Value;
+        foreach (string s in AllResources)
+        {
+            int transfer_amount = RighthandCargo.FindChild(s).GetComponentInChildren<NumericUpDown>().Value;
+            ShipB.Cargo.TransferTo(ShipA.Cargo, s, transfer_amount);
+        }
 
-        ShipB.Cargo.TransferTo(ShipA.Cargo, cargo_type, transfer_amount);
-
-        UpdateResourceList(ShipB, RighthandCargo, new string[] { cargo_type });
+        UpdateResourceList(ShipB, RighthandCargo);
     }
 }
