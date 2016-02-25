@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 public class FeedbackManager : MonoBehaviour
 {
@@ -31,7 +33,7 @@ public class FeedbackManager : MonoBehaviour
         SmtpClient client = new SmtpClient
         {
             Host = "smtp.gmail.com",
-            Port = 465,
+            Port = 587,
             EnableSsl = true,
             DeliveryMethod = SmtpDeliveryMethod.Network,
             UseDefaultCredentials = false,
@@ -39,14 +41,15 @@ public class FeedbackManager : MonoBehaviour
             Timeout = 20000
         };
 
-        MailAddress from = new MailAddress(feedback_email, "DJD Feedback", System.Text.Encoding.UTF8);
-        MailAddress to = new MailAddress(receiver_email);
+        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
 
-        MailMessage message = new MailMessage(from, to);
-        message.Subject = string.Format("[{0}]-{1}", FeedbackTypeSelection.itemText, FeedbackSubjectInput.text);
+        MailMessage message = new MailMessage();
+        message.From = new MailAddress(feedback_email);
+        message.To.Add(new MailAddress("davyjonesdevelopment@gmail.com"));
+        message.Subject = string.Format("[{0}]-{1}", FeedbackTypeSelection.captionText.text, FeedbackSubjectInput.text);
         message.Body = FeedbackInput.text;
 
-        client.SendAsync(message, "feedbacksender");
+        client.SendAsync(message, "feedbacksent");
 
         message.Dispose();
     }

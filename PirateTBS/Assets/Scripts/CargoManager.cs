@@ -96,6 +96,16 @@ public class CargoManager : MonoBehaviour
         foreach (string s in AllResources)
         {
             int transfer_amount = LefthandCargo.FindChild(s).GetComponentInChildren<NumericUpDown>().Value;
+
+            Cargo temp_cargo = new Cargo();
+            temp_cargo.GetType().GetField(s).SetValue(temp_cargo, transfer_amount);
+
+            if(temp_cargo.Size() + ShipB.Cargo.Size() > ShipB.CargoSpace)
+            {
+                double remaining_space = ShipB.CargoSpace - ShipB.Cargo.Size();
+                transfer_amount = (int)(transfer_amount + (remaining_space - temp_cargo.Size()) / Cargo.GetSizeReq(s));
+            }
+
             ShipA.Cargo.TransferTo(ShipB.Cargo, s, transfer_amount);
         }
 
@@ -107,6 +117,16 @@ public class CargoManager : MonoBehaviour
         foreach (string s in AllResources)
         {
             int transfer_amount = RighthandCargo.FindChild(s).GetComponentInChildren<NumericUpDown>().Value;
+
+            Cargo temp_cargo = new Cargo();
+            temp_cargo.GetType().GetField(s).SetValue(temp_cargo, transfer_amount);
+
+            if (temp_cargo.Size() + ShipB.Cargo.Size() > ShipB.CargoSpace)
+            {
+                double remaining_space = ShipA.CargoSpace - ShipA.Cargo.Size();
+                transfer_amount = (int)(transfer_amount + (remaining_space - temp_cargo.Size()) / Cargo.GetSizeReq(s));
+            }
+
             ShipB.Cargo.TransferTo(ShipA.Cargo, s, transfer_amount);
         }
 

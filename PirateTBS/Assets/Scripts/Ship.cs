@@ -72,8 +72,10 @@ public struct Cargo
         int cargo_amount = (int)GetType().GetField(cargo_type).GetValue(this);
         int other_cargo_amount = (int)GetType().GetField(cargo_type).GetValue(cargo);
 
-        other_cargo_amount += Mathf.Clamp(quantity, 0, cargo_amount);
-        cargo_amount = Mathf.Clamp(cargo_amount, 0, cargo_amount - quantity);
+        int transfer_amount = Mathf.Clamp(quantity, 0, cargo_amount);
+
+        other_cargo_amount += transfer_amount;
+        cargo_amount -= transfer_amount;
 
         GetType().GetField(cargo_type).SetValue(this, cargo_amount);
         GetType().GetField(cargo_type).SetValue(cargo, other_cargo_amount);
@@ -86,6 +88,23 @@ public struct Cargo
     public double Size()
     {
         return (Food * 0.1) + (Goods + 0.1) + Luxuries + (Spice + 0.1) + (Sugar * 0.1) + (Gold * 0.01);
+    }
+
+    public static double GetSizeReq(string resource_type)
+    {
+        switch(resource_type)
+        {
+            case "Gold":
+                return 0.01;
+            case "Food":
+            case "Goods":
+            case "Spice":
+            case "Sugar":
+                return 0.1;
+            case "Luxuries":
+            default:
+                return 1.0;
+        }
     }
 }
 
