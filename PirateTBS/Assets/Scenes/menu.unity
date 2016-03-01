@@ -3122,7 +3122,7 @@ MonoBehaviour:
   m_NetworkAddress: localhost
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
-  m_ScriptCRCCheck: 1
+  m_ScriptCRCCheck: 0
   m_MaxDelay: 0.01
   m_LogLevel: 2
   m_PlayerPrefab: {fileID: 0}
@@ -3177,14 +3177,14 @@ MonoBehaviour:
   m_MaxPlayers: 16
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1
-  m_LobbyPlayerPrefab: {fileID: 11439434, guid: 2d7a6f4cf17ef174e80e397b88e87ee7,
+  m_LobbyPlayerPrefab: {fileID: 11477630, guid: 3812c29056965b046b00f9771cd0d7bb,
     type: 2}
   m_GamePlayerPrefab: {fileID: 122198, guid: 7e5cf7d0b47eb09418b723c2823850bf, type: 2}
   m_LobbyScene: lobby
   m_PlayScene: main
   lobbySlots: []
   ServerPassword: 
-  ChatMessagePrefab: {fileID: 0}
+  ChatMessagePrefab: {fileID: 154570, guid: 2e046d9f30c9d98408eff461fcc22dbc, type: 2}
 --- !u!4 &787185043
 Transform:
   m_ObjectHideFlags: 0

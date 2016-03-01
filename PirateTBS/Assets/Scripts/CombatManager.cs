@@ -62,7 +62,7 @@ public class CombatManager : MonoBehaviour
     {
         PlayerFleet = player_fleet;
         EnemyFleet = enemy_fleet;
-        if (PlayerFleet.Ships.Count == 0)
+        if (PlayerFleet.Ships.Count < 1)
         { CloseCombatPanel(); }
         else
         {
@@ -94,20 +94,6 @@ public class CombatManager : MonoBehaviour
                 stat_block.StatBlockDelegate = SelectEnemyShip;
             }
         }
-
-
-        //for each ship in fleet
-        //create ship stat block
-        //add listener to on click
-        //SelectPlayerShip(statblock.ReferenceShip)
-
-        //Parenting
-        //for each ship in player_fleet
-        //add to PlayerFleetShipListContent
-        //for each ship in enemy_fleet
-        //add to EnemeyFleetShipListContent
-
-        //StatBlock.transform.SetParent(content);
     }
 
     /// <summary>
@@ -115,8 +101,6 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void SelectPlayerShip()
     {
-        //Highlight the selected stat block
-
         ShipStatBlock current_block = null;
 
         Debug.Log(PlayerSelectionGroup.SelectedObjects.Count);
@@ -134,8 +118,6 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void SelectEnemyShip()
     {
-        //Highlight the selected stat block
-
         ShipStatBlock current_block = null;
 
         if (EnemySelectionGroup.SelectedObjects.Count > 0)

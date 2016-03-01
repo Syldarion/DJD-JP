@@ -55,8 +55,11 @@ public class PanCamera : MonoBehaviour
 
     public void CenterOnTarget(Transform target)
     {
-        current_target = target;
-        MoveToPosition(target.position);
+        if (target)
+        {
+            current_target = target;
+            MoveToPosition(target.position);
+        }
     }
 
     IEnumerator MoveToPosition(Vector3 new_pos)

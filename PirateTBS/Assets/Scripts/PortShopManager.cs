@@ -32,6 +32,9 @@ public class PortShopManager : MonoBehaviour
 
     public void OpenShop(Fleet fleet_to_dock)
     {
+        if (fleet_to_dock.Ships.Count < 1)
+            return;
+
         PlayerScript.MyPlayer.UIOpen = true;
 
         DockedFleet = fleet_to_dock;
@@ -46,7 +49,6 @@ public class PortShopManager : MonoBehaviour
         PopulatePortMarket();
         PopulateShipResources();
         PopulatePortShipyard();
-
     }
 
     public void CloseShop()

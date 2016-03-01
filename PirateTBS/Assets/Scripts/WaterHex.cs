@@ -27,12 +27,6 @@ public class WaterHex : HexTile
         IsWater = true;
     }
 
-    //make movement manager
-    //if you have an active fleet and click your own fleet, open fleet manager
-    //no active fleet and your fleet, set active fleet
-    //active fleet and click on enemy fleet, open combat
-    //active fleet and click on tile, move fleet
-
     void OnMouseDown()
     {
         if (!PlayerScript.MyPlayer.UIOpen)
@@ -52,6 +46,7 @@ public class WaterHex : HexTile
 
     void OnDoubleClick()
     {
-        Camera.main.GetComponent<PanCamera>().StartCoroutine("MoveToPosition", this.transform.position);
+        if (!PlayerScript.MyPlayer.UIOpen)
+            Camera.main.GetComponent<PanCamera>().StartCoroutine("MoveToPosition", this.transform.position);
     }
 }

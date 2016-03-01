@@ -114,13 +114,6 @@ public class HexGrid : NetworkBehaviour
                     Destroy(other.gameObject);
 
                     new_hex.name = new_name;
-
-                    //if (!other.GetComponent<WaterHex>())
-                    //    other.gameObject.AddComponent<WaterHex>();
-                    //other.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
-                    //other.GetComponent<LandHex>().enabled = false;
-                    //Destroy(other.GetComponent<LandHex>());
-                    //other.GetComponent<WaterHex>().InitializeTile();
                 }
                 else if(!water_point && other.GetComponent<HexTile>().IsWater)
                 {
@@ -135,13 +128,6 @@ public class HexGrid : NetworkBehaviour
                     Destroy(other.gameObject);
 
                     new_hex.name = new_name;
-
-                    //if (!other.GetComponent<LandHex>())
-                    //    other.gameObject.AddComponent<LandHex>();
-                    //other.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
-                    //other.GetComponent<WaterHex>().enabled = false;
-                    //Destroy(other.GetComponent<WaterHex>());
-                    //other.GetComponent<LandHex>().InitializeTile();
                 }
             }
 

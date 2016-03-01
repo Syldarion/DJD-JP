@@ -7196,7 +7196,7 @@ MonoBehaviour:
   CurrentPort: {fileID: 0}
   DockedFleet: {fileID: 0}
   SelectedShip: {fileID: 0}
-  ShipSelection: {fileID: 0}
+  ShipSelection: {fileID: 1662398248}
   StatBlockPrefab: {fileID: 11448052, guid: 01639f1ced848ba4980280595b392715, type: 2}
   ActivePanel: {fileID: 932265117}
   FleetResourceList: {fileID: 1960041148}

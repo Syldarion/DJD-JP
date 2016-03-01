@@ -27,6 +27,9 @@ public class FleetManager : MonoBehaviour
     /// <param name="fleet_b">The fleet being moved onto</param>
     public void PopulateFleetManager(Fleet fleet_a, Fleet fleet_b)
     {
+        if (fleet_a.Ships.Count < 1 || fleet_b.Ships.Count < 1 || fleet_a == fleet_b)
+            return;
+
         PlayerScript.MyPlayer.UIOpen = true;
 
         GetComponent<CanvasGroup>().alpha = 1;

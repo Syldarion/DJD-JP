@@ -1811,7 +1811,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 828204419}
+      - m_Target: {fileID: 0}
         m_MethodName: UpdateMapType
         m_Mode: 0
         m_Arguments:
@@ -2386,7 +2386,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 828204419}
+      - m_Target: {fileID: 0}
         m_MethodName: UpdateGamePace
         m_Mode: 0
         m_Arguments:
@@ -3107,7 +3107,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 744726147}
+      - m_Target: {fileID: 0}
         m_MethodName: NewMessage
         m_Mode: 0
         m_Arguments:
@@ -5225,7 +5225,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 828204419}
+      - m_Target: {fileID: 0}
         m_MethodName: UpdateMapSize
         m_Mode: 0
         m_Arguments:

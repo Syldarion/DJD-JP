@@ -111,7 +111,10 @@ public class SettingsManager : NetworkBehaviour
     public void StartGame()
     {
         foreach (CustomLobbyPlayer go in GameObject.FindObjectsOfType<CustomLobbyPlayer>())
+        {
+            go.readyToBegin = true;
             go.transform.SetParent(null, false);
+        }
 
         GameObject.Find("NetworkManager").GetComponent<NetworkLobbyManager>().CheckReadyToBegin();
     }

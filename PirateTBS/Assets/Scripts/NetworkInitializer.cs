@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class NetworkInitializer : MonoBehaviour
@@ -39,6 +40,8 @@ public class NetworkInitializer : MonoBehaviour
 
     public void ConnectAsHost()
     {
+        SceneManager.LoadScene("lobby");
+
         NetworkManager.singleton.networkAddress = "localhost";
         NetworkManager.singleton.networkPort = 5666;
         NetworkManager.singleton.StartHost();
@@ -48,6 +51,8 @@ public class NetworkInitializer : MonoBehaviour
 
     public void ConnectAsClient()
     {
+        SceneManager.LoadScene("lobby");
+
         NetworkManager.singleton.networkAddress = IPAddress;
         NetworkManager.singleton.networkPort = Port;
         NetworkManager.singleton.StartClient();

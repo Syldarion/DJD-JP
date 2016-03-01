@@ -45,7 +45,7 @@ public class Port : NetworkBehaviour
 
     void OnMouseDown()
     {
-        Fleet current_fleet = GameObject.Find("Controller").GetComponent<PlayerScript>().ActiveFleet;
+        Fleet current_fleet = PlayerScript.MyPlayer.ActiveFleet;
         GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().CurrentPort = this;
         GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().OpenShop(current_fleet);
     }

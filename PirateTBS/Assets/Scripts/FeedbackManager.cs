@@ -18,13 +18,11 @@ public class FeedbackManager : MonoBehaviour
 
     string feedback_email;
     string feedback_password;
-    string receiver_email;
 
 	void Start()
 	{
         feedback_email = "djd.feedback@gmail.com";
         feedback_password = "fuckyoudontstealmypassword";
-        receiver_email = "makelacaleb@gmail.com";
 
         client = new SmtpClient
         {
