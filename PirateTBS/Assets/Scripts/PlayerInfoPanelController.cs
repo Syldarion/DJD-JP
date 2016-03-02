@@ -4,10 +4,14 @@ using System.Collections;
 
 public class PlayerInfoPanelController : MonoBehaviour
 {
+    [HideInInspector]
+    public static PlayerInfoPanelController Instance;
+
     RectTransform ActivePanel;
 
 	void Start()
 	{
+        Instance = this;
         ActivePanel = null;
 	}
 	
@@ -24,20 +28,12 @@ public class PlayerInfoPanelController : MonoBehaviour
                 return;
 
             if (ActivePanel.GetComponent<CanvasGroup>())
-            {
-                ActivePanel.GetComponent<CanvasGroup>().alpha = 0;
-                ActivePanel.GetComponent<CanvasGroup>().interactable = false;
-                ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-            }
+                PanelUtilities.DeactivatePanel(ActivePanel.GetComponent<CanvasGroup>());
         }
 
         ActivePanel = new_panel;
 
         if (ActivePanel.GetComponent<CanvasGroup>())
-        {
-            ActivePanel.GetComponent<CanvasGroup>().alpha = 1;
-            ActivePanel.GetComponent<CanvasGroup>().interactable = true;
-            ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-        }
+            PanelUtilities.ActivatePanel(ActivePanel.GetComponent<CanvasGroup>());
     }
 }

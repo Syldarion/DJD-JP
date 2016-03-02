@@ -4,6 +4,9 @@ using System.Collections;
 
 public class FleetManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static FleetManager Instance;
+
     public GameObject ShipStatBlockPrefab;
     public RectTransform FleetAList;
     public RectTransform FleetBList;
@@ -12,7 +15,7 @@ public class FleetManager : MonoBehaviour
 
 	void Start()
 	{
-		
+        Instance = this;
 	}
 
 	void Update()
@@ -32,9 +35,7 @@ public class FleetManager : MonoBehaviour
 
         PlayerScript.MyPlayer.UIOpen = true;
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
         GameObject.Find("FleetAName").GetComponentInChildren<Text>().text = fleet_a.name;
         GameObject.Find("FleetBName").GetComponentInChildren<Text>().text = fleet_b.name;
@@ -68,9 +69,7 @@ public class FleetManager : MonoBehaviour
         for (int i = 0; i < FleetBContent.childCount; i++)
             Destroy(FleetBContent.GetChild(i).gameObject);
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     /// <summary>

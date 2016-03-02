@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class PlayerInfoManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static PlayerInfoManager Instance;
+
     public PlayerScript OwningPlayer; //I'm sure this will be relevant somewhere
 
     public ShipStatBlock StatBlockPrefab;
@@ -20,7 +23,7 @@ public class PlayerInfoManager : MonoBehaviour
 
 	void Start()
     {
-
+        Instance = this;
 	}
 	
 	void Update()

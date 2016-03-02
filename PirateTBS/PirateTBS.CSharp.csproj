@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -110,6 +104,7 @@
     <Compile Include="Assets\Scripts\NetworkInitializer.cs" />
     <Compile Include="Assets\Scripts\NumericUpDown.cs" />
     <Compile Include="Assets\Scripts\PanCamera.cs" />
+    <Compile Include="Assets\Scripts\PanelUtilities.cs" />
     <Compile Include="Assets\Scripts\PlayerInfoManager.cs" />
     <Compile Include="Assets\Scripts\PlayerInfoPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />

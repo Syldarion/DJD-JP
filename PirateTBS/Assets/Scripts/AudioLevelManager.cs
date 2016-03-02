@@ -4,9 +4,12 @@ using System.Collections;
 
 public class AudioLevelManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static AudioLevelManager Instance;
+
 	void Start()
     {
-
+        Instance = this;
 	}
 
 	void Update()

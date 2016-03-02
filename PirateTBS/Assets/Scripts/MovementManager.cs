@@ -3,12 +3,15 @@ using System.Collections;
 
 public class MovementManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static MovementManager Instance;
+
     public PlayerScript ReferencePlayer;
     public FleetManager FleetManager;
 
 	void Start()
     {
-
+        Instance = this;
 	}
 	
 	void Update()

@@ -7,6 +7,9 @@ using System.Collections;
 
 public class CombatManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static CombatManager Instance;
+
     public ShipStatBlock StatBlockPrefab;
 
     public Fleet PlayerFleet;
@@ -39,18 +42,14 @@ public class CombatManager : MonoBehaviour
     {
         PlayerScript.MyPlayer.UIOpen = true;
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseCombatPanel()
     {
         PlayerScript.MyPlayer.UIOpen = false;
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     /// <summary>

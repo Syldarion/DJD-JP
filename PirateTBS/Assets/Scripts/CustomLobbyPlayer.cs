@@ -21,10 +21,22 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     {
         base.OnStartAuthority();
 
+        
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
         my_panel = Instantiate(LobbyPlayerPanelPrefab);
         NetworkServer.Spawn(my_panel);
 
         CmdUpdateName(GameObject.Find("NetworkManager").GetComponent<NetworkInitializer>().PlayerName);
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
     }
 
     void OnNameChanged(string name)

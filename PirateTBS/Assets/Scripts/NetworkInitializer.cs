@@ -5,12 +5,13 @@ using System.Collections;
 
 public class NetworkInitializer : MonoBehaviour
 {
+    [Header("Network Info")]
     public string PlayerName;
     public string IPAddress;
     public int Port;
     public string Password;
 
-	void Start()
+    void Start()
     {
         PlayerName = "Default";
         IPAddress = "localhost";
@@ -40,19 +41,13 @@ public class NetworkInitializer : MonoBehaviour
 
     public void ConnectAsHost()
     {
-        SceneManager.LoadScene("lobby");
-
         NetworkManager.singleton.networkAddress = "localhost";
         NetworkManager.singleton.networkPort = 5666;
         NetworkManager.singleton.StartHost();
-
-        NetworkManager.singleton.ServerChangeScene("lobby");
     }
 
     public void ConnectAsClient()
     {
-        SceneManager.LoadScene("lobby");
-
         NetworkManager.singleton.networkAddress = IPAddress;
         NetworkManager.singleton.networkPort = Port;
         NetworkManager.singleton.StartClient();

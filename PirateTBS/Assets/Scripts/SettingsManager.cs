@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class SettingsManager : NetworkBehaviour
 {
+    [HideInInspector]
+    public static SettingsManager Instance;
+
     public RectTransform SettingsPanel;
 
     public Dropdown MapTypeSelection;
@@ -22,6 +25,11 @@ public class SettingsManager : NetworkBehaviour
     public int MapWidth = 40;
     public int MapHeight = 24;
     public int MapControlPoints = 64;
+
+    void Start()
+    {
+        Instance = this;
+    }
 
     public override void OnStartServer()
     {
@@ -105,17 +113,5 @@ public class SettingsManager : NetworkBehaviour
     {
         GamePaceIndex = game_pace_index;
         GamePaceSelection.value = GamePaceIndex;
-    }
-
-    [Server]
-    public void StartGame()
-    {
-        foreach (CustomLobbyPlayer go in GameObject.FindObjectsOfType<CustomLobbyPlayer>())
-        {
-            go.readyToBegin = true;
-            go.transform.SetParent(null, false);
-        }
-
-        GameObject.Find("NetworkManager").GetComponent<NetworkLobbyManager>().CheckReadyToBegin();
     }
 }

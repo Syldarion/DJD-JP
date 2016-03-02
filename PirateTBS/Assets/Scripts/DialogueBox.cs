@@ -30,18 +30,14 @@ public class DialogueBox : MonoBehaviour
     {
         DialogueOpen = true;
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseDialogue()
     {
         DialogueOpen = false;
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void NewDialogue(string message, float duration = 0.0f)

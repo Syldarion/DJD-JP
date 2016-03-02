@@ -3,11 +3,19 @@ using System.Collections;
 
 public class MainMenuPanelController : MonoBehaviour
 {
+    [HideInInspector]
+    public static MainMenuPanelController Instance;
+
     public RectTransform ActivePanel;
     public RectTransform FadingInPanel;
     public RectTransform FadingOutPanel;
 
     public float FadeTime;
+
+    void Start()
+    {
+        Instance = this;
+    }
 
     public void SwitchTo(RectTransform new_panel)
     {

@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 public class PortShopManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static PortShopManager Instance;
+
     public Port CurrentPort;
     public Fleet DockedFleet;
     public Ship SelectedShip;
@@ -22,7 +25,7 @@ public class PortShopManager : MonoBehaviour
 
     public void Start()
     {
-
+        Instance = this;
     }
 
     void Update()
@@ -41,9 +44,7 @@ public class PortShopManager : MonoBehaviour
         SelectedShip = DockedFleet.Ships[0];
         PopulatePlayerShipyard(fleet_to_dock);
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
         PopulateShipDropdown();
         PopulatePortMarket();
@@ -55,9 +56,7 @@ public class PortShopManager : MonoBehaviour
     {
         PlayerScript.MyPlayer.UIOpen = false;
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void SwitchTo(RectTransform new_panel)
@@ -65,15 +64,11 @@ public class PortShopManager : MonoBehaviour
         if (!ActivePanel || ActivePanel == new_panel || !new_panel.GetComponent<CanvasGroup>())
             return;
 
-        ActivePanel.GetComponent<CanvasGroup>().alpha = 0;
-        ActivePanel.GetComponent<CanvasGroup>().interactable = false;
-        ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(ActivePanel.GetComponent<CanvasGroup>());
 
         ActivePanel = new_panel;
 
-        ActivePanel.GetComponent<CanvasGroup>().alpha = 1;
-        ActivePanel.GetComponent<CanvasGroup>().interactable = true;
-        ActivePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(ActivePanel.GetComponent<CanvasGroup>());
     }
 
     public void OnShipDropdownChange(int new_value)

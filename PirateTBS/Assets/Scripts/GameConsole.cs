@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 public class GameConsole : MonoBehaviour
 {
+    [HideInInspector]
+    public static GameConsole Instance;
+
     Dictionary<string, Action<string>> Commands;
     Dictionary<string, string> HelpText;
 
@@ -16,6 +19,8 @@ public class GameConsole : MonoBehaviour
 
 	void Start()
 	{
+        Instance = this;
+
         Commands = new Dictionary<string, Action<string>>();
         HelpText = new Dictionary<string, string>();
 

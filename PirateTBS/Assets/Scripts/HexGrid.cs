@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 public class HexGrid : NetworkBehaviour
 {
+    [HideInInspector]
+    public static HexGrid Instance;
+
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
     public GameObject PortPrefab;
@@ -24,6 +27,8 @@ public class HexGrid : NetworkBehaviour
 
 	void Start()
     {
+        Instance = this;
+
         ports = new List<Port>();
 
         LandTiles = new List<LandHex>();

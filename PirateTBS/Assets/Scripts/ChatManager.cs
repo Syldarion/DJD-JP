@@ -3,8 +3,16 @@ using UnityEngine.Networking;
 
 public class ChatManager : NetworkBehaviour
 {
+    [HideInInspector]
+    public static ChatManager Instance;
+
     public GameObject ChatMessagePrefab;
     
+    void Start()
+    {
+        Instance = this;
+    }
+
     [Command]
     public void CmdNewMessage(string sender, string message)
     {

@@ -5,13 +5,15 @@ using System.Collections.Generic;
 
 public class MiniMap : MonoBehaviour
 {
+    [HideInInspector]
+    public static MiniMap Instance;
+
     public WaterHex WaterHexPrefab;
     public LandHex LandHexPrefab;
 
-
-
     void Start()
     {
+        Instance = this;
     }
 
     void Update()

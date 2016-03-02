@@ -9,6 +9,9 @@ using System.ComponentModel;
 
 public class FeedbackManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static FeedbackManager Instance;
+
     public Dropdown FeedbackTypeSelection;
     public InputField FeedbackSubjectInput;
     public InputField FeedbackInput;
@@ -21,6 +24,8 @@ public class FeedbackManager : MonoBehaviour
 
 	void Start()
 	{
+        Instance = this;
+
         feedback_email = "djd.feedback@gmail.com";
         feedback_password = "fuckyoudontstealmypassword";
 
@@ -47,18 +52,14 @@ public class FeedbackManager : MonoBehaviour
     {
         PlayerScript.MyPlayer.UIOpen = true;
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseFeedback()
     {
         PlayerScript.MyPlayer.UIOpen = false;
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void SendFeedback()

@@ -6,6 +6,9 @@ using System.Reflection;
 
 public class CargoManager : MonoBehaviour
 {
+    [HideInInspector]
+    public static CargoManager Instance;
+
     public Ship ShipA;
     public Ship ShipB;
 
@@ -19,7 +22,7 @@ public class CargoManager : MonoBehaviour
 
     void Start()
 	{
-		
+        Instance = this;
 	}
 
 	void Update()
@@ -31,18 +34,14 @@ public class CargoManager : MonoBehaviour
     {
         PlayerScript.MyPlayer.UIOpen = true;
 
-        GetComponent<CanvasGroup>().alpha = 1;
-        GetComponent<CanvasGroup>().interactable = true;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseCargoManager()
     {
         PlayerScript.MyPlayer.UIOpen = false;
 
-        GetComponent<CanvasGroup>().alpha = 0;
-        GetComponent<CanvasGroup>().interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void PopulateShipList(Fleet fleet)

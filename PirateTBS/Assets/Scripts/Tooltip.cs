@@ -4,11 +4,12 @@ using System.Collections;
 
 public class Tooltip : MonoBehaviour
 {
-    public static Tooltip tooltip;
+    [HideInInspector]
+    public static Tooltip Instance;
 
 	void Start()
 	{
-        tooltip = this;
+        Instance = this;
 	}
 
 	void Update()
@@ -24,17 +25,9 @@ public class Tooltip : MonoBehaviour
     public static void EnableTooltip(bool enable)
     {
         if(enable)
-        {
-            tooltip.GetComponent<CanvasGroup>().alpha = 1;
-            tooltip.GetComponent<CanvasGroup>().interactable = true;
-            tooltip.GetComponent<CanvasGroup>().blocksRaycasts = true;
-        }
+            PanelUtilities.ActivatePanel(Instance.GetComponent<CanvasGroup>());
         else
-        {
-            tooltip.GetComponent<CanvasGroup>().alpha = 0;
-            tooltip.GetComponent<CanvasGroup>().interactable = false;
-            tooltip.GetComponent<CanvasGroup>().blocksRaycasts = false;
-        }
+            PanelUtilities.DeactivatePanel(Instance.GetComponent<CanvasGroup>());
     }
 
     /// <summary>
@@ -43,6 +36,6 @@ public class Tooltip : MonoBehaviour
     /// <param name="tip">Tooltip text</param>
     public static void UpdateTooltip(string tip)
     {
-        tooltip.GetComponentInChildren<Text>().text = tip;
+        Instance.GetComponentInChildren<Text>().text = tip;
     }
 }
