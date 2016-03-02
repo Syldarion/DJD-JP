@@ -28,6 +28,7 @@ public class SettingsManager : NetworkBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         Instance = this;
     }
 

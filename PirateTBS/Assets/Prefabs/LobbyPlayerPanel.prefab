@@ -46,6 +46,7 @@ GameObject:
   - 224: {fileID: 22417500}
   - 222: {fileID: 22267100}
   - 114: {fileID: 11423846}
+  - 114: {fileID: 11433320}
   - 114: {fileID: 11485896}
   - 114: {fileID: 11480108}
   m_Layer: 5
@@ -119,7 +120,22 @@ MonoBehaviour:
     i14: 126
     i15: 231
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &11433320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 194998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07834a6528bab44185712ea52052059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLobbyGUI: 0
+  PlayerName: 
+  NationalityIndex: 0
+  IsReady: 0
 --- !u!114 &11458170
 MonoBehaviour:
   m_ObjectHideFlags: 1

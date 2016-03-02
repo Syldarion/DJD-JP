@@ -8,8 +8,6 @@ public class PlayerScript : NetworkBehaviour
     public static PlayerScript MyPlayer;
     public bool UIOpen;
 
-    public FeedbackManager FeedbackPanel;
-
     [SyncVar(hook = "OnNameChanged")]
     public string Name;
 
@@ -46,10 +44,8 @@ public class PlayerScript : NetworkBehaviour
 
         MyPlayer = this;
 
-        GameObject.Find("PlayerInfoPanel").GetComponent<PlayerInfoManager>().SetOwningPlayer(this);
-        GameObject.Find("MovementManager").GetComponent<MovementManager>().ReferencePlayer = this;
-
-        FeedbackPanel = GameObject.Find("FeedbackPanel").GetComponent<FeedbackManager>();
+        PlayerInfoManager.Instance.SetOwningPlayer(this);
+        MovementManager.Instance.ReferencePlayer = this;
     }
 
     void Update()
@@ -79,12 +75,12 @@ public class PlayerScript : NetworkBehaviour
             ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++Fleet.NewShipID));
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
         {
-            GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().PopulateShipList(ActiveFleet);
-            GameObject.Find("CargoManagementPanel").GetComponent<CargoManager>().OpenCargoManager();
+            CargoManager.Instance.PopulateShipList(ActiveFleet);
+            CargoManager.Instance.OpenCargoManager();
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.F))
-            FeedbackPanel.OpenFeedback();
+            FeedbackManager.Instance.OpenFeedback();
     }
 
     [Command]

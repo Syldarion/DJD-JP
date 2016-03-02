@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class CustomLobbyPlayer : NetworkLobbyPlayer
 {
-    public GameObject LobbyPlayerPanelPrefab;
-    GameObject my_panel;
-
     [SyncVar(hook = "OnNameChanged")]
     public string PlayerName = "";
     public int NationalityIndex = 0;
@@ -14,29 +11,21 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
     void Start()
     {
-        CmdMovePanel();
     }
 
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
 
-        
+        PlayerName = CustomLobbyManager.Instance.GetComponent<NetworkInitializer>().PlayerName;
     }
 
-    public override void OnStartServer()
+
+    public override void OnStartClient()
     {
-        base.OnStartServer();
+        base.OnStartClient();
 
-        my_panel = Instantiate(LobbyPlayerPanelPrefab);
-        NetworkServer.Spawn(my_panel);
-
-        CmdUpdateName(GameObject.Find("NetworkManager").GetComponent<NetworkInitializer>().PlayerName);
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
+        transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
     }
 
     void OnNameChanged(string name)
@@ -53,9 +42,7 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     void RpcOnNameChange(string name)
     {
-        PlayerName = name;
-
-        my_panel.GetComponentInChildren<Text>().text = name;
+        GetComponentInChildren<Text>().text = name;
     }
 
     [Command]
@@ -67,6 +54,6 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     [ClientRpc]
     void RpcMovePanel()
     {
-        my_panel.transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
+        transform.SetParent(GameObject.Find("LobbyPlayerList").transform, false);
     }
 }

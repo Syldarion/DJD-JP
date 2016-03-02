@@ -36,7 +36,7 @@ public class HexGrid : NetworkBehaviour
 
         HexWidth = WaterHexPrefab.GetComponent<MeshRenderer>().bounds.size.x;
 
-        SettingsManager settings = GameObject.Find("SettingsManager").GetComponent<SettingsManager>();
+        SettingsManager settings = SettingsManager.Instance;
 
         GridWidth = settings.MapWidth;
         GridHeight = settings.MapHeight;
