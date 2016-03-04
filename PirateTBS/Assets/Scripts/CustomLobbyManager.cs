@@ -47,19 +47,28 @@ public class CustomLobbyManager : NetworkLobbyManager
         {
             PanelUtilities.DeactivatePanel(LobbyBasePanel);
             PanelUtilities.ActivatePanel(MainMenuBasePanel);
+            PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
         }
         else
+        {
             SceneManager.LoadScene("menu");
+            PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
+        }
     }
 
     public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
     {
-        Debug.Log("Entered lobbyserversceneloadedforplayer");
-
-        gamePlayer = Instantiate(gamePlayerPrefab);
         gamePlayer.GetComponent<PlayerScript>().Name = lobbyPlayer.GetComponent<CustomLobbyPlayer>().PlayerName;
 
-        return base.OnLobbyServerSceneLoadedForPlayer(lobbyPlayer, gamePlayer);
+        return true;
+    }
+
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        base.OnClientSceneChanged(conn);
+
+        if (networkSceneName == "main")
+            PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void StartGame()
@@ -75,11 +84,9 @@ public class CustomLobbyManager : NetworkLobbyManager
         foreach (CustomLobbyPlayer go in GameObject.FindObjectsOfType<CustomLobbyPlayer>())
         {
             go.readyToBegin = true;
-            go.transform.SetParent(null, false);
         }
 
-        //CheckReadyToBegin();
-
-        ServerChangeScene("main");
+        CheckReadyToBegin();
+        //ServerChangeScene("main");
     }
 }

@@ -12,6 +12,7 @@ public class MovementManager : MonoBehaviour
 	void Start()
     {
         Instance = this;
+        StartCoroutine(WaitForPlayer());
 	}
 	
 	void Update()
@@ -41,5 +42,12 @@ public class MovementManager : MonoBehaviour
             else
             { } //Combat
         }
+    }
+
+    IEnumerator WaitForPlayer()
+    {
+        while (!PlayerScript.MyPlayer)
+            yield return null;
+        ReferencePlayer = PlayerScript.MyPlayer;
     }
 }

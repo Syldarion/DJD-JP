@@ -29,16 +29,14 @@ public class FeedbackManager : MonoBehaviour
         feedback_email = "djd.feedback@gmail.com";
         feedback_password = "fuckyoudontstealmypassword";
 
-        client = new SmtpClient
-        {
-            Host = "smtp.gmail.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = (ICredentialsByHost)new NetworkCredential(feedback_email, feedback_password),
-            Timeout = 5000
-        };
+        client = new SmtpClient();
+        client.Host = "smtp.gmail.com";
+        client.Port = 587;
+        client.EnableSsl = true;
+        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+        client.UseDefaultCredentials = false;
+        client.Credentials = (ICredentialsByHost)new NetworkCredential(feedback_email, feedback_password);
+        client.Timeout = 5000;
 
         client.SendCompleted += OnMessageSent;
     }

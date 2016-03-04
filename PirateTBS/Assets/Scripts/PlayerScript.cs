@@ -27,8 +27,19 @@ public class PlayerScript : NetworkBehaviour
 
     public int NewFleetID;
 
-    void Start()
+    public override void OnStartLocalPlayer()
     {
+        base.OnStartLocalPlayer();
+
+        MyPlayer = this;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        this.name = Name;
+
         TotalGold = 0;
         TotalShips = 0;
         TotalCrew = 0;
@@ -36,16 +47,6 @@ public class PlayerScript : NetworkBehaviour
         Reputation = new int[4] { 50, 50, 50, 50 };
 
         NewFleetID = 0;
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-
-        MyPlayer = this;
-
-        PlayerInfoManager.Instance.SetOwningPlayer(this);
-        MovementManager.Instance.ReferencePlayer = this;
     }
 
     void Update()

@@ -24,6 +24,7 @@ public class PlayerInfoManager : MonoBehaviour
 	void Start()
     {
         Instance = this;
+        StartCoroutine(WaitForPlayer());
 	}
 	
 	void Update()
@@ -134,5 +135,12 @@ public class PlayerInfoManager : MonoBehaviour
     public void PopulateMoraleList()
     {
 
+    }
+
+    IEnumerator WaitForPlayer()
+    {
+        while (!PlayerScript.MyPlayer)
+            yield return null;
+        OwningPlayer = PlayerScript.MyPlayer;
     }
 }
