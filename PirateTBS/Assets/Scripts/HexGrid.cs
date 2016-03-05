@@ -192,6 +192,10 @@ public class HexGrid : NetworkBehaviour
 
             new_port.InitializePort();
 
+            NetworkServer.Spawn(new_port.gameObject);
+
+            new_port.RpcSpawnPortOthers(coastal_tiles[selected_tile].name);
+
             coastal_tiles[selected_tile].HasPort = true;
             coastal_tiles.RemoveAt(selected_tile);
 

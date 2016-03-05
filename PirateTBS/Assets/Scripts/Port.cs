@@ -6,9 +6,12 @@ using System.Collections.Generic;
 
 public class Port : NetworkBehaviour
 {
+    [SyncVar]
     public string PortName;
     public Nationality PortNationality;
     public HexTile SpawnTile;
+
+    [SyncVar]
     public Cargo Market;
     public List<Ship> Shipyard;
 
@@ -34,9 +37,10 @@ public class Port : NetworkBehaviour
 
     }
     
-    void SpawnPortOthers(string parent_tile)
+    [ClientRpc]
+    public void RpcSpawnPortOthers(string parent_tile)
     {
-        transform.SetParent(GameObject.Find(parent_tile).transform);
+        transform.SetParent(GameObject.Find(string.Format("Grid/{0}", parent_tile)).transform, false);
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
         HexGrid.ports.Add(this);
 
