@@ -38,7 +38,7 @@ public class PortShopManager : MonoBehaviour
         if (fleet_to_dock.Ships.Count < 1)
             return;
 
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         DockedFleet = fleet_to_dock;
         SelectedShip = DockedFleet.Ships[0];
@@ -54,7 +54,7 @@ public class PortShopManager : MonoBehaviour
 
     public void CloseShop()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }

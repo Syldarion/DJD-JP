@@ -33,7 +33,7 @@ public class FleetManager : MonoBehaviour
         if (fleet_a.Ships.Count < 1 || fleet_b.Ships.Count < 1 || fleet_a == fleet_b)
             return;
 
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
@@ -59,7 +59,7 @@ public class FleetManager : MonoBehaviour
     /// </summary>
     public void CloseFleetManager()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         Transform FleetAContent = GameObject.Find("FleetAShipsContent").transform;
         Transform FleetBContent = GameObject.Find("FleetBShipsContent").transform;

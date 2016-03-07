@@ -19,7 +19,7 @@ public class TurnManager : NetworkBehaviour
         base.OnStartClient();
 
         Instance = this;
-        GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        GetComponent<RectTransform>().anchoredPosition = new Vector2(0.0f, 270.0f);
     }
 
     public override void OnStartServer()

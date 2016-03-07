@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class PlayerScript : NetworkBehaviour
 {
     public static PlayerScript MyPlayer;
-    public bool UIOpen;
+    public CanvasGroup OpenUI;
 
     [SyncVar(hook = "OnNameChanged")]
     public string Name;
@@ -37,9 +37,9 @@ public class PlayerScript : NetworkBehaviour
         ReadyForNextTurn = false;
     }
 
-    public override void OnStartLocalPlayer()
+    public override void OnStartAuthority()
     {
-        base.OnStartLocalPlayer();
+        base.OnStartAuthority();
 
         MyPlayer = this;
     }
@@ -64,18 +64,25 @@ public class PlayerScript : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (UIOpen)
-            return;
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (ActiveFleet != null)
                 ActiveFleet = null;
+            else if(OpenUI)
+            {
+                PanelUtilities.DeactivatePanel(OpenUI);
+                OpenUI = null;
+            }
             else
             {
-                //Open menu
+                OpenUI = InGameMenuController.Instance.GetComponent<CanvasGroup>();
+                PanelUtilities.ActivatePanel(OpenUI);
             }
         }
+
+        if (OpenUI)
+            return;
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
@@ -83,7 +90,7 @@ public class PlayerScript : NetworkBehaviour
             CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
         }
         if (Input.GetKeyDown(KeyCode.O))
-            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++Fleet.NewShipID));
+            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++ActiveFleet.NewShipID));
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
         {
             CargoManager.Instance.PopulateShipList(ActiveFleet);

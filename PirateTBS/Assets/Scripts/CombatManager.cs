@@ -40,14 +40,14 @@ public class CombatManager : MonoBehaviour
 
     public void OpenCombatPanel()
     {
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseCombatPanel()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }

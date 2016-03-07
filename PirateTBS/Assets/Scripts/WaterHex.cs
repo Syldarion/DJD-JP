@@ -29,7 +29,7 @@ public class WaterHex : HexTile
 
     void OnMouseDown()
     {
-        if (!PlayerScript.MyPlayer.UIOpen)
+        if (!PlayerScript.MyPlayer.OpenUI)
             GameObject.Find("MovementManager").GetComponent<MovementManager>().MoveFleet(this);
     }
 
@@ -46,7 +46,7 @@ public class WaterHex : HexTile
 
     void OnDoubleClick()
     {
-        if (!PlayerScript.MyPlayer.UIOpen)
+        if (!PlayerScript.MyPlayer.OpenUI)
             Camera.main.GetComponent<PanCamera>().StartCoroutine("MoveToPosition", this.transform.position);
     }
 }

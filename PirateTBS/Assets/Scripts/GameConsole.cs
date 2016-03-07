@@ -43,18 +43,19 @@ public class GameConsole : MonoBehaviour
         {
             StopAllCoroutines();
 
-            if (PlayerScript.MyPlayer.UIOpen)
+            if (PlayerScript.MyPlayer.OpenUI)
                 StartCoroutine("CloseConsole");
             else
                 StartCoroutine("OpenConsole");
-
-            PlayerScript.MyPlayer.UIOpen = !PlayerScript.MyPlayer.UIOpen;
         }
 	}
 
     IEnumerator OpenConsole()
     {
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
         RectTransform console_rect = GetComponent<RectTransform>();
+
+        PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
         while (console_rect.sizeDelta.y < 600)
         {
@@ -65,6 +66,7 @@ public class GameConsole : MonoBehaviour
 
     IEnumerator CloseConsole()
     {
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
         RectTransform console_rect = GetComponent<RectTransform>();
 
         while (console_rect.sizeDelta.y > 0)
@@ -72,6 +74,8 @@ public class GameConsole : MonoBehaviour
             console_rect.sizeDelta = new Vector2(console_rect.sizeDelta.x, console_rect.sizeDelta.y - 20);
             yield return null;
         }
+
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void RegisterCommand(string command, Action<string> action)

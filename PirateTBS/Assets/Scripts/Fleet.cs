@@ -12,7 +12,7 @@ public class Fleet : NetworkBehaviour
     public int FleetSpeed;              //Current speed of the fleet
     public HexTile CurrentPosition;     //HexTile that the fleet is a child of
     public GameObject ShipPrefab;
-    public static int NewShipID = 0;
+    public int NewShipID = 0;
 
     [SyncVar]
     public bool MoveActionTaken;

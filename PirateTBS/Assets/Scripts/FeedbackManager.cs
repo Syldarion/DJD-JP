@@ -48,14 +48,14 @@ public class FeedbackManager : MonoBehaviour
 
     public void OpenFeedback()
     {
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseFeedback()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
