@@ -160,6 +160,8 @@ public class Ship : NetworkBehaviour
     [SyncVar]
     public Cargo Cargo;
 
+    public int CurrentCrew;  // This may need to be networked
+    
     public string ShipType;
     public int MaxCannons;
     public int Speed;

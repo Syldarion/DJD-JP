@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 060257e4c85ec2744afcd06cd560f52d
-timeCreated: 1448147880
+timeCreated: 1457313343
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - FleetPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
+  - SpawnPort: {instanceID: 0}
+  - ActiveFleet: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
