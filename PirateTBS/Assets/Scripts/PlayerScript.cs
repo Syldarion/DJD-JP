@@ -27,6 +27,16 @@ public class PlayerScript : NetworkBehaviour
 
     public int NewFleetID;
 
+    [SyncVar]
+    public bool ReadyForNextTurn;
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        ReadyForNextTurn = false;
+    }
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -92,12 +102,11 @@ public class PlayerScript : NetworkBehaviour
 
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
-        new_fleet.transform.SetParent(new_tile.transform, false);
-        new_fleet.CurrentPosition = new_tile;
-
         Fleets.Add(new_fleet);
 
         NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, gameObject);
+        
+        new_fleet.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
 
         //RpcUpdateFleet(new_fleet.gameObject, new_tile.gameObject, new Vector3(0.0f, 0.25f, 0.0f));
     }
@@ -135,5 +144,18 @@ public class PlayerScript : NetworkBehaviour
 
         if (isLocalPlayer)
             FindObjectOfType<PlayerInfoManager>().UpdateCaptainName(new_name);
+    }
+
+    [Command]
+    public void CmdReadyForNextTurn()
+    {
+        ReadyForNextTurn = true;
+        TurnManager.Instance.CmdCheckReadyForNextTurn();
+    }
+
+    [Command]
+    public void CmdNotReadyForNextTurn()
+    {
+        ReadyForNextTurn = false;
     }
 }

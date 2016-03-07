@@ -14,6 +14,11 @@ public class Fleet : NetworkBehaviour
     public GameObject ShipPrefab;
     public static int NewShipID = 0;
 
+    [SyncVar]
+    public bool MoveActionTaken;
+    [SyncVar]
+    public bool CombatActionTaken;
+
 	void Start()
     {
 
@@ -28,20 +33,23 @@ public class Fleet : NetworkBehaviour
         base.OnStartServer();
 
         FleetSpeed = 5;
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-
-        Ships = new List<Ship>();
+        MoveActionTaken = false;
+        CombatActionTaken = false;
     }
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
 
+        Ships = new List<Ship>();
+    }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+
         Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
+        PlayerScript.MyPlayer.Fleets.Add(this);
     }
 
     [Command]
@@ -111,9 +119,51 @@ public class Fleet : NetworkBehaviour
     {
         GetComponent<SphereCollider>().radius = FleetSpeed * 2;
     }
-    
+
+    [Command]
+    public void CmdSpawnOnTile(int x, int y)
+    {
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        transform.SetParent(new_tile.transform, false);
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        CurrentPosition = new_tile;
+
+        RpcSpawnOnTile(x, y);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnOnTile(int x, int y)
+    {
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        transform.SetParent(new_tile.transform, false);
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        CurrentPosition = new_tile;
+    }
+
     [Command]
     public void CmdMoveFleet(int x, int y)
+    {
+        if (MoveActionTaken)
+            return;
+
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))
+        {
+            transform.SetParent(new_tile.transform, false);
+            transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+            CurrentPosition = new_tile;
+
+            RpcMoveFleet(x, y);
+
+            MoveActionTaken = true;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcMoveFleet(int x, int y)
     {
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
