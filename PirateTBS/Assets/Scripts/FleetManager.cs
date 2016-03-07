@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FleetManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class FleetManager : MonoBehaviour
     public GameObject ShipStatBlockPrefab;
     public RectTransform FleetAList;
     public RectTransform FleetBList;
+
+    public Text FleetAName;
+    public Text FleetBName;
 
     Fleet FleetA, FleetB;
 
@@ -37,8 +41,11 @@ public class FleetManager : MonoBehaviour
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
-        GameObject.Find("FleetAName").GetComponentInChildren<Text>().text = fleet_a.name;
-        GameObject.Find("FleetBName").GetComponentInChildren<Text>().text = fleet_b.name;
+        FleetA = fleet_a;
+        FleetB = fleet_b;
+
+        FleetAName.text = fleet_a.name;
+        FleetBName.text = fleet_b.name;
 
         foreach(Ship s in fleet_a.Ships)
         {
@@ -61,13 +68,10 @@ public class FleetManager : MonoBehaviour
     {
         PlayerScript.MyPlayer.OpenUI = null;
 
-        Transform FleetAContent = GameObject.Find("FleetAShipsContent").transform;
-        Transform FleetBContent = GameObject.Find("FleetBShipsContent").transform;
-
-        for (int i = 0; i < FleetAContent.childCount; i++)
-            Destroy(FleetAContent.GetChild(i).gameObject);
-        for (int i = 0; i < FleetBContent.childCount; i++)
-            Destroy(FleetBContent.GetChild(i).gameObject);
+        var children = new List<GameObject>();
+        foreach (Transform child in FleetAList.transform) children.Add(child.gameObject);
+        foreach (Transform child in FleetBList.transform) children.Add(child.gameObject);
+        foreach (GameObject go in children) Destroy(go);
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
@@ -82,8 +86,41 @@ public class FleetManager : MonoBehaviour
     {
         if(fleet_from.Ships.Contains(ship))
         {
-            fleet_to.AddShip(ship);
+            fleet_to.CmdAddShip(ship.name);
             fleet_from.CmdRemoveShip(ship.name);
+        }
+
+        if (fleet_from.Ships.Count <= 0 || fleet_to.Ships.Count <= 0)
+            CloseFleetManager();
+    }
+
+    /// <summary>
+    /// Transfers selected ships from the left fleet to the right
+    /// </summary>
+    public void TransferLeftToRight()
+    {
+        foreach (GameObject ship in FleetAList.GetComponent<SelectionGroup>().SelectedObjects)
+        {
+            if (ship.GetComponent<ShipStatBlock>())
+            {
+                TransferShip(FleetA, FleetB, ship.GetComponent<ShipStatBlock>().ReferenceShip);
+                ship.transform.SetParent(FleetBList, false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Transfers selected ships from the right fleet to the left
+    /// </summary>
+    public void TransferRightToLeft()
+    {
+        foreach (GameObject ship in FleetBList.GetComponent<SelectionGroup>().SelectedObjects)
+        {
+            if (ship.GetComponent<ShipStatBlock>())
+            {
+                TransferShip(FleetB, FleetA, ship.GetComponent<ShipStatBlock>().ReferenceShip);
+                ship.transform.SetParent(FleetAList, false);
+            }
         }
     }
 }

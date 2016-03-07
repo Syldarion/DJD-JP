@@ -90,7 +90,7 @@ public class PlayerScript : NetworkBehaviour
             CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
         }
         if (Input.GetKeyDown(KeyCode.O))
-            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++ActiveFleet.NewShipID));
+            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", ActiveFleet.Name, ++ActiveFleet.NewShipID));
         if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
         {
             CargoManager.Instance.PopulateShipList(ActiveFleet);
@@ -114,8 +114,6 @@ public class PlayerScript : NetworkBehaviour
         NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, gameObject);
         
         new_fleet.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
-
-        //RpcUpdateFleet(new_fleet.gameObject, new_tile.gameObject, new Vector3(0.0f, 0.25f, 0.0f));
     }
 
     [ClientRpc]
@@ -157,6 +155,7 @@ public class PlayerScript : NetworkBehaviour
     public void CmdReadyForNextTurn()
     {
         ReadyForNextTurn = true;
+
         TurnManager.Instance.CmdCheckReadyForNextTurn();
     }
 
@@ -164,5 +163,14 @@ public class PlayerScript : NetworkBehaviour
     public void CmdNotReadyForNextTurn()
     {
         ReadyForNextTurn = false;
+
+        RpcSetEndTurnText();
+    }
+
+    [ClientRpc]
+    public void RpcSetEndTurnText()
+    {
+        if(this == MyPlayer)
+            TurnManager.Instance.ActionButtonText.text = "END TURN";
     }
 }

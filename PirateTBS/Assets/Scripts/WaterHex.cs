@@ -47,6 +47,6 @@ public class WaterHex : HexTile
     void OnDoubleClick()
     {
         if (!PlayerScript.MyPlayer.OpenUI)
-            Camera.main.GetComponent<PanCamera>().StartCoroutine("MoveToPosition", this.transform.position);
+            Camera.main.GetComponent<PanCamera>().CenterOnTarget(transform);
     }
 }

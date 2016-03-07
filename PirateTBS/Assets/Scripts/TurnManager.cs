@@ -10,6 +10,7 @@ public class TurnManager : NetworkBehaviour
     public static TurnManager Instance;
 
     public Text CurrentTurnText;
+    public Text ActionButtonText;
 
     [SyncVar]
     public int CurrentTurn;
@@ -48,8 +49,10 @@ public class TurnManager : NetworkBehaviour
         {
             PlayerScript player = go.GetComponent<PlayerScript>();
             if (player)
+            {
                 foreach (Fleet f in player.Fleets)
                     f.MoveActionTaken = f.CombatActionTaken = false;
+            }
         }
 
         CurrentTurn++;
@@ -66,6 +69,26 @@ public class TurnManager : NetworkBehaviour
     [Client]
     public void EndTurn()
     {
+        foreach(Fleet f in PlayerScript.MyPlayer.Fleets)
+        {
+            if(!f.MoveActionTaken)
+            {
+                Camera.main.GetComponent<PanCamera>().CenterOnTarget(f.transform);
+                StartCoroutine(UnitWaitingForCommand());
+                return;
+            }
+        }
+
+        StopAllCoroutines();
+        ActionButtonText.text = "WAITING...";
         PlayerScript.MyPlayer.CmdReadyForNextTurn();
+    }
+
+    [Client]
+    IEnumerator UnitWaitingForCommand()
+    {
+        ActionButtonText.text = "UNIT NEEDS ORDERS";
+        yield return new WaitForSeconds(1.0f);
+        ActionButtonText.text = "END TURN";
     }
 }

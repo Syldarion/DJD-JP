@@ -58,14 +58,14 @@ public class PanCamera : MonoBehaviour
         if (target)
         {
             current_target = target;
-            MoveToPosition(target.position);
+            StartCoroutine(MoveToPosition(target.position));
         }
     }
 
     IEnumerator MoveToPosition(Vector3 new_pos)
     {
         Vector3 target = new_pos + current_offset;
-        while(Vector3.Distance(transform.position, target) > 0.1f)
+        while(Vector3.Distance(transform.position, target) > 1.0f)
         {
             transform.position = Vector3.Lerp(transform.position, target, 0.25f);
             yield return null;

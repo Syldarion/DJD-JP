@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class Fleet : NetworkBehaviour
 {
+    PlayerScript OwningPlayer;
+
     [SyncVar(hook = "OnNameChanged")]
     public string Name;
     public List<Ship> Ships;            //Ships in the fleet
@@ -49,9 +51,16 @@ public class Fleet : NetworkBehaviour
         base.OnStartAuthority();
 
         Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
-        PlayerScript.MyPlayer.Fleets.Add(this);
+        if (!PlayerScript.MyPlayer.Fleets.Contains(this))
+            PlayerScript.MyPlayer.Fleets.Add(this);
+
+        OwningPlayer = PlayerScript.MyPlayer;
     }
 
+    /// <summary>
+    /// Debug function to spawn a ship in this fleet
+    /// </summary>
+    /// <param name="name">Name for the new ship</param>
     [Command]
     public void CmdSpawnShip(string name)
     {
@@ -62,14 +71,22 @@ public class Fleet : NetworkBehaviour
 
         NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, PlayerScript.MyPlayer.gameObject);
 
-        AddShip(new_ship);
+        CmdAddShip(new_ship.name);
     }
 
-    [Server]
-    public void AddShip(Ship ship)
+    [Command]
+    public void CmdAddShip(string ship_name)
     {
+        Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
+
+        if (!ship)
+            return;
+
         if (!Ships.Contains(ship))
             Ships.Add(ship);
+        else
+            return;
+
         UpdateFleetSpeed();
         ship.transform.SetParent(this.transform, false);
         RpcAddShipOthers(ship.Name);   
@@ -79,11 +96,16 @@ public class Fleet : NetworkBehaviour
     void RpcAddShipOthers(string ship_name)
     {
         Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
+
+        if (!ship)
+            return;
+
         if (!Ships.Contains(ship))
-        {
             Ships.Add(ship);
-            ship.transform.SetParent(this.transform, false);
-        }
+        else
+            return;
+
+        ship.transform.SetParent(this.transform, false);
     }
     
     [Command]
@@ -94,11 +116,14 @@ public class Fleet : NetworkBehaviour
         if (Ships.Contains(ship))
         {
             Ships.Remove(ship);
-            Network.Destroy(ship.gameObject);
+            UpdateFleetSpeed();
+            if (Ships.Count <= 0)
+            {
+                if (OwningPlayer)
+                    OwningPlayer.Fleets.Remove(this);
+                NetworkServer.Destroy(this.gameObject);
+            }
         }
-        UpdateFleetSpeed();
-        if (Ships.Count <= 0)
-            Network.Destroy(this.gameObject);
     }
 
     [Server]
@@ -117,7 +142,7 @@ public class Fleet : NetworkBehaviour
     [ClientRpc]
     void RpcUpdateFogRange()
     {
-        GetComponent<SphereCollider>().radius = FleetSpeed * 2;
+        GetComponent<SphereCollider>().radius = FleetSpeed * 2.1f;
     }
 
     [Command]

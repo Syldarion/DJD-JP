@@ -35,7 +35,7 @@ public class MovementManager : MonoBehaviour
 
         if (!tile_fleet && HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, ReferencePlayer.ActiveFleet.FleetSpeed).Contains(new_tile))
             ReferencePlayer.ActiveFleet.CmdMoveFleet(new_tile.HexCoord.Q, new_tile.HexCoord.R);
-        else if(HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 1).Contains(new_tile))
+        else if(HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 2).Contains(new_tile))
         {
             if (ReferencePlayer.Fleets.Contains(tile_fleet))
                 FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
