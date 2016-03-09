@@ -24,7 +24,11 @@ public class PortShopManager : MonoBehaviour
     public RectTransform FleetResourceList;
     public RectTransform PortResourceList;
     public RectTransform FleetShipyardList;
+    public SelectionGroup FleetSelection;
     public RectTransform PortShipyardList;
+    public SelectionGroup PortSelection;
+
+    private int PlayersGold;
 
     public void Start()
     {
@@ -53,6 +57,7 @@ public class PortShopManager : MonoBehaviour
         PopulatePortMarket();
         PopulateShipResources();
         PopulatePortShipyard();
+        PlayersGold = TotalPlayersGold();
     }
 
     public void CloseShop()
@@ -60,6 +65,8 @@ public class PortShopManager : MonoBehaviour
         PlayerScript.MyPlayer.UIOpen = false;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
+
+        UnPopulateShipyard();
     }
 
     public void SwitchTo(RectTransform new_panel)
@@ -161,6 +168,14 @@ public class PortShopManager : MonoBehaviour
             playerShipStatBlock.transform.SetParent(FleetShipyardList.transform, false);
         }
     }
+
+    public void UnPopulateShipyard()
+    {
+        var children = new List<GameObject>();
+        foreach (Transform child in FleetShipyardList.transform) children.Add(child.gameObject);
+        foreach (Transform child in PortShipyardList.transform) children.Add(child.gameObject);
+        foreach (GameObject go in children) Destroy(go);
+    }
     public void PopulatePortShipyard()
     {
         foreach (Ship forsale in CurrentPort.Shipyard)
@@ -202,10 +217,48 @@ public class PortShopManager : MonoBehaviour
 
     public void BuyShip()
     {
-        
+        int tranTotal = 0;
+                
+        foreach (GameObject ship in PortSelection.SelectedObjects)
+        {
+            tranTotal += ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        }
+
+        if (tranTotal < PlayersGold)
+        {
+            foreach (GameObject ship in PortSelection.SelectedObjects)
+            {
+                DockedFleet.AddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip);
+                CurrentPort.Shipyard.Remove(ship.GetComponent<ShipStatBlock>().ReferenceShip);
+            }
+
+            CompletePurchaseTransaction(tranTotal);
+        }
     }
 
+
     public void SellShip()
+    {
+        int tranTotal = 0;
+
+        foreach (GameObject ship in FleetSelection.SelectedObjects)
+        {
+            tranTotal += ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        }
+
+        foreach (GameObject ship in FleetSelection.SelectedObjects)
+        {
+            DockedFleet.Ships.Remove(ship.GetComponent<ShipStatBlock>().ReferenceShip);
+            CurrentPort.Shipyard.Add(ship.GetComponent<ShipStatBlock>().ReferenceShip);
+        }
+
+        if (tranTotal < CurrentPort.Market.Gold)
+            PlayersGold += tranTotal;
+        else
+            PlayersGold += CurrentPort.Market.Gold;
+    }
+
+    public void HireCrew()
     {
 
     }
@@ -213,37 +266,18 @@ public class PortShopManager : MonoBehaviour
     public void Tavern( int goldToSpend )
     {
         int allCrew = 0;
-        int totalGold = 0;
         int barTab = 0;
 
         foreach (Ship ship in DockedFleet.Ships)
         {
             allCrew += ship.CurrentCrew;
-            totalGold += ship.Cargo.Gold;
         }
 
         barTab = allCrew * goldToSpend;
 
-        if( barTab < totalGold )
+        if( barTab < PlayersGold )
         {
-            int remainingGold = totalGold - barTab;     // How much gold does the player have left
-
-            int pership = remainingGold / DockedFleet.Ships.Count;      // How much should go in each ship
-            int remainderpership = remainingGold % DockedFleet.Ships.Count;     // Is there any left over
-
-            CurrentPort.Market.Gold += barTab;      // Add the gold spent to the port
-
-            foreach (Ship ship in DockedFleet.Ships)
-            {
-                ship.Cargo.Gold = pership;      // Give each ship their portion of the gold the player has left
-            }
-            if( remainderpership > 0 )      // If there is a remainder...
-            {
-                for (int i = 0; i < DockedFleet.Ships.Count && remainderpership > 0; ++i, --remainderpership)   // ...start at the beginning of the 
-                {                                                                                               // fleet and toss one coin on each 
-                    ++DockedFleet.Ships[i].Cargo.Gold;                                                          // ship until there isn't any left
-                }
-            }
+            CompletePurchaseTransaction(barTab);
 
             foreach (Ship ship in DockedFleet.Ships )
             {
@@ -253,5 +287,39 @@ public class PortShopManager : MonoBehaviour
 
         PopulatePortMarket();
         PopulateShipResources();
+    }
+
+    void CompletePurchaseTransaction( int transAmount )
+    {
+        int remainingGold = PlayersGold - transAmount;     // How much gold does the player have left
+
+        int pership = remainingGold / DockedFleet.Ships.Count;      // How much should go in each ship
+        int remainderpership = remainingGold % DockedFleet.Ships.Count;     // Is there any left over
+
+        CurrentPort.Market.Gold += transAmount;      // Add the gold spent to the port
+
+        foreach (Ship ship in DockedFleet.Ships)
+        {
+            ship.Cargo.Gold = pership;      // Give each ship their portion of the gold the player has left
+        }
+        if (remainderpership > 0)      // If there is a remainder...
+        {
+            for (int i = 0; i < DockedFleet.Ships.Count && remainderpership > 0; ++i, --remainderpership)   // ...start at the beginning of the 
+            {                                                                                               // fleet and toss one coin on each 
+                ++DockedFleet.Ships[i].Cargo.Gold;                                                          // ship until there isn't any left
+            }
+        }
+    }
+
+    int TotalPlayersGold(  )
+    {
+        int total = 0;
+
+        foreach (Ship ship in DockedFleet.Ships)
+        {
+            total += ship.Cargo.Gold;
+        }
+
+        return total;
     }
 }
