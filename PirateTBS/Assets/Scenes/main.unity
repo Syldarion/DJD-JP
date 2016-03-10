@@ -5811,7 +5811,7 @@ CanvasGroup:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 367001286}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -7227,8 +7227,8 @@ GameObject:
   - 114: {fileID: 475237615}
   - 114: {fileID: 475237614}
   - 114: {fileID: 475237613}
-  - 114: {fileID: 475237612}
   - 114: {fileID: 475237611}
+  - 114: {fileID: 475237612}
   m_Layer: 5
   m_Name: PortShipList
   m_TagString: Untagged
@@ -7255,16 +7255,14 @@ MonoBehaviour:
 --- !u!114 &475237612
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11401612, guid: 0d86285a1fa576744b816b94f61d0c99,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 475237610}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1200242548, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: -146154839, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!114 &475237613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19290,8 +19288,8 @@ GameObject:
   - 114: {fileID: 1298658785}
   - 114: {fileID: 1298658784}
   - 114: {fileID: 1298658783}
-  - 114: {fileID: 1298658782}
   - 114: {fileID: 1298658781}
+  - 114: {fileID: 1298658782}
   m_Layer: 5
   m_Name: FleetShipList
   m_TagString: Untagged
@@ -19318,16 +19316,14 @@ MonoBehaviour:
 --- !u!114 &1298658782
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11434084, guid: 0d86285a1fa576744b816b94f61d0c99,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1298658780}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1200242548, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: -146154839, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!114 &1298658783
 MonoBehaviour:
   m_ObjectHideFlags: 0

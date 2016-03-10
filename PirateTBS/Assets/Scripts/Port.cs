@@ -32,7 +32,7 @@ public class Port : NetworkBehaviour
 
         Shipyard = Instantiate(FleetPrefab).GetComponent<Fleet>();
         Shipyard.Name = string.Format("{0}Shipyard", PortName);
-        Shipyard.transform.position = new Vector3(0.0f, 0.0f, 1000.0f);
+        Shipyard.transform.position = new Vector3(0.0f, 0.0f, 10000.0f);
 
         NetworkServer.Spawn(Shipyard.gameObject);
 
@@ -42,6 +42,13 @@ public class Port : NetworkBehaviour
     [ClientRpc]
     void RpcSetShipyard(string name)
     {
+        StartCoroutine(WaitForShipyard(name));
+    }
+
+    IEnumerator WaitForShipyard(string name)
+    {
+        while (!GameObject.Find(name))
+            yield return null;
         Shipyard = GameObject.Find(name).GetComponent<Fleet>();
     }
 

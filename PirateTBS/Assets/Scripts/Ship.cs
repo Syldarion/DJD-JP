@@ -77,8 +77,34 @@ public struct Cargo
         other_cargo_amount += transfer_amount;
         cargo_amount -= transfer_amount;
 
-        GetType().GetField(cargo_type).SetValue(this, cargo_amount);
-        GetType().GetField(cargo_type).SetValue(cargo, other_cargo_amount);
+        switch(cargo_type)
+        {
+            case "Food":
+                Food = cargo_amount;
+                cargo.Food = other_cargo_amount;
+                break;
+            case "Goods":
+                Goods = cargo_amount;
+                cargo.Goods = other_cargo_amount;
+                break;
+            case "Sugar":
+                Sugar = cargo_amount;
+                cargo.Sugar = other_cargo_amount;
+                break;
+            case "Spice":
+                Spice = cargo_amount;
+                cargo.Spice = other_cargo_amount;
+                break;
+            case "Luxuries":
+                Luxuries = cargo_amount;
+                cargo.Luxuries = other_cargo_amount;
+                break;
+            case "Gold":
+            default:
+                Gold = cargo_amount;
+                cargo.Gold = other_cargo_amount;
+                break;
+        }
     }
 
     /// <summary>

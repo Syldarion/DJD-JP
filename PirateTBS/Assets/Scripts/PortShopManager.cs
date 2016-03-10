@@ -178,6 +178,8 @@ public class PortShopManager : MonoBehaviour
         {
             int sell_amount = FleetResourceList.FindChild(string.Format("{0}/Quantity", resource)).GetComponent<NumericUpDown>().Value;
             SelectedShip.Cargo.TransferTo(CurrentPort.Market, resource, sell_amount);
+
+            Debug.Log(string.Format("{0} -> {1} -> {2}", SelectedShip.Cargo.Food, sell_amount, CurrentPort.Market.Food));
         }
 
         PopulateShipResources();

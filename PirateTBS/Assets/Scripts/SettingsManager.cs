@@ -41,7 +41,8 @@ public class SettingsManager : NetworkBehaviour
 
         SettingsPanel.GetComponent<CanvasGroup>().interactable = true;
 
-        MapSeed = Random.Range(0, 1000000);
+        //MapSeed = Random.Range(0, 1000000);
+        MapSeed = 514504;
 
         DontDestroyOnLoad(this);
     }
