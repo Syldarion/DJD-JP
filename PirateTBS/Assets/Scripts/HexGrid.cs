@@ -55,6 +55,9 @@ public class HexGrid : NetworkBehaviour
     //odd x-values are offset
     void GenerateGrid(int x, int y, int control_points)
     {
+        LoadingScreenManager.Instance.SetMessage("Creating Base Grid...");
+        LoadingScreenManager.Instance.SetProgress(0.0f);
+
         int half_grid_x = x / 2;
         int half_grid_y = y / 2;
 
@@ -85,6 +88,9 @@ public class HexGrid : NetworkBehaviour
 
     IEnumerator DropControlPoints(int control_points)
     {
+        LoadingScreenManager.Instance.SetMessage("Dropping Control Points...");
+        LoadingScreenManager.Instance.SetProgress(40.0f);
+
         float total_width = HexWidth * (GridWidth - 4);
         float total_height = HexWidth * (GridHeight - 4);
 
@@ -149,6 +155,9 @@ public class HexGrid : NetworkBehaviour
 
     void PopulateTileLists()
     {
+        LoadingScreenManager.Instance.SetMessage("Populating Tile Lists...");
+        LoadingScreenManager.Instance.SetProgress(50.0f);
+
         for(int i = -GridWidth / 2; i < GridWidth / 2; i++)
         {
             for(int j = -GridHeight / 2; j < GridHeight / 2; j++)
@@ -162,12 +171,15 @@ public class HexGrid : NetworkBehaviour
             }
         }
 
-        GameObject.Find("MiniMap").GetComponent<MiniMap>().CopyHexGridToMap();
+        MiniMap.Instance.CopyHexGridToMap();
     }
 
     //i = x + width * y
     IEnumerator CreatePorts(int number_of_ports)
     {
+        LoadingScreenManager.Instance.SetMessage("Creating Ports...");
+        LoadingScreenManager.Instance.SetProgress(95.0f);
+
         List<LandHex> coastal_tiles = new List<LandHex>();
 
         foreach(LandHex lh in LandTiles)
@@ -201,6 +213,8 @@ public class HexGrid : NetworkBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+        
+        LoadingScreenManager.Instance.SetProgress(100.0f);
     }
 
     struct Point
