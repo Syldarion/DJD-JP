@@ -98,7 +98,6 @@
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\InGameMenuController.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
-    <Compile Include="Assets\Scripts\LoadingScreenManager.cs" />
     <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
