@@ -4,9 +4,6 @@ using System.Collections;
 
 public class WaterHex : HexTile
 {
-    public Material DefaultMaterial;
-    public Material FogMaterial;
-
     float hover_timer = 0.5f;
     float double_click_start = 0;
 
@@ -22,9 +19,10 @@ public class WaterHex : HexTile
 
     public override void InitializeTile()
     {
-        GetComponent<MeshRenderer>().sharedMaterial = FogMaterial;
-
+        MeshRenderer = GetComponent<MeshRenderer>();
         IsWater = true;
+
+        MeshRenderer.sharedMaterial = CloudMaterial;
     }
 
     void OnMouseDown()

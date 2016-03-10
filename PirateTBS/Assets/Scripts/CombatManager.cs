@@ -30,12 +30,15 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
-
+        Instance = this;
     }
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.C)) //For testing purposes.
+        {
+            OpenCombatPanel();
+        }
     }
 
     public void OpenCombatPanel()
@@ -186,24 +189,26 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
-        ApplyDamage();
-        if (SelectedPlayerShip.HullHealth == 0)
-        {
-            PlayerFleet.CmdRemoveShip(SelectedPlayerShip.Name);
-
-            ShipStatBlock to_destroy = PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>();
-
-            if (to_destroy)
-            {
-                PlayerSelectionGroup.RemoveSelection(to_destroy.gameObject);
-                Destroy(to_destroy);
-            }
-        }
-
-        if (PlayerSelectionGroup.SelectedObjects.Count > 0)
-            PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedPlayerShip);
-        if (EnemySelectionGroup.SelectedObjects.Count > 0)
-            EnemySelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedEnemyShip);
+        LoadNextScene();
+        CloseCombatPanel();
+//         ApplyDamage();
+//         if (SelectedPlayerShip.HullHealth == 0)
+//         {
+//             PlayerFleet.CmdRemoveShip(SelectedPlayerShip.Name);
+// 
+//             ShipStatBlock to_destroy = PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>();
+// 
+//             if (to_destroy)
+//             {
+//                 PlayerSelectionGroup.RemoveSelection(to_destroy.gameObject);
+//                 Destroy(to_destroy);
+//             }
+//         }
+// 
+//         if (PlayerSelectionGroup.SelectedObjects.Count > 0)
+//             PlayerSelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedPlayerShip);
+//         if (EnemySelectionGroup.SelectedObjects.Count > 0)
+//             EnemySelectionGroup.SelectedObjects[0].GetComponent<ShipStatBlock>().PopulateStatBlock(SelectedEnemyShip);
     }
 
     public void ApplyDamage()
@@ -254,5 +259,9 @@ public class CombatManager : MonoBehaviour
         {
             SelectedEnemyShip.HullHealth = 0;
         }
+    }
+    void LoadNextScene()
+    {
+        SceneManager.LoadSceneAsync("combat", LoadSceneMode.Additive);
     }
 }

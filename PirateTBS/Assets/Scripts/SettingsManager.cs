@@ -14,16 +14,19 @@ public class SettingsManager : NetworkBehaviour
     public Dropdown MapSizeSelection;
     public Dropdown GamePaceSelection;
     
-    [SyncVar(hook = "RpcOnMapTypeChange")]
+    [SyncVar]
     public int MapTypeIndex = 0;
-    [SyncVar(hook = "RpcOnMapSizeChange")]
+    [SyncVar]
     public int MapSizeIndex = 0;
-    [SyncVar(hook = "RpcOnGamePaceChange")]
+    [SyncVar]
     public int GamePaceIndex = 0;
     [SyncVar]
     public int MapSeed;
+    [SyncVar]
     public int MapWidth = 40;
+    [SyncVar]
     public int MapHeight = 24;
+    [SyncVar]
     public int MapControlPoints = 64;
 
     void Start()
@@ -47,34 +50,15 @@ public class SettingsManager : NetworkBehaviour
     public void UpdateMapType(int map_type_index)
     {
         MapTypeIndex = map_type_index;
+        RpcOnMapTypeChange(map_type_index);
     }
 
     [Server]
     public void UpdateMapSize(int map_size_index)
     {
         MapSizeIndex = map_size_index;
-    }
 
-    [Server]
-    public void UpdateGamePace(int game_pace_index)
-    {
-        GamePaceIndex = game_pace_index;
-    }
-
-    [ClientRpc]
-    void RpcOnMapTypeChange(int map_type_index)
-    {
-        MapTypeIndex = map_type_index;
-        MapTypeSelection.value = MapTypeIndex;
-    }
-    
-    [ClientRpc]
-    void RpcOnMapSizeChange(int map_size_index)
-    {
-        MapSizeIndex = map_size_index;
-        MapSizeSelection.value = MapSizeIndex;
-
-        switch(MapSizeSelection.value)
+        switch (MapSizeSelection.value)
         {
             case 0://Duel
                 MapWidth = 40;
@@ -89,30 +73,50 @@ public class SettingsManager : NetworkBehaviour
             case 2://Small
                 MapWidth = 66;
                 MapHeight = 42;
-                MapControlPoints = 64;
+                MapControlPoints = 48;
                 break;
             case 3://Standard
                 MapWidth = 80;
                 MapHeight = 52;
-                MapControlPoints = 64;
+                MapControlPoints = 48;
                 break;
             case 4://Large
                 MapWidth = 104;
                 MapHeight = 64;
-                MapControlPoints = 128;
+                MapControlPoints = 64;
                 break;
             case 5://Huge
                 MapWidth = 128;
                 MapHeight = 80;
-                MapControlPoints = 128;
+                MapControlPoints = 64;
                 break;
         }
+
+        RpcOnMapSizeChange(map_size_index);
+    }
+
+    [Server]
+    public void UpdateGamePace(int game_pace_index)
+    {
+        GamePaceIndex = game_pace_index;
+        RpcOnGamePaceChange(game_pace_index);
+    }
+
+    [ClientRpc]
+    void RpcOnMapTypeChange(int map_type_index)
+    {
+        MapTypeSelection.value = MapTypeIndex;
+    }
+    
+    [ClientRpc]
+    void RpcOnMapSizeChange(int map_size_index)
+    {
+        MapSizeSelection.value = MapSizeIndex;
     }
     
     [ClientRpc]
     void RpcOnGamePaceChange(int game_pace_index)
     {
-        GamePaceIndex = game_pace_index;
         GamePaceSelection.value = GamePaceIndex;
     }
 }

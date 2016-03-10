@@ -25,6 +25,8 @@ public class HexGrid : NetworkBehaviour
 
     string parent_tile;
 
+    public bool server_side = false;
+
 	void Start()
     {
         Instance = this;
@@ -45,8 +47,15 @@ public class HexGrid : NetworkBehaviour
 
         GenerateGrid(GridWidth, GridHeight, controlPoints);
 	}
-	
-	void Update()
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        server_side = true;
+    }
+
+    void Update()
     {
 
 	}
@@ -80,7 +89,7 @@ public class HexGrid : NetworkBehaviour
             }
         }
 
-        StartCoroutine("DropControlPoints", control_points);
+        StartCoroutine(DropControlPoints(control_points));
     }
 
     IEnumerator DropControlPoints(int control_points)
@@ -106,33 +115,36 @@ public class HexGrid : NetworkBehaviour
             
             foreach(Collider other in Physics.OverlapSphere(sphere_position, sphere_radius))
             {
-                if(water_point && !other.GetComponent<HexTile>().IsWater)
+                if (other.GetComponent<HexTile>())
                 {
-                    string new_name = other.name;
+                    if (water_point && !other.GetComponent<HexTile>().IsWater)
+                    {
+                        string new_name = other.name;
 
-                    GameObject new_hex = Instantiate(WaterHexPrefab).gameObject;
+                        GameObject new_hex = Instantiate(WaterHexPrefab).gameObject;
 
-                    new_hex.transform.SetParent(this.transform);
-                    new_hex.transform.localPosition = other.transform.localPosition;
-                    new_hex.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
+                        new_hex.transform.SetParent(this.transform);
+                        new_hex.transform.localPosition = other.transform.localPosition;
+                        new_hex.GetComponent<WaterHex>().CopyTile(other.GetComponent<LandHex>());
 
-                    Destroy(other.gameObject);
+                        Destroy(other.gameObject);
 
-                    new_hex.name = new_name;
-                }
-                else if(!water_point && other.GetComponent<HexTile>().IsWater)
-                {
-                    string new_name = other.name;
+                        new_hex.name = new_name;
+                    }
+                    else if (!water_point && other.GetComponent<HexTile>().IsWater)
+                    {
+                        string new_name = other.name;
 
-                    GameObject new_hex = Instantiate(LandHexPrefab).gameObject;
+                        GameObject new_hex = Instantiate(LandHexPrefab).gameObject;
 
-                    new_hex.transform.SetParent(this.transform);
-                    new_hex.transform.localPosition = other.transform.localPosition;
-                    new_hex.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
+                        new_hex.transform.SetParent(this.transform);
+                        new_hex.transform.localPosition = other.transform.localPosition;
+                        new_hex.GetComponent<LandHex>().CopyTile(other.GetComponent<WaterHex>());
 
-                    Destroy(other.gameObject);
+                        Destroy(other.gameObject);
 
-                    new_hex.name = new_name;
+                        new_hex.name = new_name;
+                    }
                 }
             }
 
@@ -143,8 +155,8 @@ public class HexGrid : NetworkBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        if (isServer)
-            StartCoroutine("CreatePorts", GridWidth / 4);
+        if (server_side)
+            StartCoroutine(CreatePorts(GridWidth / 4));
     }
 
     void PopulateTileLists()
@@ -162,7 +174,12 @@ public class HexGrid : NetworkBehaviour
             }
         }
 
-        GameObject.Find("MiniMap").GetComponent<MiniMap>().CopyHexGridToMap();
+        MiniMap.Instance.CopyHexGridToMap();
+    }
+
+    public void StartCreatePorts()
+    {
+        StartCoroutine(CreatePorts(GridWidth / 4));
     }
 
     //i = x + width * y
@@ -201,6 +218,7 @@ public class HexGrid : NetworkBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+        
     }
 
     struct Point

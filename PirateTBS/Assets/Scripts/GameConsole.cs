@@ -44,9 +44,9 @@ public class GameConsole : MonoBehaviour
             StopAllCoroutines();
 
             if (PlayerScript.MyPlayer.OpenUI)
-                StartCoroutine("CloseConsole");
+                StartCoroutine(CloseConsole());
             else
-                StartCoroutine("OpenConsole");
+                StartCoroutine(OpenConsole());
         }
 	}
 

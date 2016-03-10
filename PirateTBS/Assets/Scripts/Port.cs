@@ -13,21 +13,50 @@ public class Port : NetworkBehaviour
 
     [SyncVar]
     public Cargo Market;
-    public List<Ship> Shipyard;
+    public Fleet Shipyard;
+
+    public GameObject FleetPrefab;
+
+    static int port_id = 0;
 
     void Start()
     {
 
     }
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        PortName = string.Format("Port{0}", ++port_id);
+
+        Shipyard = Instantiate(FleetPrefab).GetComponent<Fleet>();
+        Shipyard.Name = string.Format("{0}Shipyard", PortName);
+        Shipyard.transform.position = new Vector3(0.0f, 0.0f, 1000.0f);
+
+        NetworkServer.Spawn(Shipyard.gameObject);
+
+        RpcSetShipyard(Shipyard.Name);
+    }
+
+    [ClientRpc]
+    void RpcSetShipyard(string name)
+    {
+        Shipyard = GameObject.Find(name).GetComponent<Fleet>();
+    }
+
     public void InitializePort()
     {
         foreach (HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
-            if (GetComponentInParent<HexTile>().GetNeighbor(hc).IsWater)
+        {
+            HexTile neighbor = GetComponentInParent<HexTile>().GetNeighbor(hc);
+
+            if (neighbor && neighbor.IsWater)
             {
                 SpawnTile = GetComponentInParent<HexTile>().GetNeighbor(hc);
                 break;
             }
+        }
 
         Market = new Cargo(Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500));
     }

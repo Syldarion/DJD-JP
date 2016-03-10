@@ -84,7 +84,9 @@
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\ChatMessage.cs" />
+    <Compile Include="Assets\Scripts\CombatHexGrid.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
+    <Compile Include="Assets\Scripts\CombatSceneManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DialogueBox.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\InGameMenuController.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
+    <Compile Include="Assets\Scripts\LoadingScreenManager.cs" />
     <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />

@@ -40,7 +40,10 @@ public class MovementManager : MonoBehaviour
             if (ReferencePlayer.Fleets.Contains(tile_fleet))
                 FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
             else
-            { } //Combat
+            {
+                CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
+                CombatManager.Instance.OpenCombatPanel();
+            }
         }
     }
 

@@ -29,9 +29,11 @@ public class LandHex : HexTile
 
     public override void InitializeTile()
     {
+        MeshRenderer = GetComponent<MeshRenderer>();
         IsWater = false;
-
         TileResources = new Cargo();
+
+        MeshRenderer.sharedMaterial = CloudMaterial;
     }
 
     public bool IsCoastal()

@@ -203,16 +203,13 @@ public class Fleet : NetworkBehaviour
     void OnTriggerStay(Collider other)
     {
         WaterHex water_hex = other.GetComponent<WaterHex>();
+        LandHex land_hex = other.GetComponent<LandHex>();
 
         if (water_hex && water_hex.Fog)
-        {
-            water_hex.Fog = false;
-            water_hex.GetComponent<MeshRenderer>().material = water_hex.DefaultMaterial;
+            water_hex.RevealTile();
 
-            GameObject tile = GameObject.Find("MiniMap").transform.FindChild(other.name).gameObject;
-
-            tile.GetComponent<MeshRenderer>().material = water_hex.DefaultMaterial;
-        }
+        if(land_hex && !land_hex.Discovered)
+            land_hex.DiscoverTile();
     }
 
     void OnTriggerExit(Collider other)
@@ -220,14 +217,7 @@ public class Fleet : NetworkBehaviour
         WaterHex water_hex = other.GetComponent<WaterHex>();
 
         if (water_hex && !water_hex.Fog)
-        {
-            water_hex.Fog = true;
-            water_hex.GetComponent<MeshRenderer>().material = water_hex.FogMaterial;
-
-            GameObject tile = GameObject.Find("MiniMap").transform.FindChild(other.name).gameObject;
-
-            tile.GetComponent<MeshRenderer>().material = water_hex.FogMaterial;
-        }
+            water_hex.HideTile();
     }
 
     void OnMouseDown()
