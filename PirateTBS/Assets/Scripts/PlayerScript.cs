@@ -91,7 +91,7 @@ public class PlayerScript : NetworkBehaviour
         }
         if (Input.GetKeyDown(KeyCode.O))
             ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", ActiveFleet.Name, ++ActiveFleet.NewShipID));
-        if (Input.GetKeyDown(KeyCode.I) && ActiveFleet)
+        if (Input.GetKeyDown(KeyCode.P) && ActiveFleet)
         {
             CargoManager.Instance.PopulateShipList(ActiveFleet);
             CargoManager.Instance.OpenCargoManager();
