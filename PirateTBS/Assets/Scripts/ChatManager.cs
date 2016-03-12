@@ -6,6 +6,7 @@ public class ChatManager : NetworkBehaviour
     [HideInInspector]
     public static ChatManager Instance;
 
+    public RectTransform MessageList;
     public GameObject ChatMessagePrefab;
     
     void Start()
@@ -13,18 +14,20 @@ public class ChatManager : NetworkBehaviour
         Instance = this;
     }
 
-    [Command]
-    public void CmdNewMessage(string sender, string message)
+    public void SendNewMessage(string message)
     {
-        RpcSendChatMessage(sender, message);
+        CmdNewMessage(CustomLobbyManager.Instance.GetComponent<NetworkInitializer>().PlayerName, message);
     }
 
-    [ClientRpc]
-    public void RpcSendChatMessage(string sender, string message)
+    [Command]
+    public void CmdNewMessage(string sender, string message)
     {
         ChatMessage newChatMessage = Instantiate(ChatMessagePrefab).GetComponent<ChatMessage>();
 
         newChatMessage.Sender = sender;
         newChatMessage.Message = message;
+
+        NetworkServer.Spawn(newChatMessage.gameObject);
     }
+
 }
