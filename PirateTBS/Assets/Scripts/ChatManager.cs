@@ -14,13 +14,12 @@ public class ChatManager : NetworkBehaviour
         Instance = this;
     }
 
-    public void SendNewMessage(string message)
+    public void InitializeSend(string message)
     {
-        CmdNewMessage(CustomLobbyManager.Instance.GetComponent<NetworkInitializer>().PlayerName, message);
+        CustomLobbyPlayer.MyPlayer.CmdSendMessage(message);
     }
 
-    [Command]
-    public void CmdNewMessage(string sender, string message)
+    public void NewMessage(string sender, string message)
     {
         ChatMessage newChatMessage = Instantiate(ChatMessagePrefab).GetComponent<ChatMessage>();
 
