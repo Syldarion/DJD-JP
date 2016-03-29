@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MovementManager : MonoBehaviour
 {
@@ -9,16 +10,27 @@ public class MovementManager : MonoBehaviour
     public PlayerScript ReferencePlayer;
     public FleetManager FleetManager;
 
+    public List<WaterHex> MovementQueue;
+
 	void Start()
     {
         Instance = this;
         StartCoroutine(WaitForPlayer());
+
+        MovementQueue = new List<WaterHex>();
 	}
 	
 	void Update()
     {
 
 	}
+
+    public void ClearQueue()
+    {
+        foreach(WaterHex hex in MovementQueue)
+            hex.GetComponent<MeshRenderer>().sharedMaterial = hex.DefaultMaterial;
+        MovementQueue.Clear();
+    }
 
     public void SelectFleet(Fleet selected_fleet)
     {
@@ -44,6 +56,20 @@ public class MovementManager : MonoBehaviour
                 CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
                 CombatManager.Instance.OpenCombatPanel();
             }
+        }
+    }
+
+    public void MoveFleet()
+    {
+        if(!ReferencePlayer.ActiveFleet)
+        {
+            ClearQueue();
+            return;
+        }
+
+        foreach(WaterHex hex in MovementQueue)
+        {
+
         }
     }
 

@@ -95,4 +95,21 @@ public class HexTile : MonoBehaviour
         else
             return null;
     }
+
+    public void OnMouseEnter()
+    {
+        if(Input.GetMouseButton(0) && IsWater)
+        {
+            MovementManager.Instance.MovementQueue.Add(this as WaterHex);
+        }
+        else
+        {
+            MovementManager.Instance.ClearQueue();
+        }
+    }
+
+    public void OnMouseUp()
+    {
+        MovementManager.Instance.MoveFleet();
+    }
 }

@@ -21,6 +21,8 @@ public class Fleet : NetworkBehaviour
     [SyncVar]
     public bool CombatActionTaken;
 
+    public List<WaterHex> MovementQueue;
+
 	void Start()
     {
 
@@ -44,6 +46,7 @@ public class Fleet : NetworkBehaviour
         base.OnStartLocalPlayer();
 
         Ships = new List<Ship>();
+        MovementQueue = new List<WaterHex>();
     }
 
     public override void OnStartAuthority()

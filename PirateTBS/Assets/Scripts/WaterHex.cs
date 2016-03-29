@@ -28,7 +28,7 @@ public class WaterHex : HexTile
     void OnMouseDown()
     {
         if (!PlayerScript.MyPlayer.OpenUI)
-            GameObject.Find("MovementManager").GetComponent<MovementManager>().MoveFleet(this);
+            MovementManager.Instance.MoveFleet(this);
     }
 
     void OnMouseUp()
