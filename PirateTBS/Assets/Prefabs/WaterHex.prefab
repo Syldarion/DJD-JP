@@ -94,6 +94,7 @@ MonoBehaviour:
   DefaultMaterial: {fileID: 2100000, guid: e0b7904bbf2f9634792fe7fc882c2f37, type: 2}
   FogMaterial: {fileID: 2100000, guid: a5cffd52db28f1e449c842617bcfcb75, type: 2}
   CloudMaterial: {fileID: 2100000, guid: c5a37eee5f4dc4a42a4eb8c7f1bf633e, type: 2}
+  HighlightMaterial: {fileID: 2100000, guid: 49c24b7aa191a8043bb370af75ffa684, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

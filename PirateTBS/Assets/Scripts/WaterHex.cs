@@ -25,14 +25,35 @@ public class WaterHex : HexTile
         MeshRenderer.sharedMaterial = CloudMaterial;
     }
 
+    void OnMouseEnter()
+    {
+        if (PlayerScript.MyPlayer.OpenUI)
+            return;
+
+        if (Input.GetMouseButton(0))
+        {
+            MovementManager.Instance.MovementQueue.Add(this);
+            GetComponent<MeshRenderer>().sharedMaterial = HighlightMaterial;
+        }
+        else
+        {
+            MovementManager.Instance.ClearQueue();
+        }
+    }
+
     void OnMouseDown()
     {
-        if (!PlayerScript.MyPlayer.OpenUI)
-            MovementManager.Instance.MoveFleet(this);
+        MovementManager.Instance.MovementQueue.Add(this);
+        GetComponent<MeshRenderer>().sharedMaterial = HighlightMaterial;
     }
 
     void OnMouseUp()
     {
+        if (PlayerScript.MyPlayer.OpenUI)
+            return;
+
+        StartCoroutine(MovementManager.Instance.MoveFleet());
+
         if (Time.time - double_click_start < 0.3f)
         {
             this.OnDoubleClick();
@@ -44,7 +65,6 @@ public class WaterHex : HexTile
 
     void OnDoubleClick()
     {
-        if (!PlayerScript.MyPlayer.OpenUI)
-            Camera.main.GetComponent<PanCamera>().CenterOnTarget(transform);
+        Camera.main.GetComponent<PanCamera>().CenterOnTarget(transform);
     }
 }

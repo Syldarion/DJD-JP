@@ -185,8 +185,6 @@ public class Fleet : NetworkBehaviour
             CurrentPosition = new_tile;
 
             RpcMoveFleet(x, y);
-
-            MoveActionTaken = true;
         }
     }
 

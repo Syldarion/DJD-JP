@@ -38,39 +38,44 @@ public class MovementManager : MonoBehaviour
             ReferencePlayer.ActiveFleet = selected_fleet;
     }
 
-    public void MoveFleet(HexTile new_tile)
-    {
-        if (!ReferencePlayer.ActiveFleet)
-            return;
-
-        Fleet tile_fleet = new_tile.GetComponentInChildren<Fleet>();
-
-        if (!tile_fleet && HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, ReferencePlayer.ActiveFleet.FleetSpeed).Contains(new_tile))
-            ReferencePlayer.ActiveFleet.CmdMoveFleet(new_tile.HexCoord.Q, new_tile.HexCoord.R);
-        else if(HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 2).Contains(new_tile))
-        {
-            if (ReferencePlayer.Fleets.Contains(tile_fleet))
-                FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
-            else
-            {
-                CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
-                CombatManager.Instance.OpenCombatPanel();
-            }
-        }
-    }
-
-    public void MoveFleet()
+    public IEnumerator MoveFleet()
     {
         if(!ReferencePlayer.ActiveFleet)
         {
             ClearQueue();
-            return;
+            yield break;
         }
 
-        foreach(WaterHex hex in MovementQueue)
+        if (!HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 1).Contains(MovementQueue[0]))
+            yield break;
+
+        int remaining_moves = ReferencePlayer.ActiveFleet.FleetSpeed;
+        WaterHex next_tile;
+        Fleet tile_fleet;
+
+        for(int i = 0; i < MovementQueue.Count && i < remaining_moves; i++)
         {
+            next_tile = MovementQueue[i];
+            tile_fleet = next_tile.GetComponentInChildren<Fleet>();
 
+            if (!tile_fleet)
+                ReferencePlayer.ActiveFleet.CmdMoveFleet(next_tile.HexCoord.Q, next_tile.HexCoord.R);
+            else
+            {
+                if (ReferencePlayer.Fleets.Contains(tile_fleet))
+                    FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
+                else
+                {
+                    CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
+                    CombatManager.Instance.OpenCombatPanel();
+                }
+            }
+
+            yield return null;
         }
+
+        ReferencePlayer.ActiveFleet.MoveActionTaken = true;
+        ClearQueue();
     }
 
     IEnumerator WaitForPlayer()

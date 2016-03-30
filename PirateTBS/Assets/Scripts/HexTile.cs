@@ -31,6 +31,7 @@ public class HexTile : MonoBehaviour
     public Material DefaultMaterial;
     public Material FogMaterial;
     public Material CloudMaterial;
+    public Material HighlightMaterial;
 
     public virtual void InitializeTile() { }
 
@@ -94,22 +95,5 @@ public class HexTile : MonoBehaviour
             return GameObject.Find(hex_name).GetComponent<HexTile>();
         else
             return null;
-    }
-
-    public void OnMouseEnter()
-    {
-        if(Input.GetMouseButton(0) && IsWater)
-        {
-            MovementManager.Instance.MovementQueue.Add(this as WaterHex);
-        }
-        else
-        {
-            MovementManager.Instance.ClearQueue();
-        }
-    }
-
-    public void OnMouseUp()
-    {
-        MovementManager.Instance.MoveFleet();
     }
 }
