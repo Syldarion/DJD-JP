@@ -177,15 +177,27 @@ public class Fleet : NetworkBehaviour
             return;
 
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+        transform.SetParent(new_tile.transform);
+        CurrentPosition = new_tile;
 
-        if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))
+        RpcMoveFleet(x, y);
+
+        StopAllCoroutines();
+        StartCoroutine(SmoothMove(new_tile));
+    }
+
+    public IEnumerator SmoothMove(HexTile dest_tile)
+    {
+        Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
+
+        while(Vector3.Distance(transform.position, destination) > 0.01f)
         {
-            transform.SetParent(new_tile.transform, false);
-            transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-            CurrentPosition = new_tile;
-
-            RpcMoveFleet(x, y);
+            transform.position = Vector3.Lerp(transform.position, destination, 0.25f);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        transform.position = destination;
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }
 
     [ClientRpc]
@@ -193,12 +205,8 @@ public class Fleet : NetworkBehaviour
     {
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
-        if (HexGrid.MovementHex(CurrentPosition, FleetSpeed).Contains(new_tile))
-        {
-            transform.SetParent(new_tile.transform, false);
-            transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-            CurrentPosition = new_tile;
-        }
+        transform.SetParent(new_tile.transform, false);
+        CurrentPosition = new_tile;
     }
 
     void OnTriggerStay(Collider other)
