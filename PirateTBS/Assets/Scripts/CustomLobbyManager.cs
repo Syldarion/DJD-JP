@@ -51,8 +51,8 @@ public class CustomLobbyManager : NetworkLobbyManager
         }
         else
         {
+            dontDestroyOnLoad = false;
             SceneManager.LoadScene("menu");
-            PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
         }
     }
 
@@ -68,7 +68,16 @@ public class CustomLobbyManager : NetworkLobbyManager
         base.OnClientSceneChanged(conn);
 
         if (networkSceneName == "main")
+        {
+            
             PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
+        }
+        else if (networkSceneName == "menu")
+        {
+            PanelUtilities.DeactivatePanel(LobbyBasePanel);
+            PanelUtilities.ActivatePanel(MainMenuBasePanel);
+            PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
+        }
     }
 
     public void StartGame()

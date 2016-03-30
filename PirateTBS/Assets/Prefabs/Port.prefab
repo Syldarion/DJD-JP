@@ -123,7 +123,8 @@ MonoBehaviour:
   PortName: 
   PortNationality: 0
   SpawnTile: {fileID: 0}
-  Shipyard: []
+  Shipyard: {fileID: 0}
+  FleetPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

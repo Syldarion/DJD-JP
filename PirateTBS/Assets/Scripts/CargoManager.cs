@@ -32,14 +32,14 @@ public class CargoManager : MonoBehaviour
 
     public void OpenCargoManager()
     {
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
     public void CloseCargoManager()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }

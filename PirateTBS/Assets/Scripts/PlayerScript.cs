@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class PlayerScript : NetworkBehaviour
 {
     public static PlayerScript MyPlayer;
-    public bool UIOpen;
+    public CanvasGroup OpenUI;
 
     [SyncVar(hook = "OnNameChanged")]
     public string Name;
@@ -27,9 +27,19 @@ public class PlayerScript : NetworkBehaviour
 
     public int NewFleetID;
 
-    public override void OnStartLocalPlayer()
+    [SyncVar]
+    public bool ReadyForNextTurn;
+
+    public override void OnStartServer()
     {
-        base.OnStartLocalPlayer();
+        base.OnStartServer();
+
+        ReadyForNextTurn = false;
+    }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
 
         MyPlayer = this;
     }
@@ -54,18 +64,25 @@ public class PlayerScript : NetworkBehaviour
         if (!isLocalPlayer)
             return;
 
-        if (UIOpen)
-            return;
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (ActiveFleet != null)
                 ActiveFleet = null;
+            else if(OpenUI)
+            {
+                PanelUtilities.DeactivatePanel(OpenUI);
+                OpenUI = null;
+            }
             else
             {
-                //Open menu
+                OpenUI = InGameMenuController.Instance.GetComponent<CanvasGroup>();
+                PanelUtilities.ActivatePanel(OpenUI);
             }
         }
+
+        if (OpenUI)
+            return;
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
@@ -73,8 +90,8 @@ public class PlayerScript : NetworkBehaviour
             CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
         }
         if (Input.GetKeyDown(KeyCode.O))
-            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++Fleet.NewShipID));
-        if (Input.GetKeyDown(KeyCode.C) && ActiveFleet)
+            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", ActiveFleet.Name, ++ActiveFleet.NewShipID));
+        if (Input.GetKeyDown(KeyCode.P) && ActiveFleet)
         {
             CargoManager.Instance.PopulateShipList(ActiveFleet);
             CargoManager.Instance.OpenCargoManager();
@@ -92,14 +109,11 @@ public class PlayerScript : NetworkBehaviour
 
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
-        new_fleet.transform.SetParent(new_tile.transform, false);
-        new_fleet.CurrentPosition = new_tile;
-
         Fleets.Add(new_fleet);
 
         NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, gameObject);
-
-        //RpcUpdateFleet(new_fleet.gameObject, new_tile.gameObject, new Vector3(0.0f, 0.25f, 0.0f));
+        
+        new_fleet.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
     }
 
     [ClientRpc]
@@ -135,5 +149,28 @@ public class PlayerScript : NetworkBehaviour
 
         if (isLocalPlayer)
             FindObjectOfType<PlayerInfoManager>().UpdateCaptainName(new_name);
+    }
+
+    [Command]
+    public void CmdReadyForNextTurn()
+    {
+        ReadyForNextTurn = true;
+
+        TurnManager.Instance.CmdCheckReadyForNextTurn();
+    }
+
+    [Command]
+    public void CmdNotReadyForNextTurn()
+    {
+        ReadyForNextTurn = false;
+
+        RpcSetEndTurnText();
+    }
+
+    [ClientRpc]
+    public void RpcSetEndTurnText()
+    {
+        if(this == MyPlayer)
+            TurnManager.Instance.ActionButtonText.text = "END TURN";
     }
 }

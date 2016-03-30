@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class ChatMessage : MonoBehaviour
+public class ChatMessage : NetworkBehaviour
 {
     public ChatFilter Filter;
+
+    [SyncVar]
     public string Sender;
+    [SyncVar]
     public string Message;
 
-	void Start()
+    void Start()
     {
-        GameObject chatParent = GameObject.Find("LobbyChat/Messages");
+        GameObject chatParent = ChatManager.Instance.MessageList.gameObject;
 
         transform.SetParent(chatParent.transform, false);
         transform.localScale = new Vector3(1, 1, 1);

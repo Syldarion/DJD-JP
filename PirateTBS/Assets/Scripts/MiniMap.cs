@@ -23,6 +23,9 @@ public class MiniMap : MonoBehaviour
 
     public void CopyHexGridToMap()
     {
+        LoadingScreenManager.Instance.SetMessage("Creating minimap...");
+        LoadingScreenManager.Instance.SetProgress(40.0f);
+
         HexGrid grid = GameObject.Find("Grid").GetComponent<HexGrid>();
 
         float camera_height = (grid.GridHeight * grid.HexWidth) * 0.5f / Mathf.Tan(Mathf.Deg2Rad * (GetComponent<Camera>().fieldOfView / 2.0f));

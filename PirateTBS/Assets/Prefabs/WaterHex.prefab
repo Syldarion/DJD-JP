@@ -89,11 +89,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MeshRenderer: {fileID: 0}
   IsWater: 1
-  BaseColor: {r: 0, g: 0, b: 0, a: 0}
-  FogColor: {r: 0, g: 0, b: 0, a: 0}
   Fog: 1
+  Discovered: 0
   DefaultMaterial: {fileID: 2100000, guid: e0b7904bbf2f9634792fe7fc882c2f37, type: 2}
   FogMaterial: {fileID: 2100000, guid: a5cffd52db28f1e449c842617bcfcb75, type: 2}
+  CloudMaterial: {fileID: 2100000, guid: c5a37eee5f4dc4a42a4eb8c7f1bf633e, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

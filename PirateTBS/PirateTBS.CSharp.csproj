@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -75,7 +69,9 @@
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\ChatMessage.cs" />
+    <Compile Include="Assets\Scripts\CombatHexGrid.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
+    <Compile Include="Assets\Scripts\CombatSceneManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DialogueBox.cs" />
@@ -87,7 +83,9 @@
     <Compile Include="Assets\Scripts\GameConsole.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />
+    <Compile Include="Assets\Scripts\InGameMenuController.cs" />
     <Compile Include="Assets\Scripts\LandHex.cs" />
+    <Compile Include="Assets\Scripts\LoadingScreenManager.cs" />
     <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
@@ -107,6 +105,7 @@
     <Compile Include="Assets\Scripts\ShipStatBlock.cs" />
     <Compile Include="Assets\Scripts\TextColorFlow.cs" />
     <Compile Include="Assets\Scripts\Tooltip.cs" />
+    <Compile Include="Assets\Scripts\TurnManager.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -141,6 +141,6 @@ public class PlayerInfoManager : MonoBehaviour
     {
         while (!PlayerScript.MyPlayer)
             yield return null;
-        OwningPlayer = PlayerScript.MyPlayer;
+        SetOwningPlayer(PlayerScript.MyPlayer);
     }
 }

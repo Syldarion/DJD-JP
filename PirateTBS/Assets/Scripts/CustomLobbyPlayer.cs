@@ -5,6 +5,8 @@ using System.Collections;
 
 public class CustomLobbyPlayer : NetworkLobbyPlayer
 {
+    public static CustomLobbyPlayer MyPlayer;
+
     [SyncVar(hook = "OnNameChanged")]
     public string PlayerName = "";
     public int NationalityIndex = 0;
@@ -38,6 +40,8 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
     void SetupLocalPlayer()
     {
+        MyPlayer = this;
+
         if (GetComponentInChildren<Text>().text == string.Empty)
             CmdUpdateName(CustomLobbyManager.Instance.GetComponent<NetworkInitializer>().PlayerName);
     }
@@ -58,5 +62,11 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
     {
         PlayerName = name;
         this.name = PlayerName + "Panel";
+    }
+
+    [Command]
+    public void CmdSendMessage(string message)
+    {
+        ChatManager.Instance.NewMessage(PlayerName, message);
     }
 }

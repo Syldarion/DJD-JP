@@ -22,13 +22,13 @@ public class MainMenuPanelController : MonoBehaviour
         if (ActivePanel != new_panel)
         {
             if (ActivePanel && !FadingOutPanel)
-                StartCoroutine("FadeOutPanel", ActivePanel);
+                StartCoroutine(FadeOutPanel(ActivePanel));
 
             if (!FadingInPanel)
-                StartCoroutine("FadeInPanel", new_panel);
+                StartCoroutine(FadeInPanel(new_panel));
         }
         else if (!FadingOutPanel)
-            StartCoroutine("FadeOutPanel", ActivePanel);
+            StartCoroutine(FadeOutPanel(ActivePanel));
     }
 
     public IEnumerator FadeInPanel(RectTransform panel)

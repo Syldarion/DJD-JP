@@ -30,6 +30,9 @@ public class PortShopManager : MonoBehaviour
 
     private int PlayersGold;
 
+    public SelectionGroup ShipyardFleetSelection;
+    public SelectionGroup ShipyardPortSelection;
+
     public void Start()
     {
         Instance = this;
@@ -45,7 +48,7 @@ public class PortShopManager : MonoBehaviour
         if (fleet_to_dock.Ships.Count < 1)
             return;
 
-        PlayerScript.MyPlayer.UIOpen = true;
+        PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         DockedFleet = fleet_to_dock;
         SelectedShip = DockedFleet.Ships[0];
@@ -62,7 +65,7 @@ public class PortShopManager : MonoBehaviour
 
     public void CloseShop()
     {
-        PlayerScript.MyPlayer.UIOpen = false;
+        PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
 
@@ -178,7 +181,7 @@ public class PortShopManager : MonoBehaviour
     }
     public void PopulatePortShipyard()
     {
-        foreach (Ship forsale in CurrentPort.Shipyard)
+        foreach (Ship forsale in CurrentPort.Shipyard.Ships)
         {
             ShipStatBlock portShipStatBlock = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
 
@@ -187,6 +190,17 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
+=======
+    public void ClearShipyard()
+    {
+        var children = new List<GameObject>();
+        foreach (Transform child in FleetShipyardList.transform) children.Add(child.gameObject);
+        foreach (Transform child in PortShipyardList.transform) children.Add(child.gameObject);
+        foreach (GameObject go in children) Destroy(go);
+    }
+
+>>>>>>> refs/remotes/origin/master
     public void SellResources()
     {
         string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
@@ -195,6 +209,11 @@ public class PortShopManager : MonoBehaviour
         {
             int sell_amount = FleetResourceList.FindChild(string.Format("{0}/Quantity", resource)).GetComponent<NumericUpDown>().Value;
             SelectedShip.Cargo.TransferTo(CurrentPort.Market, resource, sell_amount);
+<<<<<<< HEAD
+=======
+
+            Debug.Log(string.Format("{0} -> {1} -> {2}", SelectedShip.Cargo.Food, sell_amount, CurrentPort.Market.Food));
+>>>>>>> refs/remotes/origin/master
         }
 
         PopulateShipResources();
@@ -217,6 +236,7 @@ public class PortShopManager : MonoBehaviour
 
     public void BuyShip()
     {
+<<<<<<< HEAD
         int tranTotal = 0;
                 
         foreach (GameObject ship in PortSelection.SelectedObjects)
@@ -233,12 +253,29 @@ public class PortShopManager : MonoBehaviour
             }
 
             CompletePurchaseTransaction(tranTotal);
+=======
+        int transaction_total = 0;
+
+        foreach (GameObject ship in ShipyardPortSelection.SelectedObjects)
+        {
+            transaction_total += ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        }
+
+        if (transaction_total < PlayerScript.MyPlayer.TotalGold)
+        {
+            foreach (GameObject ship in ShipyardPortSelection.SelectedObjects)
+            {
+                DockedFleet.CmdAddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+                CurrentPort.Shipyard.CmdRemoveShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+            }
+>>>>>>> refs/remotes/origin/master
         }
     }
 
 
     public void SellShip()
     {
+<<<<<<< HEAD
         int tranTotal = 0;
 
         foreach (GameObject ship in FleetSelection.SelectedObjects)
@@ -292,6 +329,30 @@ public class PortShopManager : MonoBehaviour
     void CompletePurchaseTransaction( int transAmount )
     {
         int remainingGold = PlayersGold - transAmount;     // How much gold does the player have left
+=======
+        int transaction_total = 0;
+
+        foreach (GameObject ship in ShipyardFleetSelection.SelectedObjects)
+        {
+            transaction_total += ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        }
+
+        foreach (GameObject ship in ShipyardFleetSelection.SelectedObjects)
+        {
+            DockedFleet.CmdRemoveShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+            CurrentPort.Shipyard.CmdAddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+        }
+
+        if (transaction_total < CurrentPort.Market.Gold)
+            PlayerScript.MyPlayer.TotalGold += transaction_total;
+        else
+            PlayerScript.MyPlayer.TotalGold += CurrentPort.Market.Gold;
+    }
+
+    void CompletePurchaseTransaction(int transAmount)
+    {
+        int remainingGold = PlayerScript.MyPlayer.TotalGold - transAmount;     // How much gold does the player have left
+>>>>>>> refs/remotes/origin/master
 
         int pership = remainingGold / DockedFleet.Ships.Count;      // How much should go in each ship
         int remainderpership = remainingGold % DockedFleet.Ships.Count;     // Is there any left over
@@ -311,6 +372,7 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     int TotalPlayersGold(  )
     {
         int total = 0;
@@ -321,5 +383,36 @@ public class PortShopManager : MonoBehaviour
         }
 
         return total;
+=======
+    public void HireCrew()
+    {
+
+    }
+
+    public void Tavern(int goldToSpend)
+    {
+        int allCrew = 0;
+        int barTab = 0;
+
+        foreach (Ship ship in DockedFleet.Ships)
+        {
+            allCrew += ship.CurrentCrew;
+        }
+
+        barTab = allCrew * goldToSpend;
+
+        if (barTab < PlayerScript.MyPlayer.TotalGold)
+        {
+            CompletePurchaseTransaction(barTab);
+
+            foreach (Ship ship in DockedFleet.Ships)
+            {
+                ship.CrewMorale += ship.CurrentCrew * goldToSpend;
+            }
+        }
+
+        PopulatePortMarket();
+        PopulateShipResources();
+>>>>>>> refs/remotes/origin/master
     }
 }

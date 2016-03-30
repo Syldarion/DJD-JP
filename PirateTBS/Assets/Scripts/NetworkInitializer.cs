@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -10,6 +11,10 @@ public class NetworkInitializer : MonoBehaviour
     public string IPAddress;
     public int Port;
     public string Password;
+
+    [Space]
+    [Header("UI References")]
+    public Text PlayerCountText;
 
     void Start()
     {
@@ -37,6 +42,12 @@ public class NetworkInitializer : MonoBehaviour
     public void SetPassword(string password)
     {
         Password = password;
+    }
+
+    public void ChangePlayerCount(int change)
+    {
+        CustomLobbyManager.Instance.maxPlayers = Mathf.Clamp(CustomLobbyManager.Instance.maxPlayers + change, 2, 16);
+        PlayerCountText.text = CustomLobbyManager.Instance.maxPlayers.ToString();
     }
 
     public void ConnectAsHost()
