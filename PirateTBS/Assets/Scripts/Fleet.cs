@@ -39,6 +39,8 @@ public class Fleet : NetworkBehaviour
         FleetSpeed = 5;
         MoveActionTaken = false;
         CombatActionTaken = false;
+
+        MovementQueue = new List<WaterHex>();
     }
 
     public override void OnStartLocalPlayer()
@@ -46,7 +48,6 @@ public class Fleet : NetworkBehaviour
         base.OnStartLocalPlayer();
 
         Ships = new List<Ship>();
-        MovementQueue = new List<WaterHex>();
     }
 
     public override void OnStartAuthority()
@@ -171,32 +172,48 @@ public class Fleet : NetworkBehaviour
     }
 
     [Command]
-    public void CmdMoveFleet(int x, int y)
+    public void CmdQueueMove(int x, int y)
+    {
+        WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
+        MovementQueue.Add(new_tile);
+    }
+
+    [Command]
+    public void CmdMoveFleet()
     {
         if (MoveActionTaken)
             return;
 
-        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
-        transform.SetParent(new_tile.transform);
-        CurrentPosition = new_tile;
+        transform.SetParent(MovementQueue[MovementQueue.Count - 1].transform, true);
+        CurrentPosition = MovementQueue[MovementQueue.Count - 1];
 
-        RpcMoveFleet(x, y);
+        RpcMoveFleet(MovementQueue[MovementQueue.Count - 1].HexCoord.Q, MovementQueue[MovementQueue.Count - 1].HexCoord.R);
 
         StopAllCoroutines();
-        StartCoroutine(SmoothMove(new_tile));
+        StartCoroutine(SmoothMove());
+
+        MoveActionTaken = true;
     }
 
-    public IEnumerator SmoothMove(HexTile dest_tile)
+    public IEnumerator SmoothMove()
     {
-        Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
-
-        while(Vector3.Distance(transform.position, destination) > 0.01f)
+        foreach (HexTile dest_tile in MovementQueue)
         {
-            transform.position = Vector3.Lerp(transform.position, destination, 0.25f);
-            yield return new WaitForSeconds(0.1f);
+            Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
+
+            Vector3 direction = (destination - transform.position) / 20.0f;
+
+            for(int i = 0; i < 20; i++)
+            {
+                transform.Translate(direction);
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            transform.position = destination;
+
+            yield return null;
         }
 
-        transform.position = destination;
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }
 
@@ -205,7 +222,7 @@ public class Fleet : NetworkBehaviour
     {
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
 
-        transform.SetParent(new_tile.transform, false);
+        transform.SetParent(new_tile.transform, true);
         CurrentPosition = new_tile;
     }
 

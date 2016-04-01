@@ -59,22 +59,26 @@ public class MovementManager : MonoBehaviour
             tile_fleet = next_tile.GetComponentInChildren<Fleet>();
 
             if (!tile_fleet)
-                ReferencePlayer.ActiveFleet.CmdMoveFleet(next_tile.HexCoord.Q, next_tile.HexCoord.R);
+                ReferencePlayer.ActiveFleet.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
             else
             {
                 if (ReferencePlayer.Fleets.Contains(tile_fleet))
+                {
                     FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
+                    remaining_moves = 0;
+                }
                 else
                 {
                     CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
                     CombatManager.Instance.OpenCombatPanel();
+                    remaining_moves = 0;
                 }
             }
 
             yield return null;
         }
 
-        ReferencePlayer.ActiveFleet.MoveActionTaken = true;
+        ReferencePlayer.ActiveFleet.CmdMoveFleet();
         ClearQueue();
     }
 
