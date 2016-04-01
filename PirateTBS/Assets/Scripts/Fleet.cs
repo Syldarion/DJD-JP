@@ -8,20 +8,20 @@ public class Fleet : NetworkBehaviour
     PlayerScript OwningPlayer;
 
     [SyncVar(hook = "OnNameChanged")]
-    public string Name;
-    public List<Ship> Ships;            //Ships in the fleet
+    public string Name;                     //Name of fleet
+    public List<Ship> Ships;                //Ships in fleet
     [SyncVar]
-    public int FleetSpeed;              //Current speed of the fleet
-    public HexTile CurrentPosition;     //HexTile that the fleet is a child of
-    public GameObject ShipPrefab;
-    public int NewShipID = 0;
+    public int FleetSpeed;                  //Current fleet speed
+    public HexTile CurrentPosition;         //HexTile fleet is on
+    public GameObject ShipPrefab;           //Ship prefab for spawning new ship in fleet
+    public int NewShipID = 0;               //Dev variable for making sure all new ships have a unique name
 
     [SyncVar]
-    public bool MoveActionTaken;
+    public bool MoveActionTaken;            //Tracks if this fleet has moved this turn
     [SyncVar]
-    public bool CombatActionTaken;
+    public bool CombatActionTaken;          //Tracks if this fleet has been in combat this turn
 
-    public List<WaterHex> MovementQueue;
+    public List<WaterHex> MovementQueue;    //List of tiles fleet needs to move to
 
 	void Start()
     {
@@ -62,7 +62,7 @@ public class Fleet : NetworkBehaviour
     }
 
     /// <summary>
-    /// Debug function to spawn a ship in this fleet
+    /// Debug server-side function to spawn a ship in fleet
     /// </summary>
     /// <param name="name">Name for the new ship</param>
     [Command]
@@ -78,6 +78,10 @@ public class Fleet : NetworkBehaviour
         CmdAddShip(new_ship.name);
     }
 
+    /// <summary>
+    /// Server-side command to add existing ship to fleet
+    /// </summary>
+    /// <param name="ship_name">Name of ship to find</param>
     [Command]
     public void CmdAddShip(string ship_name)
     {
@@ -96,6 +100,10 @@ public class Fleet : NetworkBehaviour
         RpcAddShipOthers(ship.Name);   
     }
     
+    /// <summary>
+    /// Client-side command to add existing ship to fleet
+    /// </summary>
+    /// <param name="ship_name">Name of ship to find</param>
     [ClientRpc]
     void RpcAddShipOthers(string ship_name)
     {
@@ -112,6 +120,10 @@ public class Fleet : NetworkBehaviour
         ship.transform.SetParent(this.transform, false);
     }
     
+    /// <summary>
+    /// Server-side command to remove existing ship from fleet
+    /// </summary>
+    /// <param name="ship_name">Name of ship to find</param>
     [Command]
     public void CmdRemoveShip(string ship_name)
     {
@@ -130,6 +142,9 @@ public class Fleet : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Server-side function to update fleet speed
+    /// </summary>
     [Server]
     public void UpdateFleetSpeed()
     {
@@ -143,12 +158,20 @@ public class Fleet : NetworkBehaviour
         RpcUpdateFogRange();
     }
 
+    /// <summary>
+    /// Client-side command to update fog range
+    /// </summary>
     [ClientRpc]
     void RpcUpdateFogRange()
     {
         GetComponent<SphereCollider>().radius = FleetSpeed * 2.1f;
     }
 
+    /// <summary>
+    /// Server-side command to place newly spawned fleet
+    /// </summary>
+    /// <param name="x">Q-coordinate of tile to spawn on</param>
+    /// <param name="y">R-coordinate of tile to spawn on</param>
     [Command]
     public void CmdSpawnOnTile(int x, int y)
     {
@@ -161,6 +184,11 @@ public class Fleet : NetworkBehaviour
         RpcSpawnOnTile(x, y);
     }
 
+    /// <summary>
+    /// Client-side command to place newly spawned fleet
+    /// </summary>
+    /// <param name="x">Q-coordinate of tile to spawn on</param>
+    /// <param name="y">R-coordinate of tile to spawn on</param>
     [ClientRpc]
     public void RpcSpawnOnTile(int x, int y)
     {
@@ -171,11 +199,17 @@ public class Fleet : NetworkBehaviour
         CurrentPosition = new_tile;
     }
 
+    /// <summary>
+    /// Server-side command to add tile to movement queue
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
     [Command]
     public void CmdQueueMove(int x, int y)
     {
         WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
-        MovementQueue.Add(new_tile);
+        if (new_tile)
+            MovementQueue.Add(new_tile);
     }
 
     [Command]
@@ -248,7 +282,7 @@ public class Fleet : NetworkBehaviour
 
     void OnMouseDown()
     {
-        GameObject.Find("MovementManager").GetComponent<MovementManager>().SelectFleet(this);
+        MovementManager.Instance.SelectFleet(this);
     }
 
     void OnMouseEnter()

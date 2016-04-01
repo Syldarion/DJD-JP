@@ -27,8 +27,15 @@ public class MovementManager : MonoBehaviour
 
     public void ClearQueue()
     {
-        foreach(WaterHex hex in MovementQueue)
-            hex.GetComponent<MeshRenderer>().sharedMaterial = hex.DefaultMaterial;
+        foreach (WaterHex hex in MovementQueue)
+        {
+            if (hex.Discovered)
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.CloudMaterial;
+            else if (hex.Fog)
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.FogMaterial;
+            else
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.DefaultMaterial;
+        }
         MovementQueue.Clear();
     }
 
@@ -38,16 +45,19 @@ public class MovementManager : MonoBehaviour
             ReferencePlayer.ActiveFleet = selected_fleet;
     }
 
-    public IEnumerator MoveFleet()
+    public void MoveFleet()
     {
         if(!ReferencePlayer.ActiveFleet)
         {
             ClearQueue();
-            yield break;
+            return;
         }
 
         if (!HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 1).Contains(MovementQueue[0]))
-            yield break;
+        {
+            ClearQueue();
+            return;
+        }
 
         int remaining_moves = ReferencePlayer.ActiveFleet.FleetSpeed;
         WaterHex next_tile;
@@ -74,8 +84,6 @@ public class MovementManager : MonoBehaviour
                     remaining_moves = 0;
                 }
             }
-
-            yield return null;
         }
 
         ReferencePlayer.ActiveFleet.CmdMoveFleet();

@@ -7,17 +7,17 @@ using System.Collections.Generic;
 public class Port : NetworkBehaviour
 {
     [SyncVar]
-    public string PortName;
-    public Nationality PortNationality;
-    public HexTile SpawnTile;
+    public string PortName;                 //Name of port
+    public Nationality PortNationality;     //Associated nation of port
+    public HexTile SpawnTile;               //Tile fleets from port are spawned on
 
     [SyncVar]
-    public Cargo Market;
-    public Fleet Shipyard;
+    public Cargo Market;                    //Contents of port's marketplace
+    public Fleet Shipyard;                  //Contents of port's shipyard
 
-    public GameObject FleetPrefab;
+    public GameObject FleetPrefab;          //Fleet prefab for spawning new fleets
 
-    static int port_id = 0;
+    static int port_id = 0;                 //Dev variable for making sure all ports have unique names
 
     void Start()
     {
@@ -39,12 +39,21 @@ public class Port : NetworkBehaviour
         RpcSetShipyard(Shipyard.Name);
     }
 
+    /// <summary>
+    /// Client-side call to set shipyard
+    /// </summary>
+    /// <param name="name">Name of shipyard to attach to port</param>
     [ClientRpc]
     void RpcSetShipyard(string name)
     {
         StartCoroutine(WaitForShipyard(name));
     }
 
+    /// <summary>
+    /// Waits for shipyard to be spawned
+    /// </summary>
+    /// <param name="name">Name of shipyard to wait for</param>
+    /// <returns></returns>
     IEnumerator WaitForShipyard(string name)
     {
         while (!GameObject.Find(name))
@@ -52,6 +61,9 @@ public class Port : NetworkBehaviour
         Shipyard = GameObject.Find(name).GetComponent<Fleet>();
     }
 
+    /// <summary>
+    /// Finds nearby water tile to set as spawn tile and initializes port market
+    /// </summary>
     public void InitializePort()
     {
         foreach (HexCoordinate hc in GetComponentInParent<HexTile>().Directions)
@@ -73,6 +85,10 @@ public class Port : NetworkBehaviour
 
     }
     
+    /// <summary>
+    /// Client-side function to update information that can't be sent over network
+    /// </summary>
+    /// <param name="parent_tile">Name of tile port is to be on</param>
     [ClientRpc]
     public void RpcSpawnPortOthers(string parent_tile)
     {
@@ -99,11 +115,5 @@ public class Port : NetworkBehaviour
     void OnMouseExit()
     {
         Tooltip.EnableTooltip(false);
-    }
-    
-    void SendSystemMessage(string message)
-    {
-        //global message box
-        //append message
     }
 }

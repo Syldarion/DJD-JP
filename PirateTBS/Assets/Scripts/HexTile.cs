@@ -18,23 +18,27 @@ public struct HexCoordinate
 public class HexTile : MonoBehaviour
 {
     [HideInInspector]
-    public MeshRenderer MeshRenderer;
+    public MeshRenderer MeshRenderer;   //Reference to tile's mesh
     [HideInInspector]
-    public HexCoordinate HexCoord;
+    public HexCoordinate HexCoord;      //Q, R coordinates for the tile
     [HideInInspector]
-    public HexCoordinate[] Directions = new HexCoordinate[6];
+    public HexCoordinate[] Directions 
+        = new HexCoordinate[6];         //Constant coordinates pointing to tile neighbors
 
-    public bool IsWater = false;
-    public bool Fog = true;
-    public bool Discovered = false;
+    public bool IsWater = false;        //Is the tile water?
+    public bool Fog = true;             //Is the tile fogged?
+    public bool Discovered = false;     //Is the tile discovered?
 
-    public Material DefaultMaterial;
-    public Material FogMaterial;
-    public Material CloudMaterial;
-    public Material HighlightMaterial;
+    public Material DefaultMaterial;    //Material for discovered / unfogged
+    public Material FogMaterial;        //Material for discovered / fogged
+    public Material CloudMaterial;      //Material for undiscovered
+    public Material HighlightMaterial;  //Material for highlighted
 
     public virtual void InitializeTile() { }
 
+    /// <summary>
+    /// Discover tile, removing cloud cover
+    /// </summary>
     public void DiscoverTile()
     {
         Discovered = true;
@@ -42,6 +46,9 @@ public class HexTile : MonoBehaviour
         MiniMap.Instance.transform.FindChild(name).GetComponent<MeshRenderer>().material = DefaultMaterial;
     }
 
+    /// <summary>
+    /// Reveal tile, removing fog cover
+    /// </summary>
     public void RevealTile()
     {
         Fog = false;
@@ -49,6 +56,9 @@ public class HexTile : MonoBehaviour
         MiniMap.Instance.transform.FindChild(name).GetComponent<MeshRenderer>().material = DefaultMaterial;
     }
 
+    /// <summary>
+    /// Hide tile, adding fog cover
+    /// </summary>
     public void HideTile()
     {
         Fog = true;
@@ -56,6 +66,10 @@ public class HexTile : MonoBehaviour
         MiniMap.Instance.transform.FindChild(name).GetComponent<MeshRenderer>().material = FogMaterial;
     }
 
+    /// <summary>
+    /// Copy coordinates and neighbor coordinates of another tile
+    /// </summary>
+    /// <param name="other">Tile to copy</param>
     public void CopyTile(HexTile other)
     {
         HexCoord = new HexCoordinate(other.HexCoord.Q, other.HexCoord.R);
@@ -63,6 +77,11 @@ public class HexTile : MonoBehaviour
             Directions[i] = new HexCoordinate(other.Directions[i].Q, other.Directions[i].R);
     }
 
+    /// <summary>
+    /// Get distance from this tile to another
+    /// </summary>
+    /// <param name="dest">Other tile</param>
+    /// <returns>Distance from this to dest</returns>
     float DistanceToTile(HexTile dest)
     {
         return (Mathf.Abs(HexCoord.Q - dest.HexCoord.Q)
@@ -70,6 +89,10 @@ public class HexTile : MonoBehaviour
             + Mathf.Abs(HexCoord.R - dest.HexCoord.R)) / 2.0f;
     }
 
+    /// <summary>
+    /// Sets direction coordinates
+    /// </summary>
+    /// <param name="is_even">Is the tile an "even" tile?</param>
     public void SetDirections(bool is_even)
     {
         Directions[0] = new HexCoordinate(0, 1);
@@ -88,6 +111,11 @@ public class HexTile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get a specific neighbor
+    /// </summary>
+    /// <param name="direction">The direction the neighbor is in</param>
+    /// <returns>Hextile in the specified direction, if it exists</returns>
     public HexTile GetNeighbor(HexCoordinate direction)
     {
         string hex_name = string.Format("{0},{1}", HexCoord.Q + direction.Q, HexCoord.R + direction.R);

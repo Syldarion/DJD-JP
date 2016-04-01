@@ -101,34 +101,4 @@ public class CombatHexGrid : MonoBehaviour
 
         return visited;
     }
-
-    public static List<HexTile> HexesWithinRange(HexTile start, int range)
-    {
-        List<HexTile> visited = new List<HexTile>();
-        visited.Add(start);
-
-        List<List<HexTile>> fringes = new List<List<HexTile>>();
-        fringes.Add(new List<HexTile>());
-        fringes[0].Add(start);
-        for (int i = 1; i <= range; i++)
-        {
-            fringes.Add(new List<HexTile>());
-
-            foreach (HexTile ht in fringes[i - 1])
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    HexTile neighbor_tile = ht.GetNeighbor(ht.Directions[j]);
-                    if (neighbor_tile != null)
-                        if (!visited.Contains(neighbor_tile))
-                        {
-                            visited.Add(neighbor_tile);
-                            fringes[i].Add(neighbor_tile);
-                        }
-                }
-            }
-        }
-
-        return visited;
-    }
 }

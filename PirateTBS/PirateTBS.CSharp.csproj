@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\ChatMessage.cs" />
     <Compile Include="Assets\Scripts\CombatHexGrid.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
+    <Compile Include="Assets\Scripts\CombatMovementManager.cs" />
     <Compile Include="Assets\Scripts\CombatSceneManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
