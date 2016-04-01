@@ -16,6 +16,8 @@ public class Fleet : NetworkBehaviour
     public GameObject ShipPrefab;
     public int NewShipID = 0;
 
+    public int fleetGold = 0;   // This may need to be networked.
+
     [SyncVar]
     public bool MoveActionTaken;
     [SyncVar]

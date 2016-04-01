@@ -194,7 +194,6 @@ public class Ship : NetworkBehaviour
     public int CrewMorale;
     public ShipClass Class;
     public int Price;
-    public int CurrentCrew;
 
 	void Start()
     {

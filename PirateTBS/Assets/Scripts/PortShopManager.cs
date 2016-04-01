@@ -190,8 +190,6 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
-=======
     public void ClearShipyard()
     {
         var children = new List<GameObject>();
@@ -200,7 +198,6 @@ public class PortShopManager : MonoBehaviour
         foreach (GameObject go in children) Destroy(go);
     }
 
->>>>>>> refs/remotes/origin/master
     public void SellResources()
     {
         string[] resource_types = { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
@@ -209,11 +206,9 @@ public class PortShopManager : MonoBehaviour
         {
             int sell_amount = FleetResourceList.FindChild(string.Format("{0}/Quantity", resource)).GetComponent<NumericUpDown>().Value;
             SelectedShip.Cargo.TransferTo(CurrentPort.Market, resource, sell_amount);
-<<<<<<< HEAD
-=======
+
 
             Debug.Log(string.Format("{0} -> {1} -> {2}", SelectedShip.Cargo.Food, sell_amount, CurrentPort.Market.Food));
->>>>>>> refs/remotes/origin/master
         }
 
         PopulateShipResources();
@@ -236,7 +231,6 @@ public class PortShopManager : MonoBehaviour
 
     public void BuyShip()
     {
-<<<<<<< HEAD
         int tranTotal = 0;
                 
         foreach (GameObject ship in PortSelection.SelectedObjects)
@@ -253,7 +247,7 @@ public class PortShopManager : MonoBehaviour
             }
 
             CompletePurchaseTransaction(tranTotal);
-=======
+
         int transaction_total = 0;
 
         foreach (GameObject ship in ShipyardPortSelection.SelectedObjects)
@@ -268,14 +262,12 @@ public class PortShopManager : MonoBehaviour
                 DockedFleet.CmdAddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
                 CurrentPort.Shipyard.CmdRemoveShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
             }
->>>>>>> refs/remotes/origin/master
         }
     }
 
 
     public void SellShip()
     {
-<<<<<<< HEAD
         int tranTotal = 0;
 
         foreach (GameObject ship in FleetSelection.SelectedObjects)
@@ -329,7 +321,6 @@ public class PortShopManager : MonoBehaviour
     void CompletePurchaseTransaction( int transAmount )
     {
         int remainingGold = PlayersGold - transAmount;     // How much gold does the player have left
-=======
         int transaction_total = 0;
 
         foreach (GameObject ship in ShipyardFleetSelection.SelectedObjects)
@@ -352,7 +343,6 @@ public class PortShopManager : MonoBehaviour
     void CompletePurchaseTransaction(int transAmount)
     {
         int remainingGold = PlayerScript.MyPlayer.TotalGold - transAmount;     // How much gold does the player have left
->>>>>>> refs/remotes/origin/master
 
         int pership = remainingGold / DockedFleet.Ships.Count;      // How much should go in each ship
         int remainderpership = remainingGold % DockedFleet.Ships.Count;     // Is there any left over
@@ -372,7 +362,6 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
     int TotalPlayersGold(  )
     {
         int total = 0;
@@ -383,7 +372,6 @@ public class PortShopManager : MonoBehaviour
         }
 
         return total;
-=======
     public void HireCrew()
     {
 
@@ -410,9 +398,5 @@ public class PortShopManager : MonoBehaviour
                 ship.CrewMorale += ship.CurrentCrew * goldToSpend;
             }
         }
-
-        PopulatePortMarket();
-        PopulateShipResources();
->>>>>>> refs/remotes/origin/master
     }
 }
