@@ -10,15 +10,12 @@ public class CombatSceneManager : MonoBehaviour {
     [HideInInspector]
     public static CombatSceneManager Instance;
 
-    public bool InCombat;
-
     Scene combatscene;
     Scene mainscene;
 
     void Start()
     {
         Instance = this;
-        InCombat = false;
 
         SceneSetup();
     }
@@ -30,8 +27,6 @@ public class CombatSceneManager : MonoBehaviour {
 
         if (combatscene.IsValid())
         {
-            InCombat = true;
-
             foreach (Ship s in CombatManager.Instance.PlayerFleet.Ships)
                 s.GetComponent<NetworkTransform>().enabled = true;
             foreach (Ship s in CombatManager.Instance.EnemyFleet.Ships)
@@ -45,8 +40,6 @@ public class CombatSceneManager : MonoBehaviour {
     {
         if (mainscene.IsValid())
         {
-            InCombat = false;
-
             foreach (Ship s in CombatManager.Instance.PlayerFleet.Ships)
                 s.GetComponent<NetworkTransform>().enabled = false;
             foreach (Ship s in CombatManager.Instance.EnemyFleet.Ships)

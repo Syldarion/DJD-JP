@@ -32,7 +32,7 @@ public class WaterHex : HexTile
 
         if (Input.GetMouseButton(0))
         {
-            if (!CombatSceneManager.Instance.InCombat)
+            if (!CombatSceneManager.Instance)
                 MovementManager.Instance.MovementQueue.Add(this);
             else
                 CombatMovementManager.Instance.MovementQueue.Add(this);
@@ -46,7 +46,7 @@ public class WaterHex : HexTile
 
     void OnMouseDown()
     {
-        if (!CombatSceneManager.Instance.InCombat)
+        if (!CombatSceneManager.Instance)
             MovementManager.Instance.MovementQueue.Add(this);
         else
             CombatMovementManager.Instance.MovementQueue.Add(this);
@@ -58,7 +58,7 @@ public class WaterHex : HexTile
         if (PlayerScript.MyPlayer.OpenUI)
             return;
 
-        if (!CombatSceneManager.Instance.InCombat)
+        if (!CombatSceneManager.Instance)
             MovementManager.Instance.MoveFleet();
         else
             CombatMovementManager.Instance.MoveShip();

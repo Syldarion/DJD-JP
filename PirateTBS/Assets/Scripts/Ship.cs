@@ -415,7 +415,7 @@ public class Ship : NetworkBehaviour
 
     void OnMouseDown()
     {
-        if (CombatSceneManager.Instance.InCombat)
+        if (CombatSceneManager.Instance)
             CombatMovementManager.Instance.SelectShip(this);
     }
 }
