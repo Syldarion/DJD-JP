@@ -90,7 +90,7 @@ public class PlayerScript : NetworkBehaviour
             CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
         }
         if (Input.GetKeyDown(KeyCode.O))
-            ActiveFleet.CmdSpawnShip(string.Format("{0}Ship{1}", ActiveFleet.Name, ++ActiveFleet.NewShipID));
+            ActiveFleet.CmdSpawnShip();
         if (Input.GetKeyDown(KeyCode.P) && ActiveFleet)
         {
             CargoManager.Instance.PopulateShipList(ActiveFleet);
