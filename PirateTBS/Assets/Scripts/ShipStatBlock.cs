@@ -11,6 +11,14 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
     public OnClickDelegate StatBlockDelegate;
     public Ship ReferenceShip;
 
+    public Text ShipNameText;
+    public Text ShipTypeText;
+
+    public Text HealthText;
+    public Text SpeedText;
+    public Text CargoText;
+    public Text CannonText;
+
 	void Start()
 	{
         StatBlockDelegate = null;
@@ -29,14 +37,13 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
     {
         ReferenceShip = ship;
 
-        transform.FindChild("ShipNameText").GetComponent<Text>().text = ship.name;
-        transform.FindChild("ShipTypeText").GetComponent<Text>().text = ship.ShipType;
-
-        Transform ship_stats_transform = transform.FindChild("ShipStats");
-        ship_stats_transform.FindChild("HealthText").GetComponent<Text>().text = string.Format("{0} | {1}", ship.HullHealth, ship.SailHealth);
-        ship_stats_transform.FindChild("CargoText").GetComponent<Text>().text = string.Format("{0}/{1}", ship.Cargo.Size().ToString("F1"), ship.CargoSpace.ToString());
-        ship_stats_transform.FindChild("SpeedText").GetComponent<Text>().text = ship.FullSpeed.ToString();
-        ship_stats_transform.FindChild("CannonText").GetComponent<Text>().text = ship.Cannons.ToString();
+        ShipNameText.text = ship.name;
+        ShipTypeText.text = ship.ShipType;
+        
+        HealthText.text = string.Format("{0} | {1}", ship.HullHealth, ship.SailHealth);
+        SpeedText.text = ship.FullSpeed.ToString();
+        CargoText.text = string.Format("{0}/{1}", ship.Cargo.Size().ToString("F1"), ship.CargoSpace.ToString());
+        CannonText.text = ship.Cannons.ToString();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -57,5 +64,16 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
             parent_group.RemoveSelection(gameObject);
         else
             parent_group.AddSelection(gameObject);
+    }
+
+    public void ActivateTooltip(string text)
+    {
+        Tooltip.EnableTooltip(true);
+        Tooltip.UpdateTooltip(text);
+    }
+
+    public void DeactivateTooltip()
+    {
+        Tooltip.EnableTooltip(false);
     }
 }
