@@ -15,6 +15,7 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     public Color ActivatedColor;
     public Color DeactivatedColor;
 
+    public TechNode PreliminaryNode;
     public bool IsActive;
 
     public OnActivateDelegate OnActivation;
@@ -34,7 +35,7 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 
     public void ActivateNode()
     {
-        if (IsActive)
+        if (IsActive || (PreliminaryNode && !PreliminaryNode.IsActive))
             return;
 
         Icon.color = ActivatedColor;
