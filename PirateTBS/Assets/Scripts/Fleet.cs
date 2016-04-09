@@ -230,6 +230,8 @@ public class Fleet : NetworkBehaviour
         StartCoroutine(SmoothMove());
 
         MoveActionTaken = true;
+
+        MovementQueue.Clear();
     }
 
     public IEnumerator SmoothMove()
