@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -105,6 +99,7 @@
     <Compile Include="Assets\Scripts\MainMenuPanelController.cs" />
     <Compile Include="Assets\Scripts\MiniMap.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
+    <Compile Include="Assets\Scripts\NameGenerator.cs" />
     <Compile Include="Assets\Scripts\Nation.cs" />
     <Compile Include="Assets\Scripts\NetworkInitializer.cs" />
     <Compile Include="Assets\Scripts\NumericUpDown.cs" />
@@ -119,6 +114,8 @@
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
     <Compile Include="Assets\Scripts\ShipStatBlock.cs" />
+    <Compile Include="Assets\Scripts\TechNode.cs" />
+    <Compile Include="Assets\Scripts\TechTree.cs" />
     <Compile Include="Assets\Scripts\TextColorFlow.cs" />
     <Compile Include="Assets\Scripts\Tooltip.cs" />
     <Compile Include="Assets\Scripts\TurnManager.cs" />
@@ -130,6 +127,9 @@
     <None Include="Assets\Text\EnglishPorts.txt" />
     <None Include="Assets\Text\FrenchPorts.txt" />
     <None Include="Assets\Text\PirateFilterList.txt" />
+    <None Include="Assets\Text\ShipNameAdjectives.txt" />
+    <None Include="Assets\Text\ShipNameNouns.txt" />
+    <None Include="Assets\Text\ShipNamePlaces.txt" />
     <None Include="Assets\Text\SpanishPorts.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

@@ -6,7 +6,8 @@ public enum Nationality
     English,
     Spanish,
     Dutch,
-    French
+    French,
+    Pirate
 }
 
 public class Nation

@@ -7,15 +7,28 @@ public class Tooltip : MonoBehaviour
     [HideInInspector]
     public static Tooltip Instance;
 
+    static bool active;
+
+    RectTransform my_transform;
+
 	void Start()
 	{
         Instance = this;
+        active = false;
+        my_transform = GetComponent<RectTransform>();
 	}
 
 	void Update()
 	{
-        if (GetComponent<CanvasGroup>().alpha != 0)
-            transform.position = Input.mousePosition + new Vector3(10.0f, -10.0f);
+        if (active)
+        {
+            if(Input.mousePosition.x <= Screen.width / 2)
+                my_transform.pivot = new Vector2(0.0f, 1.0f);
+            else
+                my_transform.pivot = new Vector2(1.0f, 1.0f);
+
+            transform.position = Input.mousePosition + new Vector3(10.0f - (10.0f * my_transform.pivot.x), -10.0f);
+        }
 	}
 
     /// <summary>
@@ -28,6 +41,8 @@ public class Tooltip : MonoBehaviour
             PanelUtilities.ActivatePanel(Instance.GetComponent<CanvasGroup>());
         else
             PanelUtilities.DeactivatePanel(Instance.GetComponent<CanvasGroup>());
+
+        active = enable;
     }
 
     /// <summary>

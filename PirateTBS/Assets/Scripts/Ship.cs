@@ -358,7 +358,7 @@ public class Ship : NetworkBehaviour
 
     void OnNameChanged(string new_name)
     {
-        GameObject.Find("ConsolePanel").GetComponent<GameConsole>().GenericLog(Name);
+        GameConsole.Instance.GenericLog(Name);
         name = new_name;
     }
 

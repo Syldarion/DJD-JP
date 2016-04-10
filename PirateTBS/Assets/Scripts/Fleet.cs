@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class Fleet : NetworkBehaviour
 {
@@ -66,10 +67,12 @@ public class Fleet : NetworkBehaviour
     /// </summary>
     /// <param name="name">Name for the new ship</param>
     [Command]
-    public void CmdSpawnShip(string name)
+    public void CmdSpawnShip()
     {
+        string ship_name = NameGenerator.Instance.GetShipName();
+
         Ship new_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
-        new_ship.Name = name;
+        new_ship.Name = ship_name;
         new_ship.SetClass((ShipClass)Random.Range(0, 8));
         new_ship.Cargo = new Cargo(50, 500);
 
@@ -87,7 +90,7 @@ public class Fleet : NetworkBehaviour
     {
         Ship ship = GameObject.Find(ship_name).GetComponent<Ship>();
 
-        if (!ship)
+        if (!ship || Ships.Count >= 8)
             return;
 
         if (!Ships.Contains(ship))
@@ -227,6 +230,8 @@ public class Fleet : NetworkBehaviour
         StartCoroutine(SmoothMove());
 
         MoveActionTaken = true;
+
+        MovementQueue.Clear();
     }
 
     public IEnumerator SmoothMove()

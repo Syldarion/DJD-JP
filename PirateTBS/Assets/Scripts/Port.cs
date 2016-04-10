@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class Port : NetworkBehaviour
 {
@@ -28,7 +29,14 @@ public class Port : NetworkBehaviour
     {
         base.OnStartServer();
 
-        PortName = string.Format("Port{0}", ++port_id);
+        PortNationality = (Nationality)Random.Range(0, 5);
+
+        int port_index = Random.Range(0, 5);
+        PortNationality = (Nationality)port_index;
+        if (port_index == 5)
+            port_index = Random.Range(0, 4);
+
+        PortName = name = NameGenerator.Instance.GetPortName(port_index);
 
         Shipyard = Instantiate(FleetPrefab).GetComponent<Fleet>();
         Shipyard.Name = string.Format("{0}Shipyard", PortName);
@@ -102,8 +110,8 @@ public class Port : NetworkBehaviour
     void OnMouseDown()
     {
         Fleet current_fleet = PlayerScript.MyPlayer.ActiveFleet;
-        GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().CurrentPort = this;
-        GameObject.Find("PortShopBasePanel").GetComponent<PortShopManager>().OpenShop(current_fleet);
+        PortShopManager.Instance.CurrentPort = this;
+        PortShopManager.Instance.OpenShop(current_fleet);
     }
 
     void OnMouseEnter()
