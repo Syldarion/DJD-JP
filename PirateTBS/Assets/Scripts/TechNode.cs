@@ -4,9 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public delegate void OnActivateDelegate();
-
-public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public class TechNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string Name;                         //Name of technology
     public string NodeCode;                     //Code representing node eg. C01
@@ -20,11 +18,12 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     public List<TechNode> ChildNodes;           //Nodes that require this node to be active
     public bool IsActive;                       //Is this an active node?
 
-    public OnActivateDelegate OnActivation;     //Delegate to call when node is activated
-    public OnActivateDelegate OnDeactivation;   //Delegate to call when node is deactivated
+    public List<string> ActivationString;       //Commands to parse on activation
+    public List<string> DeactivationString;     //Commands to parse on deactivation
 
 	void Start()
     {
+        Name = GetComponentInChildren<Text>().text;
         NodeCode = name.Remove(0, 8);
 
         if (TechTree.Instance)
@@ -33,6 +32,8 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             StartCoroutine(WaitForTree());
 
         Icon = GetComponent<Image>();
+
+        GetComponent<Button>().onClick.AddListener(SwitchNode);
 	}
 	
 	void Update()
@@ -46,52 +47,12 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             yield return null;
 
         TechTree.Instance.Nodes[NodeCode] = this;
-    }
-
-    public void ActivateNode()
-    {
-        foreach (TechNode node in ParentNodes)
-            if (!node.IsActive)
-                return;
-
-        if (IsActive)
-            return;
-
-        Icon.color = ActivatedColor;
-
-        IsActive = true;
-        if (OnActivation != null)
-            OnActivation.Invoke();
 
         foreach (TechNode node in ChildNodes)
-            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.yellow;
+            TechTree.Instance.DrawLine(this, node, 10.0f);
     }
 
-    public void DeactivateNode()
-    {
-        if (!IsActive)
-            return;
-
-        Icon.color = DeactivatedColor;
-
-        IsActive = false;
-
-        if (OnDeactivation != null)
-            OnDeactivation.Invoke();
-
-        foreach (TechNode node in ChildNodes)
-            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.gray;
-
-        foreach (TechNode node in ChildNodes)
-            node.DeactivateNode();
-    }
-
-    public void AddActivationAction(OnActivateDelegate action)
-    {
-        OnActivation += action;
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
+    public void SwitchNode()
     {
         if (!TechTree.Instance.ModifyingTree)
             return;
@@ -102,10 +63,44 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             ActivateNode();
     }
 
+    public void ActivateNode()
+    {
+        foreach (TechNode node in ParentNodes)
+            if (!node.IsActive)
+                return;
+
+        Icon.color = ActivatedColor;
+
+        IsActive = true;
+
+        foreach (TechNode node in ChildNodes)
+            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.yellow;
+
+        foreach (string s in ActivationString)
+            TechTree.Instance.ModifyStat(s);
+    }
+
+    public void DeactivateNode()
+    {
+        foreach (TechNode node in ChildNodes)
+            if (node.IsActive)
+                node.DeactivateNode();
+
+        Icon.color = DeactivatedColor;
+
+        IsActive = false;
+
+        foreach (TechNode node in ChildNodes)
+            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.gray;
+
+        foreach (string s in DeactivationString)
+            TechTree.Instance.ModifyStat(s);
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         Tooltip.EnableTooltip(true);
-        Tooltip.UpdateTooltip(string.Format("{0}: {1}", Name, EffectText));
+        Tooltip.UpdateTooltip(EffectText);
     }
 
     public void OnPointerExit(PointerEventData eventData)

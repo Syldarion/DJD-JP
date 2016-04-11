@@ -1,13 +1,15 @@
-﻿Fighter
-Sturdy I
-Sturdy II
-Sturdy III
-Damage I
-Damage II
-Damage III
-More Cannons
-Evasiveness
-Fast Hands
+﻿//Name;Level;Order;Code;Effect;Children;Activation;Deactivation
+
+Fighter;0;0;C00;Unlock combat tree;C01,C04,C07;;
+Sturdy I;1;0;C01;Increase ship health by 10%;C02;HealthMultiplier 1.1;HealthMultiplier 1.0
+Sturdy II;2;0;C02;Increase ship health by 10%;C03;HealthMultiplier 1.2;HealthMultiplier 1.1
+Sturdy III;3;0;C03;Increase ship health by 10%;;HealthMultiplier 1.3;HealthMultiplier 1.2
+Damage I;1;1;C04;Increase ship damage by 10%;C05;DamageMultiplier 1.1;DamageMultiplier 1.0
+Damage II;2;1;C05;Increase ship damage by 10%;C06;DamageMultiplier 1.2;DamageMultiplier 1.1
+Damage III;3;1;C06;Increase ship damage by 10%;;DamageMultiplier 1.3;DamageMultiplier 1.2
+More Cannons;1;2;C07;Increase max cannons by 1;C08;MaxCannonModifier 1;MaxCannonModifier 0
+Evasiveness;2;2;C08;Increase dodge chance by 10%;C09;DodgeChanceModifier 1.1;DodgeChanceModifier 1.0
+Fast Hands;3;2;C09;Decrease reload speed by 10%;;ReloadSpeedModifier 0.9;ReloadSpeedModifier 1.0
 
 Trader
 Spacious I
