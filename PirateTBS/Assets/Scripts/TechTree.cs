@@ -48,4 +48,34 @@ public class TechTree : MonoBehaviour
     {
 
 	}
+
+    void SetupDelegates()
+    {
+
+    }
+
+    public void ModifyStat(string modify_string)
+    {
+        string var = modify_string.Split(' ')[0];
+        float mod_val = float.Parse(modify_string.Split(' ')[2]);
+        string mod_oper = modify_string.Split(' ')[1];
+
+        float current_var_val = 
+
+        switch(mod_oper)
+        {
+            case "+":
+                break;
+            case "-":
+                break;
+            case "*":
+                break;
+            case "/":
+                break;
+            default:
+                return;
+        }
+
+        float current_value 
+    }
 }

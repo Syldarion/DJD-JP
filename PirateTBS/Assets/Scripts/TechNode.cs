@@ -26,7 +26,11 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 	void Start()
     {
         NodeCode = name.Remove(0, 8);
-        TechTree.Instance.Nodes[NodeCode] = this;
+
+        if (TechTree.Instance)
+            TechTree.Instance.Nodes[NodeCode] = this;
+        else
+            StartCoroutine(WaitForTree());
 
         Icon = GetComponent<Image>();
 	}
@@ -35,6 +39,14 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     {
 
 	}
+
+    IEnumerator WaitForTree()
+    {
+        while (!TechTree.Instance)
+            yield return null;
+
+        TechTree.Instance.Nodes[NodeCode] = this;
+    }
 
     public void ActivateNode()
     {
@@ -68,7 +80,7 @@ public class TechNode : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             OnDeactivation.Invoke();
 
         foreach (TechNode node in ChildNodes)
-            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.black;
+            GameObject.Find(string.Format("{0}to{1}", NodeCode, node.NodeCode)).GetComponent<Image>().color = Color.gray;
 
         foreach (TechNode node in ChildNodes)
             node.DeactivateNode();

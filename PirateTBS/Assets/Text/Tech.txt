@@ -1,0 +1,32 @@
+﻿Fighter
+Sturdy I
+Sturdy II
+Sturdy III
+Damage I
+Damage II
+Damage III
+More Cannons
+Evasiveness
+Fast Hands
+
+Trader
+Spacious I
+Spacious II
+Spacious III
+Bartering I
+Bartering II
+Bartering III
+Strong Crew
+Shipwright
+Collector
+
+Navigator
+Swift I
+Swift II
+Swift III
+Inspiration I
+Inspiration II
+Inspiration III
+Eagle Eye
+Armada
+Hero
