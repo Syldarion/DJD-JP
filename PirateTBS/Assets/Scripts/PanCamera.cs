@@ -24,8 +24,8 @@ public class PanCamera : MonoBehaviour
 	
 	void Update()
     {
-        if (PlayerScript.MyPlayer.OpenUI)
-            return;
+        //if (PlayerScript.MyPlayer.OpenUI)
+        //    return;
 
         if (Input.GetKeyDown(KeyCode.Space))
             CenterOnTarget(current_target);

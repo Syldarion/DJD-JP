@@ -70,10 +70,18 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
+    <Compile Include="Assets\Scripts\CannonBall.cs" />
+    <Compile Include="Assets\Scripts\CannonFire.cs" />
     <Compile Include="Assets\Scripts\CargoManager.cs" />
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />

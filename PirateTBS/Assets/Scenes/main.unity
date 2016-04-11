@@ -5735,6 +5735,7 @@ GameObject:
   - 114: {fileID: 295949862}
   - 114: {fileID: 295949864}
   - 114: {fileID: 295949865}
+  - 225: {fileID: 295949866}
   m_Layer: 5
   m_Name: TechTreePanel
   m_TagString: Untagged
@@ -5827,6 +5828,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ModifyingTree: 0
+  HealthMultiplier: 1
+  DamageMultiplier: 1
+  ReloadSpeedMultiplier: 1
+  MaxCannonModifier: 0
+  DodgeChanceMultiplier: 1
+  CargoSizeMultiplier: 1
+  CrewNeedMultiplier: 1
+  ResourceCostMultiplier: 1
+  ResourceGenMultiplier: 1
+  ShipCostMultiplier: 1
+  ShipSpeedMultiplier: 1
+  ReputationGainMultiplier: 1
+  MaxFleetSizeModifier: 0
+  ViewRadiusModifier: 0
+  MoraleMultiplier: 1
+--- !u!225 &295949866
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 295949860}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &301672555
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,6 +38,7 @@ public class CombatManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C)) //For testing purposes.
         {
             OpenCombatPanel();
+            PopulateFleetLists(PlayerScript.MyPlayer.ActiveFleet, PlayerScript.MyPlayer.ActiveFleet);
         }
     }
 
