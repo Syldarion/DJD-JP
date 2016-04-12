@@ -5,17 +5,17 @@ using System.Text;
 
 public class TextColorFlow : MonoBehaviour
 {
-    public string BaseColorHex;
-    public string FlowColorHex;
-    public float FlowTime;
-    public float DelayTime;
-    public string BaseText;
+    public string BaseColorHex;         //Hexadecimal value for default text color
+    public string FlowColorHex;         //Hexadecimal value for color to change text to
+    public float FlowTime;              //Time in seconds it takes to complete a run across all letters
+    public float DelayTime;             //Time in seconds to delay between running across letter
+    public string BaseText;             //Text to display
 
-    float CurrentTime;
-    float TotalTime;
-    int CurrentStep;
-    int MaxStep;
-    float[] StepTimes;
+    float CurrentTime;                  //Current time in seconds of cycle
+    float TotalTime;                    //Total time for a cycle
+    int CurrentStep;                    //Current index of cycle
+    int MaxStep;                        //Max index of cycle
+    float[] StepTimes;                  //Times in seconds for when to step
 
 	void Start()
     {
@@ -43,6 +43,10 @@ public class TextColorFlow : MonoBehaviour
             CurrentTime = 0.0f;
 	}
 
+    /// <summary>
+    /// Builds string with appropriate letter colors
+    /// </summary>
+    /// <returns></returns>
     string BuildFlowString()
     {
         StringBuilder builder = new StringBuilder();

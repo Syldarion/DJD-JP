@@ -9,13 +9,13 @@ public class GameConsole : MonoBehaviour
     [HideInInspector]
     public static GameConsole Instance;
 
-    Dictionary<string, Action<string>> Commands;
-    Dictionary<string, string> HelpText;
+    Dictionary<string, Action<string>> Commands;            //Dictionary of commands
+    Dictionary<string, string> HelpText;                    //Dictionary of help text for commands
 
-    public GameObject LogItemPrefab;
-    public GameObject ContentPanel;
+    public GameObject LogItemPrefab;                        //Reference to prefab for instantiating log items
+    public GameObject ContentPanel;                         //Reference to panel container for log items
 
-    string base_input;
+    string base_input;                                      //Base input from user
 
 	void Start()
 	{
@@ -29,12 +29,14 @@ public class GameConsole : MonoBehaviour
         RegisterCommand("ListShips", ListShips);
         RegisterCommand("ListPorts", ListPorts);
         RegisterCommand("ListInventory", ListInventory);
+        RegisterCommand("ModifyStat", ModifyStat);
 
         HelpText.Add("Help", "Usage: Help <command>");
         HelpText.Add("ListFleets", "Usage: ListFleets");
         HelpText.Add("ListShips", "Usage: ListShips <fleet>");
         HelpText.Add("ListPorts", "Usage: ListPorts");
         HelpText.Add("ListInventory", "Usage: ListInventory <container>");
+        HelpText.Add("ModifyStat", "Usage: ModifyStat <object_type>,<object_name>,<modification_string>");
 	}
 	
 	void Update()
@@ -50,6 +52,10 @@ public class GameConsole : MonoBehaviour
         }
 	}
 
+    /// <summary>
+    /// Opens console from bottom of screen
+    /// </summary>
+    /// <returns></returns>
     IEnumerator OpenConsole()
     {
         PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
@@ -64,6 +70,10 @@ public class GameConsole : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Retracts console into bottom of screen
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CloseConsole()
     {
         PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
@@ -78,6 +88,11 @@ public class GameConsole : MonoBehaviour
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Register a new command with the console
+    /// </summary>
+    /// <param name="command">String to activate command</param>
+    /// <param name="action">Action, taking string param, to execute when command is entered</param>
     public void RegisterCommand(string command, Action<string> action)
     {
         if (Commands.ContainsKey(command))
@@ -86,6 +101,10 @@ public class GameConsole : MonoBehaviour
             Commands.Add(command, action);
     }
 
+    /// <summary>
+    /// Parse user input to determine what to execute
+    /// </summary>
+    /// <param name="input">User input</param>
     public void ParseInput(string input)
     {
         base_input = input;
@@ -104,6 +123,10 @@ public class GameConsole : MonoBehaviour
         Commands[command].Invoke(args);
     }
 
+    /// <summary>
+    /// Add generic log message to console
+    /// </summary>
+    /// <param name="message">Message to display</param>
     public void GenericLog(string message)
     {
         GameObject new_log_item = Instantiate(LogItemPrefab);
@@ -114,6 +137,10 @@ public class GameConsole : MonoBehaviour
             Destroy(ContentPanel.transform.GetChild(0).gameObject);
     }
 
+    /// <summary>
+    /// Add log message to console, prepended by the related command being executed
+    /// </summary>
+    /// <param name="message">Message to display</param>
     void AddToLog(string message)
     {
         GameObject new_log_item = Instantiate(LogItemPrefab);
@@ -124,6 +151,10 @@ public class GameConsole : MonoBehaviour
             Destroy(ContentPanel.transform.GetChild(0).gameObject);
     }
 
+    /// <summary>
+    /// Display help text for given command
+    /// </summary>
+    /// <param name="input">Command name</param>
     void Help(string input)
     {
         if (HelpText.ContainsKey(input))
@@ -137,6 +168,10 @@ public class GameConsole : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Command to list all fleets in-game
+    /// </summary>
+    /// <param name="input">User input, not used</param>
     void ListFleets(string input)
     {
         Fleet[] fleets = FindObjectsOfType<Fleet>();
@@ -148,6 +183,10 @@ public class GameConsole : MonoBehaviour
         AddToLog(fleet_str);
     }
 
+    /// <summary>
+    /// List all ships in a fleet
+    /// </summary>
+    /// <param name="input">User input containing fleet name</param>
     void ListShips(string input)
     {
         string[] tokens = input.Split(' ', '\t');
@@ -176,6 +215,10 @@ public class GameConsole : MonoBehaviour
         AddToLog(ship_str);
     }
 
+    /// <summary>
+    /// List all ports in game
+    /// </summary>
+    /// <param name="input">User input, not used</param>
     void ListPorts(string input)
     {
         Port[] fleets = FindObjectsOfType<Port>();
@@ -187,6 +230,10 @@ public class GameConsole : MonoBehaviour
         AddToLog(port_str);
     }
 
+    /// <summary>
+    /// List inventory of a given container
+    /// </summary>
+    /// <param name="input">User input, containing container type and container name</param>
     void ListInventory(string input)
     {
         string[] tokens = input.Split(' ', '\t');
@@ -231,5 +278,48 @@ public class GameConsole : MonoBehaviour
         }
         else
             AddToLog(string.Format("{0} - Invalid cargo container (arg 1)", tokens[0].ToLower()));
+    }
+
+    /// <summary>
+    /// Modifies the stats of a given object
+    /// </summary>
+    /// <param name="input">User input, containing object type [player, ship, fleet], object name, and modification string</param>
+    void ModifyStat(string input)
+    {
+        string[] args = input.Split(',');
+
+        switch(args[0])
+        {
+            case "Ship":
+                Ship ship = GameObject.Find(args[1]).GetComponent<Ship>();
+                if(!ship)
+                {
+                    AddToLog("Ship not found");
+                    break;
+                }
+                ship.CmdUpdateStat(args[2]);
+                break;
+            case "Fleet":
+                Fleet fleet = GameObject.Find(args[1]).GetComponent<Fleet>();
+                if(!fleet)
+                {
+                    AddToLog("Fleet not found");
+                    break;
+                }
+                fleet.CmdUpdateStat(args[2]);
+                break;
+            case "Player":
+                PlayerScript player = GameObject.Find(args[1]).GetComponent<PlayerScript>();
+                if(!player)
+                {
+                    AddToLog("Player not found");
+                    break;
+                }
+                player.CmdUpdateStat(args[2]);
+                break;
+            default:
+                AddToLog("Invalid object type");
+                break;
+        }
     }
 }

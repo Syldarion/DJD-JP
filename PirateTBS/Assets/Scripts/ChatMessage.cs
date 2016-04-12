@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class ChatMessage : NetworkBehaviour
 {
-    public ChatFilter Filter;
+    public ChatFilter Filter;           //Filter to apply to chat message
 
     [SyncVar]
-    public string Sender;
+    public string Sender;               //Sender of message
     [SyncVar]
-    public string Message;
+    public string Message;              //Message text
 
     void Start()
     {
@@ -24,6 +24,9 @@ public class ChatMessage : NetworkBehaviour
         UpdateMessage();
     }
 
+    /// <summary>
+    /// Updates chat message with values from server
+    /// </summary>
     public void UpdateMessage()
     {
         transform.GetChild(0).GetComponent<Text>().text = Sender;

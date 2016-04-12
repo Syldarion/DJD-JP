@@ -9,14 +9,14 @@ public class CargoManager : MonoBehaviour
     [HideInInspector]
     public static CargoManager Instance;
 
-    public Ship ShipA;
-    public Ship ShipB;
+    public Ship ShipA;                          //Reference to left-hand ship
+    public Ship ShipB;                          //Reference to right-hand ship
 
-    public Dropdown LefthandShips;
-    public Dropdown RighthandShips;
+    public Dropdown LefthandShips;              //Reference to dropdown for left-hand ships
+    public Dropdown RighthandShips;             //Reference to dropdown for right-hand ships
 
-    public RectTransform LefthandCargo;
-    public RectTransform RighthandCargo;
+    public RectTransform LefthandCargo;         //Reference to container for left-hand ship's cargo
+    public RectTransform RighthandCargo;        //Reference to container for right-hand ship's cargo
 
     string[] AllResources = new string[] { "Food", "Goods", "Sugar", "Spice", "Luxuries" };
 
@@ -30,6 +30,9 @@ public class CargoManager : MonoBehaviour
 		
 	}
 
+    /// <summary>
+    /// Opens the cargo manager panel
+    /// </summary>
     public void OpenCargoManager()
     {
         PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
@@ -37,6 +40,9 @@ public class CargoManager : MonoBehaviour
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Closes the cargo manager panel
+    /// </summary>
     public void CloseCargoManager()
     {
         PlayerScript.MyPlayer.OpenUI = null;
@@ -44,6 +50,10 @@ public class CargoManager : MonoBehaviour
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Populates dropdowns with ships
+    /// </summary>
+    /// <param name="fleet">Fleet to grab ships from</param>
     public void PopulateShipList(Fleet fleet)
     {
         if(fleet.Ships.Count < 2)
@@ -64,6 +74,11 @@ public class CargoManager : MonoBehaviour
         PopulateCargoList(fleet.Ships[0], fleet.Ships[1]);
     }
 
+    /// <summary>
+    /// Populates cargo lists
+    /// </summary>
+    /// <param name="ship_a">Left-hand ship</param>
+    /// <param name="ship_b">Right-hand ship</param>
     public void PopulateCargoList(Ship ship_a, Ship ship_b)
     {
         if (ship_a == ship_b)
@@ -76,6 +91,11 @@ public class CargoManager : MonoBehaviour
         UpdateResourceList(ShipB, RighthandCargo);
     }
 
+    /// <summary>
+    /// Updates a resource list
+    /// </summary>
+    /// <param name="ship">New ship to use</param>
+    /// <param name="resource_list">Resource list to repopulate</param>
     public void UpdateResourceList(Ship ship, RectTransform resource_list)
     {
         foreach(string s in AllResources)
@@ -90,6 +110,9 @@ public class CargoManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Transfers cargo from left-hand ship to right-hand ship
+    /// </summary>
     public void TransferLeftToRight()
     {
         foreach (string s in AllResources)
@@ -111,6 +134,9 @@ public class CargoManager : MonoBehaviour
         UpdateResourceList(ShipA, LefthandCargo);
     }
 
+    /// <summary>
+    /// Transfers cargo from right-hand ship to left-hand ship
+    /// </summary>
     public void TransferRightToLeft()
     {
         foreach (string s in AllResources)

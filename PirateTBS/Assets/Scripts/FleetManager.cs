@@ -8,14 +8,15 @@ public class FleetManager : MonoBehaviour
     [HideInInspector]
     public static FleetManager Instance;
 
-    public GameObject ShipStatBlockPrefab;
-    public RectTransform FleetAList;
-    public RectTransform FleetBList;
+    public GameObject ShipStatBlockPrefab;          //Reference to prefab for instantiating ship stat blocks
+    public RectTransform FleetAList;                //Reference to list of ships in left-hand fleet
+    public RectTransform FleetBList;                //Reference to list of ships in right-hand fleet
 
-    public Text FleetAName;
-    public Text FleetBName;
+    public Text FleetAName;                         //Reference to text showing left-hand fleet name
+    public Text FleetBName;                         //Reference to text showing right-hand fleet name
 
-    Fleet FleetA, FleetB;
+    Fleet FleetA;                                   //Left-hand fleet
+    Fleet FleetB;                                   //Right-hand fleet
 
 	void Start()
 	{

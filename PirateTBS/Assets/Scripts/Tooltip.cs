@@ -7,9 +7,9 @@ public class Tooltip : MonoBehaviour
     [HideInInspector]
     public static Tooltip Instance;
 
-    static bool active;
+    static bool active;                 //Is the tooltip currently active
 
-    RectTransform my_transform;
+    RectTransform my_transform;         //The transform of the tooltip
 
 	void Start()
 	{

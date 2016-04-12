@@ -12,15 +12,14 @@ public class FeedbackManager : MonoBehaviour
     [HideInInspector]
     public static FeedbackManager Instance;
 
-    public Dropdown FeedbackTypeSelection;
-    public InputField FeedbackSubjectInput;
-    public InputField FeedbackInput;
-    public DialogueBox MessageSuccessPanel;
+    public Dropdown FeedbackTypeSelection;          //Reference to the feedback type selection
+    public InputField FeedbackSubjectInput;         //Reference to the feedback subject box
+    public InputField FeedbackInput;                //Reference to the feedback input box
+    public DialogueBox MessageSuccessPanel;         //Reference to dialogue box showing a success message
 
-    SmtpClient client;
-
-    string feedback_email;
-    string feedback_password;
+    SmtpClient client;                              //Email client
+    string feedback_email;                          //Email address of client
+    string feedback_password;                       //Email password of client
 
 	void Start()
 	{
@@ -46,6 +45,9 @@ public class FeedbackManager : MonoBehaviour
 
 	}
 
+    /// <summary>
+    /// Open feedback panel
+    /// </summary>
     public void OpenFeedback()
     {
         PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
@@ -53,6 +55,9 @@ public class FeedbackManager : MonoBehaviour
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Close feedback panel
+    /// </summary>
     public void CloseFeedback()
     {
         PlayerScript.MyPlayer.OpenUI = null;
@@ -60,6 +65,9 @@ public class FeedbackManager : MonoBehaviour
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Send player feedback to devs
+    /// </summary>
     public void SendFeedback()
     {
         ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
@@ -78,6 +86,11 @@ public class FeedbackManager : MonoBehaviour
         FeedbackInput.text = string.Empty;
     }
 
+    /// <summary>
+    /// Callback for message sent
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public void OnMessageSent(object sender, AsyncCompletedEventArgs e)
     {
         DialogueBox message_success = Instantiate(MessageSuccessPanel).GetComponent<DialogueBox>();

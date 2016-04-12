@@ -8,26 +8,26 @@ public class SettingsManager : NetworkBehaviour
     [HideInInspector]
     public static SettingsManager Instance;
 
-    public RectTransform SettingsPanel;
+    public RectTransform SettingsPanel;         //Reference to lobby settings panel
 
-    public Dropdown MapTypeSelection;
-    public Dropdown MapSizeSelection;
-    public Dropdown GamePaceSelection;
+    public Dropdown MapTypeSelection;           //Reference to map type selection
+    public Dropdown MapSizeSelection;           //Reference to map size selection
+    public Dropdown GamePaceSelection;          //Reference to game pace selection
     
     [SyncVar]
-    public int MapTypeIndex = 0;
+    public int MapTypeIndex = 0;                //Current map type selected index
     [SyncVar]
-    public int MapSizeIndex = 0;
+    public int MapSizeIndex = 0;                //Current map size selected index
     [SyncVar]
-    public int GamePaceIndex = 0;
+    public int GamePaceIndex = 0;               //Current game pace selected index
     [SyncVar]
-    public int MapSeed;
+    public int MapSeed;                         //Current map seed
     [SyncVar]
-    public int MapWidth = 40;
+    public int MapWidth = 40;                   //Current map width
     [SyncVar]
-    public int MapHeight = 24;
+    public int MapHeight = 24;                  //Current map height
     [SyncVar]
-    public int MapControlPoints = 64;
+    public int MapControlPoints = 64;           //Current map control points
 
     void Start()
     {
@@ -47,6 +47,10 @@ public class SettingsManager : NetworkBehaviour
         DontDestroyOnLoad(this);
     }
     
+    /// <summary>
+    /// Server-side function to update the selected map type
+    /// </summary>
+    /// <param name="map_type_index">Map type index</param>
     [Server]
     public void UpdateMapType(int map_type_index)
     {
@@ -54,6 +58,10 @@ public class SettingsManager : NetworkBehaviour
         RpcOnMapTypeChange(map_type_index);
     }
 
+    /// <summary>
+    /// Server-side function to update the selected map size
+    /// </summary>
+    /// <param name="map_size_index">Map size index</param>
     [Server]
     public void UpdateMapSize(int map_size_index)
     {
@@ -96,6 +104,10 @@ public class SettingsManager : NetworkBehaviour
         RpcOnMapSizeChange(map_size_index);
     }
 
+    /// <summary>
+    /// Server-side function to update the game pace
+    /// </summary>
+    /// <param name="game_pace_index">Game pace index</param>
     [Server]
     public void UpdateGamePace(int game_pace_index)
     {
@@ -103,18 +115,30 @@ public class SettingsManager : NetworkBehaviour
         RpcOnGamePaceChange(game_pace_index);
     }
 
+    /// <summary>
+    /// Client-side function to update the map type
+    /// </summary>
+    /// <param name="map_type_index">Map type index</param>
     [ClientRpc]
     void RpcOnMapTypeChange(int map_type_index)
     {
         MapTypeSelection.value = MapTypeIndex;
     }
     
+    /// <summary>
+    /// Client-side function to update the map size
+    /// </summary>
+    /// <param name="map_size_index">Map size index</param>
     [ClientRpc]
     void RpcOnMapSizeChange(int map_size_index)
     {
         MapSizeSelection.value = MapSizeIndex;
     }
     
+    /// <summary>
+    /// Client-side function to update the game pace
+    /// </summary>
+    /// <param name="game_pace_index">Game pace index</param>
     [ClientRpc]
     void RpcOnGamePaceChange(int game_pace_index)
     {

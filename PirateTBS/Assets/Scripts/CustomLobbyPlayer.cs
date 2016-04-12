@@ -5,12 +5,12 @@ using System.Collections;
 
 public class CustomLobbyPlayer : NetworkLobbyPlayer
 {
-    public static CustomLobbyPlayer MyPlayer;
+    public static CustomLobbyPlayer MyPlayer;           //Reference to the local lobby player
 
     [SyncVar(hook = "OnNameChanged")]
-    public string PlayerName = "";
-    public int NationalityIndex = 0;
-    public bool IsReady = false;
+    public string PlayerName = "";                      //Lobby player username
+    public int NationalityIndex = 0;                    //Index of nationality
+    public bool IsReady = false;                        //Is this player ready to play?
 
     public override void OnClientEnterLobby()
     {
@@ -51,12 +51,20 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 
     }
 
+    /// <summary>
+    /// Callback when username is changed
+    /// </summary>
+    /// <param name="name">New player name</param>
     void OnNameChanged(string name)
     {
         PlayerName = name;
         GetComponentInChildren<Text>().text = name;
     }
 
+    /// <summary>
+    /// Server-side command to change player name
+    /// </summary>
+    /// <param name="name">New player name</param>
     [Command]
     public void CmdUpdateName(string name)
     {
@@ -64,6 +72,10 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
         this.name = PlayerName + "Panel";
     }
 
+    /// <summary>
+    /// Server-side command to send chat message
+    /// </summary>
+    /// <param name="message">Message to send to chat</param>
     [Command]
     public void CmdSendMessage(string message)
     {

@@ -46,6 +46,16 @@ public struct Cargo
         Gold += cargo.Gold;
     }
 
+    /// <summary>
+    /// Transfer from another cargo to this one
+    /// </summary>
+    /// <param name="cargo">Cargo to transfer from</param>
+    /// <param name="food">Amount of food to transfer</param>
+    /// <param name="gold">Amount of gold to transfer</param>
+    /// <param name="goods">Amount of goods to transfer</param>
+    /// <param name="sugar">Amount of sugar to transfer</param>
+    /// <param name="spice">Amount of spice to tranfer</param>
+    /// <param name="luxuries">Amount of luxuries to transfer</param>
     public void TransferCargo(Cargo cargo, int food = 0, int gold = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
     {
         cargo.Food += Mathf.Clamp(food, 0, Food);
@@ -116,6 +126,11 @@ public struct Cargo
         return (Food * 0.1) + (Goods + 0.1) + Luxuries + (Spice + 0.1) + (Sugar * 0.1) + (Gold * 0.01);
     }
 
+    /// <summary>
+    /// Returns the amount of space the resource type takes
+    /// </summary>
+    /// <param name="resource_type">Type of resource</param>
+    /// <returns>Space a single piece of that type takes</returns>
     public static double GetSizeReq(string resource_type)
     {
         switch(resource_type)
@@ -168,34 +183,38 @@ public enum ShotType
 public class Ship : NetworkBehaviour
 {
     [SyncVar(hook = "OnNameChanged")]
-    public string Name;
+    public string Name;                         //Name of the ship
     [SyncVar]
-    public int HullHealth;
+    public int HullHealth;                      //Current hull health
     [SyncVar]
-    public int SailHealth;
+    public int SailHealth;                      //Current sail health
     [SyncVar]
-    public int CargoSpace;
+    public int CargoSpace;                      //Total cargo space
     [SyncVar]
-    public int Cannons;
+    public int Cannons;                         //Current cannon count
     [SyncVar]
-    public int FullSpeed;
+    public int FullSpeed;                       //Max speed of ship
     [SyncVar]
-    public int CrewNeeded;
+    public int CrewNeeded;                      //Crew members needed for ideal ship performance
     [SyncVar]
-    public double DodgeChance;
+    public int DodgeChance;                     //Chance for ship to dodge projectiles
     [SyncVar]
-    public Cargo Cargo;
+    public Cargo Cargo;                         //Reference to this ship's cargo
+    [SyncVar]
+    public int DamageMod;                       //Damage modifier
+    [SyncVar]
+    public int ReloadSpeed;                     //Time in seconds it takes to reload cannons
 
-    public string ShipType;
-    public int MaxCannons;
-    public int Speed;
-    public int CrewMorale;
-    public ShipClass Class;
-    public int Price;
-    public int CurrentCrew;
+    public string ShipType;                     //Text representation of ship type
+    public int MaxCannons;                      //Max cannon count
+    public int Speed;                           //Current ship speed
+    public int CrewMorale;                      //Current morale level of crew
+    public ShipClass Class;                     //Class of ship
+    public int Price;                           //Price of ship, used at port shipyards
+    public int CurrentCrew;                     //Current crew count
 
-    public List<WaterHex> MovementQueue;
-    public HexTile CurrentPosition;
+    public List<WaterHex> MovementQueue;        //List of tiles to move ship along
+    public HexTile CurrentPosition;             //Current parent tile of ship
 
 	void Start()
     {
@@ -214,6 +233,10 @@ public class Ship : NetworkBehaviour
 
 	}
     
+    /// <summary>
+    /// Server-side function to set the ship class, which determines base stats
+    /// </summary>
+    /// <param name="new_class">Class to set ship class to</param>
     [Server]
     public void SetClass(ShipClass new_class)
     {
@@ -229,7 +252,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 4;
                 Speed = FullSpeed = 5;
                 CrewNeeded = 6;
-                DodgeChance = 0.4;
+                DodgeChance = 40;
                 break;
             case ShipClass.Sloop:
                 HullHealth = 60;
@@ -238,7 +261,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 6;
                 Speed = FullSpeed = 5;
                 CrewNeeded = 9;
-                DodgeChance = 0.35;
+                DodgeChance = 35;
                 break;
             case ShipClass.Barque:
                 HullHealth = 80;
@@ -247,7 +270,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 4;
                 CrewNeeded = 11;
-                DodgeChance = 0.3;
+                DodgeChance = 30;
                 break;
             case ShipClass.Brig:
                 HullHealth = 120;
@@ -256,7 +279,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 10;
                 Speed = FullSpeed = 3;
                 CrewNeeded = 14;
-                DodgeChance = 0.25;
+                DodgeChance = 25;
                 break;
             case ShipClass.Merchantman:
                 HullHealth = 120;
@@ -265,7 +288,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 3;
                 CrewNeeded = 12;
-                DodgeChance = 0.25;
+                DodgeChance = 25;
                 break;
             case ShipClass.MerchantGalleon:
                 HullHealth = 200;
@@ -274,7 +297,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 12;
                 Speed = FullSpeed = 2;
                 CrewNeeded = 19;
-                DodgeChance = 0.15;
+                DodgeChance = 15;
                 ShipType = "Merchant Galleon";
                 break;
             case ShipClass.CombatGalleon:
@@ -284,7 +307,7 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 24;
                 Speed = FullSpeed = 2;
                 CrewNeeded = 31;
-                DodgeChance = 0.15;
+                DodgeChance = 15;
                 ShipType = "Combat Galleon";
                 break;
             case ShipClass.Frigate:
@@ -294,23 +317,56 @@ public class Ship : NetworkBehaviour
                 Cannons = MaxCannons = 32;
                 Speed = FullSpeed = 1;
                 CrewNeeded = 43;
-                DodgeChance = 0.1;
+                DodgeChance = 10;
                 break;
         }
     }
 
+    /// <summary>
+    /// Command to modify ship stat on server
+    /// </summary>
+    /// <param name="modify_string">String representing the stat modification to execute</param>
     [Command]
-    public void CmdApplyModifiers()
+    public void CmdUpdateStat(string modify_string)
     {
-        //apply modifiers from tech tree
+        if (modify_string == string.Empty)
+            return;
+
+        string[] split = modify_string.Split(' ');
+
+        if (split.Length != 3)
+            return;
+
+        string var = split[0];
+        string mod_oper = split[1];
+        int val = int.Parse(split[2]);
+
+        int current_var_val = (int)GetType().GetField(var).GetValue(this);
+
+        switch(mod_oper)
+        {
+            case "+":
+                GetType().GetField(var).SetValue(this, current_var_val + val);
+                break;
+            case "-":
+                GetType().GetField(var).SetValue(this, current_var_val - val);
+                break;
+            case "*":
+                GetType().GetField(var).SetValue(this, current_var_val * val);
+                break;
+            case "/":
+                GetType().GetField(var).SetValue(this, current_var_val / val);
+                break;
+            default:
+                return;
+        }
     }
     
-    [Command]
-    public void CmdClearModifiers()
-    {
-        SetClass(Class);
-    }
-    
+    /// <summary>
+    /// Apply damage to ship
+    /// </summary>
+    /// <param name="hdam">Hull damage</param>
+    /// <param name="sdam">Sail damage</param>
     public void DamageShip(int hdam, int sdam)
     {
         HullHealth -= hdam;
@@ -320,6 +376,10 @@ public class Ship : NetworkBehaviour
         Speed = (int)(FullSpeed * (SailHealth / 100.0f));
     }
     
+    /// <summary>
+    /// Renames the ship
+    /// </summary>
+    /// <param name="new_name">New ship name</param>
     public void RenameShip(string new_name)
     {
         if (!GameObject.Find(new_name))
@@ -335,18 +395,29 @@ public class Ship : NetworkBehaviour
         }
     }
     
+    /// <summary>
+    /// Adds cargo to this ship's cargo
+    /// </summary>
+    /// <param name="new_cargo">Cargo to mergo onto this ship</param>
     public void AddCargo(Cargo new_cargo)
     {
         if (Cargo.Size() + new_cargo.Size() <= CargoSpace)
             Cargo.MergeCargo(new_cargo);
     }
     
+    /// <summary>
+    /// Server-side command to destroy this ship
+    /// </summary>
     [Command]
     public void CmdSinkShip()
     {
         Network.Destroy(this.gameObject);
     }
     
+    /// <summary>
+    /// Modify the morale of this ship
+    /// </summary>
+    /// <param name="modifier">Modification to ship morale</param>
     public void ModifyMorale(int modifier)
     {
         CrewMorale = Mathf.Clamp(CrewMorale + modifier, 0, 100);
@@ -356,12 +427,21 @@ public class Ship : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Callback when ship name is changed
+    /// </summary>
+    /// <param name="new_name">New ship name</param>
     void OnNameChanged(string new_name)
     {
         GameConsole.Instance.GenericLog(Name);
         name = new_name;
     }
 
+    /// <summary>
+    /// Server-side command to add tile to movement queue
+    /// </summary>
+    /// <param name="x">Q coordinate of tile</param>
+    /// <param name="y">R coordinate of tile</param>
     [Command]
     public void CmdQueueMove(int x, int y)
     {
@@ -370,6 +450,9 @@ public class Ship : NetworkBehaviour
             MovementQueue.Add(new_tile);
     }
 
+    /// <summary>
+    /// Server-side command to run ship through movement queue
+    /// </summary>
     [Command]
     public void CmdMoveShip()
     {
@@ -382,6 +465,10 @@ public class Ship : NetworkBehaviour
         StartCoroutine(SmoothMove());
     }
 
+    /// <summary>
+    /// Smoothly runs ship through all tiles in movement queue
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SmoothMove()
     {
         foreach (HexTile dest_tile in MovementQueue)
@@ -404,6 +491,11 @@ public class Ship : NetworkBehaviour
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }
 
+    /// <summary>
+    /// Client-side command to move ship to a tile
+    /// </summary>
+    /// <param name="x">Q coordinate of tile</param>
+    /// <param name="y">R coordinate of tile</param>
     [ClientRpc]
     public void RpcMoveShip(int x, int y)
     {

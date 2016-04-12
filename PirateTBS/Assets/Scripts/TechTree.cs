@@ -8,41 +8,19 @@ public class TechTree : MonoBehaviour
     [HideInInspector]
     public static TechTree Instance;
 
-    public Dictionary<string, TechNode> Nodes;
+    public List<TechNode> Nodes;
 
     public bool ModifyingTree;
 
     public CanvasGroup ActiveTechPanel = null;
     public Image LinePrefab;
 
-    //Combat tech modifiers
-
-    public float HealthMultiplier = 1.0f;
-    public float DamageMultiplier = 1.0f;
-    public float ReloadSpeedMultiplier = 1.0f;
-    public float MaxCannonModifier = 0.0f;
-    public float DodgeChanceMultiplier = 1.0f;
-
-    //Mercantile tech modifiers
-
-    public float CargoSizeMultiplier = 1.0f;
-    public float CrewNeedMultiplier = 1.0f;
-    public float ResourceCostMultiplier = 1.0f;
-    public float ResourceGenMultiplier = 1.0f;
-    public float ShipCostMultiplier = 1.0f;
-
-    //Exploration tech modifiers
-
-    public float ShipSpeedMultiplier = 1.0f;
-    public float ReputationGainMultiplier = 1.0f;
-    public float MaxFleetSizeModifier = 0.0f;
-    public float ViewRadiusModifier = 0.0f;
-    public float MoraleMultiplier = 1.0f;
+    public int TechCount = 30;
 
 	void Start()
     {
         Instance = this;
-        Nodes = new Dictionary<string, TechNode>();
+        Nodes = new List<TechNode>();
 
         ModifyingTree = false;
 	}
@@ -52,25 +30,39 @@ public class TechTree : MonoBehaviour
 
 	}
 
-    void SetupDelegates()
+    public void AddNode(TechNode node)
     {
-
+        Nodes.Add(node);
+        if (Nodes.Count >= TechCount)
+            foreach (TechNode tnode in Nodes)
+                tnode.InitializeNode();
     }
 
     public void ModifyStat(string modify_string)
     {
-        if (modify_string == string.Empty)
-            return;
-
         string[] split = modify_string.Split(' ');
-
-        if (split.Length != 2)
+        if (split.Length != 4)
             return;
 
-        string var = split[0];
-        float val = float.Parse(split[1]);
+        string rest = string.Format("{0} {1} {2}", split[1], split[2], split[3]);
 
-        GetType().GetField(var).SetValue(this, val);
+        switch(split[0])
+        {
+            case "Ship":
+                foreach (Fleet f in PlayerScript.MyPlayer.Fleets)
+                    foreach (Ship s in f.Ships)
+                        s.CmdUpdateStat(rest);
+                break;
+            case "Fleet":
+                foreach (Fleet f in PlayerScript.MyPlayer.Fleets)
+                    f.CmdUpdateStat(rest);
+                break;
+            case "Player":
+                PlayerScript.MyPlayer.CmdUpdateStat(rest);
+                break;
+            default:
+                return;
+        }
     }
 
     public void SwitchTechPanel(CanvasGroup new_panel)

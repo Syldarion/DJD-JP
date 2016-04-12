@@ -13,6 +13,8 @@ public class Fleet : NetworkBehaviour
     public List<Ship> Ships;                //Ships in fleet
     [SyncVar]
     public int FleetSpeed;                  //Current fleet speed
+    [SyncVar]
+    public int MaxFleetSize;
     public HexTile CurrentPosition;         //HexTile fleet is on
     public GameObject ShipPrefab;           //Ship prefab for spawning new ship in fleet
     public int NewShipID = 0;               //Dev variable for making sure all new ships have a unique name
@@ -60,6 +62,46 @@ public class Fleet : NetworkBehaviour
             PlayerScript.MyPlayer.Fleets.Add(this);
 
         OwningPlayer = PlayerScript.MyPlayer;
+    }
+
+    /// <summary>
+    /// Server-side command to update stat
+    /// </summary>
+    /// <param name="modify_string">String to parse for stat modification</param>
+    [Command]
+    public void CmdUpdateStat(string modify_string)
+    {
+        if (modify_string == string.Empty)
+            return;
+
+        string[] split = modify_string.Split(' ');
+
+        if (split.Length != 3)
+            return;
+
+        string var = split[0];
+        string mod_oper = split[1];
+        int val = int.Parse(split[2]);
+
+        int current_var_val = (int)GetType().GetField(var).GetValue(this);
+
+        switch (mod_oper)
+        {
+            case "+":
+                GetType().GetField(var).SetValue(this, current_var_val + val);
+                break;
+            case "-":
+                GetType().GetField(var).SetValue(this, current_var_val - val);
+                break;
+            case "*":
+                GetType().GetField(var).SetValue(this, current_var_val * val);
+                break;
+            case "/":
+                GetType().GetField(var).SetValue(this, current_var_val / val);
+                break;
+            default:
+                return;
+        }
     }
 
     /// <summary>
@@ -215,6 +257,9 @@ public class Fleet : NetworkBehaviour
             MovementQueue.Add(new_tile);
     }
 
+    /// <summary>
+    /// Server-side command to move fleet along movement queue
+    /// </summary>
     [Command]
     public void CmdMoveFleet()
     {
@@ -234,6 +279,10 @@ public class Fleet : NetworkBehaviour
         MovementQueue.Clear();
     }
 
+    /// <summary>
+    /// Smoothly moves fleet along tiles in movement queue
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SmoothMove()
     {
         foreach (HexTile dest_tile in MovementQueue)
@@ -256,6 +305,11 @@ public class Fleet : NetworkBehaviour
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }
 
+    /// <summary>
+    /// Client-side command to move fleet
+    /// </summary>
+    /// <param name="x">Q coordinate of tile</param>
+    /// <param name="y">R coordinate of tile</param>
     [ClientRpc]
     public void RpcMoveFleet(int x, int y)
     {
@@ -301,6 +355,10 @@ public class Fleet : NetworkBehaviour
         Tooltip.EnableTooltip(false);
     }
 
+    /// <summary>
+    /// Callback when fleet name is changed
+    /// </summary>
+    /// <param name="new_name">New fleet name</param>
     void OnNameChanged(string new_name)
     {
         name = new_name;

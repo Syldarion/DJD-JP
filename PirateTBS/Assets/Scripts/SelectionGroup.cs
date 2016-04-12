@@ -7,10 +7,10 @@ using System.Collections.Generic;
 [AddComponentMenu("UI/Selection Group")]
 public class SelectionGroup : MonoBehaviour
 {
-    public bool AllowMultipleSelection;
-    public Sprite BorderImage;
-    public Sprite DefaultImage;
-    public List<GameObject> SelectedObjects;
+    public bool AllowMultipleSelection;         //Does the selection group allow you to select multiple objects?
+    public Sprite BorderImage;                  //Image to put around object when selected
+    public Sprite DefaultImage;                 //Image to put around object when not selected
+    public List<GameObject> SelectedObjects;    //List of selected objects
 
 	void Start()
 	{
@@ -22,6 +22,10 @@ public class SelectionGroup : MonoBehaviour
 
 	}
 
+    /// <summary>
+    /// Add object to selection list
+    /// </summary>
+    /// <param name="selection">Object to add</param>
     public void AddSelection(GameObject selection)
     {
         if (!selection.transform.IsChildOf(transform))
@@ -39,6 +43,10 @@ public class SelectionGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Remove object from selection list, if it is present
+    /// </summary>
+    /// <param name="selection">Object to remove</param>
     public void RemoveSelection(GameObject selection)
     {
         if (!selection.transform.IsChildOf(transform))
@@ -51,6 +59,9 @@ public class SelectionGroup : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Remove all objects from selection list
+    /// </summary>
     public void ClearSelection()
     {
         foreach (GameObject go in SelectedObjects)

@@ -7,13 +7,13 @@ public class NameGenerator : MonoBehaviour
     [HideInInspector]
     public static NameGenerator Instance;
 
-    string[] english_ports;
-    string[] spanish_ports;
-    string[] dutch_ports;
-    string[] french_ports;
+    string[] english_ports;                 //Array of English port names
+    string[] spanish_ports;                 //Array of Spanish port names
+    string[] dutch_ports;                   //Array of Dutch port names
+    string[] french_ports;                  //Array of French port names
 
-    string[] ship_name_adjectives;
-    string[] ship_name_nouns;
+    string[] ship_name_adjectives;          //Array of adjectives to use in ship names
+    string[] ship_name_nouns;               //Array of nouns to use in ship names
 
 	void Start()
     {
@@ -33,6 +33,11 @@ public class NameGenerator : MonoBehaviour
 
 	}
 
+    /// <summary>
+    /// Generate a random port name depending on port's nationality
+    /// </summary>
+    /// <param name="nation_index">Index of nation</param>
+    /// <returns>Name for port</returns>
     public string GetPortName(int nation_index)
     {
         string port_name;
@@ -57,6 +62,10 @@ public class NameGenerator : MonoBehaviour
         return port_name;
     }
 
+    /// <summary>
+    /// Generate a random ship name
+    /// </summary>
+    /// <returns>Name for ship</returns>
     public string GetShipName()
     {
         string ship_name;

@@ -7,10 +7,10 @@ public class InGameMenuController : MonoBehaviour
     [HideInInspector]
     public static InGameMenuController Instance;
 
-    public Text NetworkIPText;
-    public Text NetworkPingText;
+    public Text NetworkIPText;              //Reference to text displaying IP address
+    public Text NetworkPingText;            //Reference to text displaying ping
 
-    PlayerScript ReferencePlayer;
+    PlayerScript ReferencePlayer;           //Reference to player in control of this menu
 
 	void Start()
     {
@@ -23,6 +23,9 @@ public class InGameMenuController : MonoBehaviour
 
 	}
 
+    /// <summary>
+    /// Leave the current game
+    /// </summary>
     public void LeaveGame()
     {
         if (ReferencePlayer.connectionToServer.isConnected)
@@ -31,6 +34,10 @@ public class InGameMenuController : MonoBehaviour
             CustomLobbyManager.singleton.StopHost();
     }
 
+    /// <summary>
+    /// Wait for local player to be setup
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WaitForPlayer()
     {
         while (!PlayerScript.MyPlayer)
@@ -42,6 +49,10 @@ public class InGameMenuController : MonoBehaviour
         StartCoroutine(UpdatePing());
     }
 
+    /// <summary>
+    /// Update ping every 10 seconds while connected to server
+    /// </summary>
+    /// <returns></returns>
     IEnumerator UpdatePing()
     {
         while(ReferencePlayer.connectionToServer.isConnected)

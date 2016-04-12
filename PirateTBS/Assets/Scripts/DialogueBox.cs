@@ -6,19 +6,20 @@ using System.Collections.Generic;
 
 public class DialogueBox : MonoBehaviour
 {
-    public static bool DialogueOpen;
-    public static DialogueBox CurrentDialogue;
+    public static bool DialogueOpen;                    //Is a dialogue box open?
+    public static DialogueBox CurrentDialogue;          //Reference to currently open dialogue box
 
-    public Text DialogueMessage;
-    public RectTransform OptionPanelPrefab;
-    public Button OptionButtonPrefab;
+    public Text DialogueMessage;                        //Reference to the message of the dialogue box
+    public RectTransform OptionPanelPrefab;             //Reference to the prefab for instantiating option panels
+    public Button OptionButtonPrefab;                   //Reference to the prefab for instantiating option buttons
 
-    List<Button> options;
-    RectTransform current_option_panel;
+    List<Button> options;                               //List of options in the dialogue box
+    RectTransform current_option_panel;                 //Reference to the current option panel
 
 	void Start()
     {
         DialogueOpen = false;
+        options = new List<Button>();
 	}
 	
 	void Update()
@@ -26,6 +27,9 @@ public class DialogueBox : MonoBehaviour
         	
 	}
 
+    /// <summary>
+    /// Open dialogue box
+    /// </summary>
     public void OpenDialogue()
     {
         DialogueOpen = true;
@@ -33,6 +37,9 @@ public class DialogueBox : MonoBehaviour
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Close dialogue box
+    /// </summary>
     public void CloseDialogue()
     {
         DialogueOpen = false;
@@ -40,6 +47,11 @@ public class DialogueBox : MonoBehaviour
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
     }
 
+    /// <summary>
+    /// Create a new dialogue box
+    /// </summary>
+    /// <param name="message">Message for the dialogue box</param>
+    /// <param name="duration">Duration of the dialog box [0 = infinite]</param>
     public void NewDialogue(string message, float duration = 0.0f)
     {
         if(DialogueOpen)
@@ -52,6 +64,11 @@ public class DialogueBox : MonoBehaviour
             Destroy(this.gameObject, duration);
     }
 
+    /// <summary>
+    /// Add an option to the dialogue box
+    /// </summary>
+    /// <param name="option_text">Text to display for the option</param>
+    /// <param name="option_action">Function to run when this option is selected</param>
     public void AddOption(string option_text, UnityAction option_action)
     {
         if (options.Count % 3 == 0)
@@ -65,5 +82,7 @@ public class DialogueBox : MonoBehaviour
 
         new_button.GetComponentInChildren<Text>().text = option_text;
         new_button.onClick.AddListener(option_action);
+
+        options.Add(new_button);
     }
 }

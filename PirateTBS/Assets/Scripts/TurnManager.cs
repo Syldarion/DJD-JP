@@ -9,11 +9,11 @@ public class TurnManager : NetworkBehaviour
     [HideInInspector]
     public static TurnManager Instance;
 
-    public Text CurrentTurnText;
-    public Text ActionButtonText;
+    public Text CurrentTurnText;            //Text reference to display current turn number
+    public Text ActionButtonText;           //Text reference to show message on turn button
 
     [SyncVar]
-    public int CurrentTurn;
+    public int CurrentTurn;                 //Turn game is on
 
     public override void OnStartClient()
     {
@@ -35,6 +35,9 @@ public class TurnManager : NetworkBehaviour
         	
 	}
 
+    /// <summary>
+    /// Checks all players and continues to next turn if they are all ready
+    /// </summary>
     [Command]
     public void CmdCheckReadyForNextTurn()
     {
@@ -59,6 +62,10 @@ public class TurnManager : NetworkBehaviour
         RpcNextTurn(CurrentTurn);
     }
 
+    /// <summary>
+    /// Client-side function to move on to next turn
+    /// </summary>
+    /// <param name="current_turn"></param>
     [ClientRpc]
     void RpcNextTurn(int current_turn)
     {
@@ -66,6 +73,9 @@ public class TurnManager : NetworkBehaviour
         PlayerScript.MyPlayer.CmdNotReadyForNextTurn();
     }
 
+    /// <summary>
+    /// Client-side function to end turn
+    /// </summary>
     [Client]
     public void EndTurn()
     {
@@ -84,6 +94,10 @@ public class TurnManager : NetworkBehaviour
         PlayerScript.MyPlayer.CmdReadyForNextTurn();
     }
 
+    /// <summary>
+    /// Client-side callback if unit needs a command
+    /// </summary>
+    /// <returns></returns>
     [Client]
     IEnumerator UnitWaitingForCommand()
     {

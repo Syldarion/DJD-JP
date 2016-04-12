@@ -4,16 +4,16 @@ using System.Collections;
 [AddComponentMenu("Camera Controls/Pan Camera")]
 public class PanCamera : MonoBehaviour
 {
-    float drag_speed;
-    float zoom_speed;
+    float drag_speed;                   //How many units the camera will move per frame while dragging
+    float zoom_speed;                   //How many units the camera will zoom per frame
 
-    Vector3 translation;
+    Vector3 translation;                //How much to move this frame
 
-    Ray forward_ray;
-    RaycastHit hit;
+    Ray forward_ray;                    //Ray to maintain zoom level
+    RaycastHit hit;                     //Raycast to maintain zoom level
 
-    Transform current_target;
-    Vector3 current_offset;
+    Transform current_target;           //Current target of the camera
+    Vector3 current_offset;             //Current offset from map
 
     void Start()
     {
@@ -53,6 +53,10 @@ public class PanCamera : MonoBehaviour
         translation = Vector3.zero;
     }
 
+    /// <summary>
+    /// Sets camera target and starts to move towards that target
+    /// </summary>
+    /// <param name="target">Target to center camera on</param>
     public void CenterOnTarget(Transform target)
     {
         if (target)
@@ -62,6 +66,11 @@ public class PanCamera : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Smoothly move camera to new position
+    /// </summary>
+    /// <param name="new_pos">Position to move camera to</param>
+    /// <returns></returns>
     IEnumerator MoveToPosition(Vector3 new_pos)
     {
         Vector3 target = new_pos + current_offset;

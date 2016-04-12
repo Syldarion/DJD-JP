@@ -26,14 +26,7 @@ public class TechNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Name = GetComponentInChildren<Text>().text;
         NodeCode = name.Remove(0, 8);
 
-        if (TechTree.Instance)
-            TechTree.Instance.Nodes[NodeCode] = this;
-        else
-            StartCoroutine(WaitForTree());
-
-        Icon = GetComponent<Image>();
-
-        GetComponent<Button>().onClick.AddListener(SwitchNode);
+        TechTree.Instance.AddNode(this);
 	}
 	
 	void Update()
@@ -41,15 +34,14 @@ public class TechNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	}
 
-    IEnumerator WaitForTree()
+    public void InitializeNode()
     {
-        while (!TechTree.Instance)
-            yield return null;
-
-        TechTree.Instance.Nodes[NodeCode] = this;
-
         foreach (TechNode node in ChildNodes)
             TechTree.Instance.DrawLine(this, node, 10.0f);
+
+        Icon = GetComponent<Image>();
+
+        GetComponent<Button>().onClick.AddListener(SwitchNode);
     }
 
     public void SwitchNode()

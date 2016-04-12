@@ -9,29 +9,27 @@ public class HexGrid : NetworkBehaviour
     [HideInInspector]
     public static HexGrid Instance;
 
-    public WaterHex WaterHexPrefab;
-    public LandHex LandHexPrefab;
-    public GameObject PortPrefab;
-    public static List<Port> ports;
+    public WaterHex WaterHexPrefab;             //Reference to prefab for instantiating water hexes
+    public LandHex LandHexPrefab;               //Reference to prefab for instantiating land hexes
+    public GameObject PortPrefab;               //Reference to prefab for instantiating ports
+    public static List<Port> Ports;             //List of ports on the grid
 
-    public float HexWidth;
+    public float HexWidth;                      //Width of a single hex tile
 
-    public int GridWidth;
-    public int GridHeight;
-    int controlPoints;
+    public int GridWidth;                       //Width of the grid
+    public int GridHeight;                      //Height of the grid
+    int controlPoints;                          //How many control points to use in generation
 
-    public List<LandHex> LandTiles;
-    public List<WaterHex> WaterTiles;
+    public List<LandHex> LandTiles;             //List of land tiles on the grid
+    public List<WaterHex> WaterTiles;           //List of water tiles on the grid
 
-    string parent_tile;
-
-    public bool server_side = false;
+    public bool server_side = false;            //Is this grid on the server?
 
 	void Start()
     {
         Instance = this;
 
-        ports = new List<Port>();
+        Ports = new List<Port>();
 
         LandTiles = new List<LandHex>();
         WaterTiles = new List<WaterHex>();
@@ -60,8 +58,12 @@ public class HexGrid : NetworkBehaviour
 
 	}
 
-    //odd-q layout
-    //odd x-values are offset
+    /// <summary>
+    /// Generates a new grid
+    /// </summary>
+    /// <param name="x">Width for new grid</param>
+    /// <param name="y">Height for new grid</param>
+    /// <param name="control_points">Control point count for new grid</param>
     void GenerateGrid(int x, int y, int control_points)
     {
         LoadingScreenManager.Instance.SetMessage("Starting generation...");
@@ -95,6 +97,11 @@ public class HexGrid : NetworkBehaviour
         StartCoroutine(DropControlPoints(control_points));
     }
 
+    /// <summary>
+    /// Drops control points for map generation
+    /// </summary>
+    /// <param name="control_points">Number of control points</param>
+    /// <returns></returns>
     IEnumerator DropControlPoints(int control_points)
     {
         LoadingScreenManager.Instance.SetMessage("Dropping control points...");
@@ -170,6 +177,9 @@ public class HexGrid : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Fills tiles lists with tiles present on the grid
+    /// </summary>
     void PopulateTileLists()
     {
         LoadingScreenManager.Instance.SetMessage("Populating tile lists...");
@@ -191,12 +201,11 @@ public class HexGrid : NetworkBehaviour
         MiniMap.Instance.CopyHexGridToMap();
     }
 
-    public void StartCreatePorts()
-    {
-        StartCoroutine(CreatePorts(GridWidth / 4));
-    }
-
-    //i = x + width * y
+    /// <summary>
+    /// Create ports on grid
+    /// </summary>
+    /// <param name="number_of_ports">Number of ports to create</param>
+    /// <returns></returns>
     IEnumerator CreatePorts(int number_of_ports)
     {
         LoadingScreenManager.Instance.SetMessage("Creating ports...");
@@ -240,82 +249,12 @@ public class HexGrid : NetworkBehaviour
         LoadingScreenManager.Instance.SetProgress(100.0f);
     }
 
-    struct Point
-    {
-        public int x;
-        public int y;
-
-        public Point(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public float Distance(Point other)
-        {
-            return Mathf.Sqrt(Mathf.Pow(other.x - x, 2) + Mathf.Pow(other.y - y, 2));
-        }
-    }
-
-    int[][] VoronoiGrid(int x, int y, int control_points)
-    {
-        int[][] voronoi = new int[y][];
-        for (int i = 0; i < y; i++)
-            voronoi[i] = new int[x];
-
-        //size of water border around map
-        int water_border = 2;
-
-        List<Point> points = new List<Point>();
-
-        for (int i = 0; i < control_points; i++)
-        {
-            points.Add(new Point(Random.Range(water_border, x - water_border), Random.Range(water_border, y - water_border)));
-            if (Random.Range(0, 3) > 0)
-                voronoi[points[i].y][points[i].x] = 0;
-            else
-                voronoi[points[i].y][points[i].x] = 1;                
-        }
-
-        for (int i = 0; i < y; i++)
-        {
-            for(int j = 0; j < x; j++)
-            {
-                Point closest = points[0];
-
-                foreach (Point p in points)
-                {
-                    if (p.Distance(new Point(i, j)) < closest.Distance(new Point(i, j)))
-                    {
-                        closest = p;
-                    }
-                }
-
-                voronoi[i][j] = voronoi[closest.y][closest.x];
-            }
-        }
-
-        //finally, make sure you have a contiguous strip of water around the map, because the water_border isn't perfect
-        for (int i = 0; i < x; i++)
-        {
-            for (int j = 0; j < water_border; j++)
-            {
-                voronoi[j][i] = 0;
-                voronoi[y - j - 1][i] = 0;
-            }
-        }
-        for (int i = 0; i < y; i++)
-        {
-            for (int j = 0; j < water_border; j++)
-            {
-                voronoi[i][j] = 0;
-                voronoi[i][x - j - 1] = 0;
-            }
-        }
-
-        return voronoi;
-    }
-
+    /// <summary>
+    /// Find water tiles within a range
+    /// </summary>
+    /// <param name="start">Tile to start search on</param>
+    /// <param name="movement">Movement range</param>
+    /// <returns>List of water tiles within range</returns>
     public static List<HexTile> MovementHex(HexTile start, int movement)
     {
         List<HexTile> visited = new List<HexTile>();
@@ -346,6 +285,12 @@ public class HexGrid : NetworkBehaviour
         return visited;
     }
 
+    /// <summary>
+    /// Find all tiles within a range
+    /// </summary>
+    /// <param name="start">Tile to start search on</param>
+    /// <param name="range">Movement range</param>
+    /// <returns>List of tiles within range</returns>
     public static List<HexTile> HexesWithinRange(HexTile start, int range)
     {
         List<HexTile> visited = new List<HexTile>();

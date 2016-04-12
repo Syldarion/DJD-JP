@@ -18,8 +18,6 @@ public class Port : NetworkBehaviour
 
     public GameObject FleetPrefab;          //Fleet prefab for spawning new fleets
 
-    static int port_id = 0;                 //Dev variable for making sure all ports have unique names
-
     void Start()
     {
 
@@ -102,7 +100,7 @@ public class Port : NetworkBehaviour
     {
         transform.SetParent(GameObject.Find(string.Format("Grid/{0}", parent_tile)).transform, false);
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
-        HexGrid.ports.Add(this);
+        HexGrid.Ports.Add(this);
 
         InitializePort();
     }

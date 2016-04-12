@@ -10,12 +10,12 @@ public class CustomLobbyManager : NetworkLobbyManager
     public static CustomLobbyManager Instance;
 
     [Header("UI References")]
-    public CanvasGroup MainMenuBasePanel;
-    public CanvasGroup LobbyBasePanel;
+    public CanvasGroup MainMenuBasePanel;           //Reference to main menu base panel
+    public CanvasGroup LobbyBasePanel;              //Reference to lobby base panel
 
     [Space]
-    public string ServerPassword;
-    public GameObject ChatMessagePrefab;
+    public string ServerPassword;                   //Password for server
+    public GameObject ChatMessagePrefab;            //Reference to prefab for instantiating chat messages
 
     void Start()
     {
@@ -80,6 +80,9 @@ public class CustomLobbyManager : NetworkLobbyManager
         }
     }
 
+    /// <summary>
+    /// Moves the game into the main scene
+    /// </summary>
     public void StartGame()
     {
         MainMenuBasePanel = null;

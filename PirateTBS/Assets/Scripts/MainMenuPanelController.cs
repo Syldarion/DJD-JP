@@ -6,17 +6,21 @@ public class MainMenuPanelController : MonoBehaviour
     [HideInInspector]
     public static MainMenuPanelController Instance;
 
-    public RectTransform ActivePanel;
-    public RectTransform FadingInPanel;
-    public RectTransform FadingOutPanel;
+    public RectTransform ActivePanel;               //Reference to panel that is currently active
+    public RectTransform FadingInPanel;             //Reference to panel that is currently fading in
+    public RectTransform FadingOutPanel;            //Reference to panel that is currently fading out
 
-    public float FadeTime;
+    public float FadeTime;                          //Time in seconds it takes to fade a panel
 
     void Start()
     {
         Instance = this;
     }
 
+    /// <summary>
+    /// Switch to new panel, fading it in, and fading out currently active panel
+    /// </summary>
+    /// <param name="new_panel">Panel to switch to</param>
     public void SwitchTo(RectTransform new_panel)
     {
         if (ActivePanel != new_panel)
@@ -31,6 +35,11 @@ public class MainMenuPanelController : MonoBehaviour
             StartCoroutine(FadeOutPanel(ActivePanel));
     }
 
+    /// <summary>
+    /// Fade in panel
+    /// </summary>
+    /// <param name="panel">Panel to fade in</param>
+    /// <returns></returns>
     public IEnumerator FadeInPanel(RectTransform panel)
     {
         FadingInPanel = panel;
@@ -47,6 +56,11 @@ public class MainMenuPanelController : MonoBehaviour
         FadingInPanel = null;
     }
 
+    /// <summary>
+    /// Fade out panel
+    /// </summary>
+    /// <param name="panel">Panel to fade out</param>
+    /// <returns></returns>
     public IEnumerator FadeOutPanel(RectTransform panel)
     {
         FadingOutPanel = panel;

@@ -8,16 +8,16 @@ public delegate void OnClickDelegate();
 
 public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
 {
-    public OnClickDelegate StatBlockDelegate;
-    public Ship ReferenceShip;
+    public OnClickDelegate StatBlockDelegate;           //Functions to call when the stat block is clicked
+    public Ship ReferenceShip;                          //Ship this stat block is referring to
 
-    public Text ShipNameText;
-    public Text ShipTypeText;
+    public Text ShipNameText;                           //Reference to text showing name of ship
+    public Text ShipTypeText;                           //Reference to text showing type of ship
 
-    public Text HealthText;
-    public Text SpeedText;
-    public Text CargoText;
-    public Text CannonText;
+    public Text HealthText;                             //Reference to text showing current health of ship
+    public Text SpeedText;                              //Reference to text showing max speed of ship
+    public Text CargoText;                              //Reference to text showing cargo space of ship
+    public Text CannonText;                             //Reference to text showing cannon count of ship
 
 	void Start()
 	{
@@ -53,6 +53,9 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
             StatBlockDelegate.Invoke();
     }
 
+    /// <summary>
+    /// Adds this stat block to the nearest selection group
+    /// </summary>
     public void AddToSelectionGroup()
     {
         SelectionGroup parent_group = GetComponentInParent<SelectionGroup>();
@@ -66,12 +69,19 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
             parent_group.AddSelection(gameObject);
     }
 
+    /// <summary>
+    /// Activates the tooltip
+    /// </summary>
+    /// <param name="text">Text to show on tooltip</param>
     public void ActivateTooltip(string text)
     {
         Tooltip.EnableTooltip(true);
         Tooltip.UpdateTooltip(text);
     }
 
+    /// <summary>
+    /// Deactivates the tooltip
+    /// </summary>
     public void DeactivateTooltip()
     {
         Tooltip.EnableTooltip(false);

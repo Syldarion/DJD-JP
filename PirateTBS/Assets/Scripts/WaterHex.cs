@@ -4,7 +4,6 @@ using System.Collections;
 
 public class WaterHex : HexTile
 {
-    float hover_timer = 0.5f;
     float double_click_start = 0;
 
 	void Start()
