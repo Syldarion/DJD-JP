@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\Fleet.cs" />
     <Compile Include="Assets\Scripts\FleetManager.cs" />
     <Compile Include="Assets\Scripts\GameConsole.cs" />
+    <Compile Include="Assets\Scripts\GameSettingsManager.cs" />
     <Compile Include="Assets\Scripts\HexGrid.cs" />
     <Compile Include="Assets\Scripts\HexTile.cs" />
     <Compile Include="Assets\Scripts\InGameMenuController.cs" />
