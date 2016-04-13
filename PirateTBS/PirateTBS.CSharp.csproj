@@ -120,6 +120,7 @@
     <Compile Include="Assets\Scripts\TextColorFlow.cs" />
     <Compile Include="Assets\Scripts\Tooltip.cs" />
     <Compile Include="Assets\Scripts\TurnManager.cs" />
+    <Compile Include="Assets\Scripts\VisibleValueSlider.cs" />
     <Compile Include="Assets\Scripts\WaterHex.cs" />
   </ItemGroup>
   <ItemGroup>
