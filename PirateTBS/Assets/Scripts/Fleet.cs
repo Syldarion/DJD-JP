@@ -275,8 +275,6 @@ public class Fleet : NetworkBehaviour
         StartCoroutine(SmoothMove());
 
         MoveActionTaken = true;
-
-        MovementQueue.Clear();
     }
 
     /// <summary>
@@ -301,6 +299,8 @@ public class Fleet : NetworkBehaviour
 
             yield return null;
         }
+
+        MovementQueue.Clear();
 
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }

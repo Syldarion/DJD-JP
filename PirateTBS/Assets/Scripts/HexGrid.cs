@@ -192,7 +192,10 @@ public class HexGrid : NetworkBehaviour
                 Transform tile = transform.FindChild(string.Format("{0},{1}", i, j));
 
                 if (tile.GetComponent<LandHex>())
+                {
                     LandTiles.Add(tile.GetComponent<LandHex>());
+                    tile.Translate(new Vector3(0.0f, 1.5f, 0.0f));
+                }
                 else if (tile.GetComponent<WaterHex>())
                     WaterTiles.Add(tile.GetComponent<WaterHex>());
             }

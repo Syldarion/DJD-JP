@@ -72,6 +72,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="PirateTBS.CSharp.Plugins.csproj">
+      <Project>{2A8369E6-E90E-C7B6-6E0E-755246A63EC5}</Project>
+      <Name>PirateTBS.CSharp.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
     <Compile Include="Assets\Scripts\CargoManager.cs" />
@@ -125,6 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ConsolePro\Readme.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
     <None Include="Assets\Text\DutchPorts.txt" />
     <None Include="Assets\Text\EnglishPorts.txt" />
     <None Include="Assets\Text\FrenchPorts.txt" />
