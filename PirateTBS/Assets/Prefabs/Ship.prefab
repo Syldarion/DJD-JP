@@ -106,8 +106,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625f23655ac4613448a13bee89ba9746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 5497468, guid: 8fb40039b17b1a64abf428b520692cd4, type: 2}
+  cannonBall: {fileID: 119716, guid: 84e66e20b944f5d47a59a34005685449, type: 2}
+  rateOfFire: 0.5
   speed: 1000
+  distance: 10
   Target: {fileID: 0}
 --- !u!114 &11410432
 MonoBehaviour:

@@ -1,10 +1,12 @@
 fileFormatVersion: 2
 guid: 0a653a4e503ab3140afb8f73d6ef9f11
-timeCreated: 1457621003
+timeCreated: 1461131975
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ShipPrefab: {fileID: 109258, guid: c12b2693e6555cb4ca37037047d157d3, type: 2}
+  - HealthBarPrefab: {fileID: 143994, guid: 52930301913d10f479d5a727e50e89cc, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

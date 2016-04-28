@@ -56,6 +56,7 @@ public class CombatHexGrid : MonoBehaviour
             }
         }
         PopulateTileLists();
+        CombatSceneManager.Instance.CmdSpawnShip();
     }
 
     void PopulateTileLists()
