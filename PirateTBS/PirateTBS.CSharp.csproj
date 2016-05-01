@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
+    <Compile Include="Assets\HealthBars.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
     <Compile Include="Assets\Scripts\CannonFire.cs" />
     <Compile Include="Assets\Scripts\Cannonball.cs" />

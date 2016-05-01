@@ -62,23 +62,33 @@ public class CombatSceneManager : MonoBehaviour {
         foreach (Ship s in CombatManager.Instance.PlayerFleet.Ships)
         {
             HexTile SpawnHex = AllHex[Random.Range(0, AllHex.Count)];
-            Ship clone_ship = Instantiate(s);
+            Ship clone_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
+            clone_ship.Name = s.Name;
+            clone_ship.SetClass(s.Class);
+            clone_ship.Cargo = s.Cargo;
+
             clone_ship.transform.SetParent(SpawnHex.transform, false);
             clone_ship.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
             clone_ship.CurrentPosition = SpawnHex;
             GameObject Health = Instantiate(HealthBarPrefab);
             Health.transform.SetParent(clone_ship.transform, false);
+            Health.GetComponent<HealthBars>().SetRefship(clone_ship);
             NetworkServer.SpawnWithClientAuthority(clone_ship.gameObject, PlayerScript.MyPlayer.gameObject);
         }
         foreach (Ship s in CombatManager.Instance.EnemyFleet.Ships)
         {
             HexTile SpawnHex = AllHex[Random.Range(0, AllHex.Count)];
-            Ship clone_ship = Instantiate(s);
+            Ship clone_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
+            clone_ship.Name = s.Name;
+            clone_ship.SetClass(s.Class);
+            clone_ship.Cargo = s.Cargo;
+
             clone_ship.transform.SetParent(SpawnHex.transform, false);
             clone_ship.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
             clone_ship.CurrentPosition = SpawnHex;
             GameObject Health = Instantiate(HealthBarPrefab);
             Health.transform.SetParent(clone_ship.transform, false);
+            Health.GetComponent<HealthBars>().SetRefship(clone_ship);
             //NetworkServer.SpawnWithClientAuthority(clone_ship.gameObject, PlayerScript.MyPlayer.gameObject);
         }
     }

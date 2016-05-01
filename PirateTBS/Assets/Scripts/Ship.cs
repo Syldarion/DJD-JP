@@ -174,6 +174,10 @@ public class Ship : NetworkBehaviour
     [SyncVar]
     public int SailHealth;
     [SyncVar]
+    public int HullMaxHealth;
+    [SyncVar]
+    public int SailMaxHealth;
+    [SyncVar]
     public int CargoSpace;
     [SyncVar]
     public int Cannons;
@@ -224,7 +228,9 @@ public class Ship : NetworkBehaviour
         {
             case ShipClass.Pinnace:
                 HullHealth = 50;
+                HullMaxHealth = HullHealth;
                 SailHealth = 50;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 15;
                 Cannons = MaxCannons = 4;
                 Speed = FullSpeed = 5;
@@ -233,7 +239,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.Sloop:
                 HullHealth = 60;
+                HullMaxHealth = HullHealth;
                 SailHealth = 70;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 35;
                 Cannons = MaxCannons = 6;
                 Speed = FullSpeed = 5;
@@ -242,7 +250,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.Barque:
                 HullHealth = 80;
+                HullMaxHealth = HullHealth;
                 SailHealth = 80;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 45;
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 4;
@@ -251,7 +261,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.Brig:
                 HullHealth = 120;
+                HullMaxHealth = HullHealth;
                 SailHealth = 100;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 100;
                 Cannons = MaxCannons = 10;
                 Speed = FullSpeed = 3;
@@ -260,7 +272,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.Merchantman:
                 HullHealth = 120;
+                HullMaxHealth = HullHealth;
                 SailHealth = 100;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 150;
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 3;
@@ -269,7 +283,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.MerchantGalleon:
                 HullHealth = 200;
+                HullMaxHealth = HullHealth;
                 SailHealth = 200;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 450;
                 Cannons = MaxCannons = 12;
                 Speed = FullSpeed = 2;
@@ -279,7 +295,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.CombatGalleon:
                 HullHealth = 250;
+                HullMaxHealth = HullHealth;
                 SailHealth = 250;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 400;
                 Cannons = MaxCannons = 24;
                 Speed = FullSpeed = 2;
@@ -289,7 +307,9 @@ public class Ship : NetworkBehaviour
                 break;
             case ShipClass.Frigate:
                 HullHealth = 300;
+                HullMaxHealth = HullHealth;
                 SailHealth = 300;
+                SailMaxHealth = SailHealth;
                 CargoSpace = 600;
                 Cannons = MaxCannons = 32;
                 Speed = FullSpeed = 1;
