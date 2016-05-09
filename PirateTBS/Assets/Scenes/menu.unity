@@ -1472,7 +1472,7 @@ GameObject:
   - 124: {fileID: 176553939}
   - 81: {fileID: 176553938}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MenuCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

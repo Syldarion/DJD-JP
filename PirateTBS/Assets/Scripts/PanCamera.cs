@@ -24,7 +24,7 @@ public class PanCamera : MonoBehaviour
 	
 	void Update()
     {
-        if (PlayerScript.MyPlayer.OpenUI)
+        if (PlayerScript.MyPlayer.OpenUI && name == "MainCamera")
             return;
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -45,9 +45,9 @@ public class PanCamera : MonoBehaviour
         }
 
         if (Input.GetMouseButton(1))
-            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime * (hit.distance / 100));
+            translation -= new Vector3(Input.GetAxis("Mouse X") * drag_speed * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * drag_speed * Time.deltaTime);
         else
-            translation += new Vector3(Input.GetAxis("Horizontal") * drag_speed * Time.deltaTime * (hit.distance / 100), 0, Input.GetAxis("Vertical") * drag_speed * Time.deltaTime * (hit.distance / 100));
+            translation += new Vector3(Input.GetAxis("Horizontal") * drag_speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * drag_speed * Time.deltaTime);
 
         transform.position += translation;
         translation = Vector3.zero;

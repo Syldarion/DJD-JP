@@ -5,13 +5,14 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-public class CombatSceneManager : MonoBehaviour {
+public class CombatSceneManager : MonoBehaviour
+{
 
     [HideInInspector]
     public static CombatSceneManager Instance;
 
-    Scene combatscene;
-    Scene mainscene;
+    Scene combat_scene;
+    Scene main_scene;
 
     void Start()
     {
@@ -22,34 +23,30 @@ public class CombatSceneManager : MonoBehaviour {
 
     void SceneSetup()
     {
-        combatscene = SceneManager.GetSceneByName("combat");
-        mainscene = SceneManager.GetSceneByName("main");
+        combat_scene = SceneManager.GetSceneByName("combat");
+        main_scene = SceneManager.GetSceneByName("main");
 
-        if (combatscene.IsValid())
-        {
-            foreach (Ship s in CombatManager.Instance.PlayerFleet.Ships)
-                s.GetComponent<NetworkTransform>().enabled = true;
-            foreach (Ship s in CombatManager.Instance.EnemyFleet.Ships)
-                s.GetComponent<NetworkTransform>().enabled = true;
-
-            SceneManager.SetActiveScene(combatscene);
-        }
+        if (combat_scene.IsValid())
+            SceneManager.SetActiveScene(combat_scene);
     }
 
     public void ExitScene()
     {
-        if (mainscene.IsValid())
+        if (main_scene.IsValid())
         {
-            foreach (Ship s in CombatManager.Instance.PlayerFleet.Ships)
-                s.GetComponent<NetworkTransform>().enabled = false;
-            foreach (Ship s in CombatManager.Instance.EnemyFleet.Ships)
-                s.GetComponent<NetworkTransform>().enabled = false;
-
-            SceneManager.SetActiveScene(mainscene);
-            if (combatscene.IsValid())
+            SceneManager.SetActiveScene(main_scene);
+            CanvasGroup main_scene_canvas = GameObject.Find("MainSceneCanvas").GetComponent<CanvasGroup>();
+            if (main_scene_canvas)
             {
-                SceneManager.UnloadScene(combatscene.buildIndex);
+                main_scene_canvas.alpha = 1;
+                main_scene_canvas.interactable = true;
+                main_scene_canvas.blocksRaycasts = true;
             }
-        } 
+            else
+                Debug.LogWarning("Could not find MainSceneCanvas");
+
+            if (combat_scene.IsValid())
+                SceneManager.UnloadScene(combat_scene.buildIndex);
+        }
     }
 }

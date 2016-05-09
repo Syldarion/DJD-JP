@@ -10,20 +10,25 @@ public class CombatHexGrid : MonoBehaviour
     public static CombatHexGrid Instance;
 
     public WaterHex WaterHexPrefab;
+    public CombatShip CombatShipPrefab;
 
     public float HexWidth;
 
-    public const int GridWidth = 10;
-    public const int GridHeight = 10;
+    public int GridWidth = 10;
+    public int GridHeight = 10;
 
     public List<WaterHex> WaterTiles;
+
+    public List<WaterHex> PlayerSpawnTiles;
+    public List<WaterHex> EnemySpawnTiles;
+
+    public Material WaterMaterial;
 
     void Start()
     {
         Instance = this;
 
         WaterTiles = new List<WaterHex>();
-
         HexWidth = WaterHexPrefab.GetComponent<MeshRenderer>().bounds.size.x;
 
         GenerateGrid(GridWidth, GridHeight);
@@ -38,14 +43,16 @@ public class CombatHexGrid : MonoBehaviour
         {
             for (int j = -half_grid_y; j < half_grid_y; j++)
             {
-                Transform new_hex = Instantiate(WaterHexPrefab).transform;
-                new_hex.GetComponent<WaterHex>().InitializeTile();
+                WaterHex new_hex = Instantiate(WaterHexPrefab);
+                new_hex.Discovered = true;
+                new_hex.Fog = false;
+                new_hex.GetComponent<MeshRenderer>().sharedMaterial = WaterMaterial;
 
-                new_hex.parent = this.transform;
-                new_hex.localPosition = new Vector3(i * (HexWidth * 0.76f), 0.0f, j * (0.876f * HexWidth));
+                new_hex.transform.parent = this.transform;
+                new_hex.transform.localPosition = new Vector3(i * (HexWidth * 0.76f), 0.0f, j * (0.876f * HexWidth));
 
                 if (i % 2 != 0)
-                    new_hex.Translate(0.0f, 0.0f, 0.4325f * HexWidth, this.transform);
+                    new_hex.transform.Translate(0.0f, 0.0f, 0.4325f * HexWidth, this.transform);
 
                 new_hex.GetComponent<HexTile>().HexCoord.Q = i;
                 new_hex.GetComponent<HexTile>().HexCoord.R = j;
@@ -53,22 +60,38 @@ public class CombatHexGrid : MonoBehaviour
                 new_hex.name = string.Format("{0},{1}", i, j);
 
                 new_hex.GetComponent<HexTile>().SetDirections(i % 2 == 0);
+
+                WaterTiles.Add(new_hex);
+
+                if (i == -5)
+                    PlayerSpawnTiles.Add(new_hex);
+                if (i == 4)
+                    EnemySpawnTiles.Add(new_hex);
             }
         }
-        PopulateTileLists();
+
+        PlaceShips();
     }
 
-    void PopulateTileLists()
+    void PlaceShips()
     {
-        for (int i = -GridWidth / 2; i < GridWidth / 2; i++)
-        {
-            for (int j = -GridHeight / 2; j < GridHeight / 2; j++)
-            {
-                Transform tile = transform.FindChild(string.Format("{0},{1}", i, j));
+        Fleet player_fleet = CombatManager.Instance.PlayerFleet;
+        Fleet enemy_fleet = CombatManager.Instance.EnemyFleet;
 
-                if (tile.GetComponent<WaterHex>())
-                    WaterTiles.Add(tile.GetComponent<WaterHex>());
-            }
+        for(int i = 0; i < player_fleet.Ships.Count; i++)
+        {
+            CombatShip new_ship = Instantiate(CombatShipPrefab).GetComponent<CombatShip>();
+            new_ship.CopyShip(player_fleet.Ships[i]);
+            new_ship.LinkedShip = player_fleet.Ships[i];
+
+            new_ship.transform.SetParent(PlayerSpawnTiles[i].transform, false);
+            new_ship.transform.localScale = new Vector3(0.25f, 1.0f, 0.25f);
+
+            NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, player_fleet.connectionToClient);
+        }
+        for(int i = 0; i < enemy_fleet.Ships.Count; i++)
+        {
+
         }
     }
 

@@ -8,22 +8,22 @@ public class CombatMovementManager : MonoBehaviour
     public static CombatMovementManager Instance;
 
     public PlayerScript ReferencePlayer;
-    public Ship SelectedShip;
+    public CombatShip SelectedShip;
 
     public List<WaterHex> MovementQueue;
 
-	void Start()
+    void Start()
     {
         Instance = this;
         StartCoroutine(WaitForPlayer());
 
         MovementQueue = new List<WaterHex>();
-	}
-	
-	void Update()
+    }
+
+    void Update()
     {
 
-	}
+    }
 
     public void ClearQueue()
     {
@@ -32,21 +32,21 @@ public class CombatMovementManager : MonoBehaviour
         MovementQueue.Clear();
     }
 
-    public void SelectShip(Ship selected_ship)
+    public void SelectShip(CombatShip selected_ship)
     {
-        if (CombatManager.Instance.PlayerFleet.Ships.Contains(selected_ship))
+        if (PlayerScript.MyPlayer.ActiveFleet.Ships.Contains(selected_ship.LinkedShip))
             SelectedShip = selected_ship;
     }
 
     public void MoveShip()
     {
-        if(!SelectedShip)
+        if (!SelectedShip)
         {
             ClearQueue();
             return;
         }
 
-        if(!CombatHexGrid.MovementHex(SelectedShip.CurrentPosition, 1).Contains(MovementQueue[0]))
+        if (!CombatHexGrid.MovementHex(SelectedShip.CurrentPosition, 1).Contains(MovementQueue[0]))
         {
             ClearQueue();
             return;

@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 181660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 25, z: 0.25}
+  m_LocalScale: {x: 0.25, y: 2.5, z: 0.25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -161,8 +161,13 @@ MonoBehaviour:
   Name: 
   Ships: []
   FleetSpeed: 0
+  MaxFleetSize: 0
   CurrentPosition: {fileID: 0}
   ShipPrefab: {fileID: 109258, guid: c12b2693e6555cb4ca37037047d157d3, type: 2}
+  NewShipID: 0
+  MoveActionTaken: 0
+  CombatActionTaken: 0
+  MovementQueue: []
 --- !u!135 &13521874
 SphereCollider:
   m_ObjectHideFlags: 1

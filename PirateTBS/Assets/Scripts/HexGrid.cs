@@ -123,7 +123,7 @@ public class HexGrid : NetworkBehaviour
             else
                 water_point = false;
 
-            sphere_radius = Random.Range(1, 6) * 100;
+            sphere_radius = Random.Range(1, 6) * 10;
             sphere_position = new Vector3(Random.Range(-total_width / 2, total_width / 2), 0, Random.Range(-total_height / 2, total_height / 2));
             
             foreach(Collider other in Physics.OverlapSphere(sphere_position, sphere_radius))
@@ -194,7 +194,7 @@ public class HexGrid : NetworkBehaviour
                 if (tile.GetComponent<LandHex>())
                 {
                     LandTiles.Add(tile.GetComponent<LandHex>());
-                    tile.Translate(new Vector3(0.0f, 1.5f, 0.0f));
+                    tile.Translate(new Vector3(0.0f, .15f, 0.0f));
                 }
                 else if (tile.GetComponent<WaterHex>())
                     WaterTiles.Add(tile.GetComponent<WaterHex>());
@@ -235,6 +235,7 @@ public class HexGrid : NetworkBehaviour
             Port new_port = Instantiate(PortPrefab).GetComponent<Port>();
             new_port.transform.SetParent(coastal_tiles[selected_tile].transform, false);
             new_port.transform.localPosition = Vector3.zero;
+            new_port.transform.localScale = new Vector3(.25f, 2.5f, .25f);
 
             new_port.InitializePort();
 

@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CombatMovementManager.cs" />
     <Compile Include="Assets\Scripts\CombatSceneManager.cs" />
+    <Compile Include="Assets\Scripts\CombatShip.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyManager.cs" />
     <Compile Include="Assets\Scripts\CustomLobbyPlayer.cs" />
     <Compile Include="Assets\Scripts\DialogueBox.cs" />
