@@ -13,6 +13,7 @@ public class Fleet : NetworkBehaviour
     public List<Ship> Ships;                //Ships in fleet
     [SyncVar]
     public int FleetSpeed;                  //Current fleet speed
+    [SyncVar] public int FleetGold;
     [SyncVar]
     public int MaxFleetSize;
     public HexTile CurrentPosition;         //HexTile fleet is on
@@ -42,6 +43,8 @@ public class Fleet : NetworkBehaviour
         FleetSpeed = 5;
         MoveActionTaken = false;
         CombatActionTaken = false;
+
+        FleetGold = Random.Range(500, 1000);
 
         MovementQueue = new List<WaterHex>();
     }

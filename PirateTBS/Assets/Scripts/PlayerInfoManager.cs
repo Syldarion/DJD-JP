@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 public class PlayerInfoManager : MonoBehaviour
 {
@@ -60,8 +62,8 @@ public class PlayerInfoManager : MonoBehaviour
     {
         OwningPlayer.TotalShips = 0;
 
-        foreach (Fleet f in OwningPlayer.Fleets)
-            OwningPlayer.TotalShips += f.Ships.Count;
+        foreach (var fleet in OwningPlayer.Fleets)
+            OwningPlayer.TotalShips += fleet.Ships.Count;
 
         ShipCountText.text = OwningPlayer.TotalShips.ToString();
     }
@@ -73,26 +75,19 @@ public class PlayerInfoManager : MonoBehaviour
     {
         OwningPlayer.TotalGold = 0;
 
-        foreach (Fleet f in OwningPlayer.Fleets)
-            foreach (Ship s in f.Ships)
-                OwningPlayer.TotalGold += s.Cargo.Gold;
+        foreach (var fleet in OwningPlayer.Fleets)
+            OwningPlayer.TotalGold += fleet.FleetGold;
 
         GoldCountText.text = OwningPlayer.TotalGold.ToString();
     }
 
     public void UpdateAverageMoraleLevel()
     {
-        float average_morale = 0.0f;
+        var morale_sum = (from fleet in OwningPlayer.Fleets let fleet_morale = 
+                          fleet.Ships.Aggregate(0.0f, (current, s) => current + s.CrewMorale)
+                          select fleet_morale/fleet.Ships.Count).Sum();
 
-        foreach(Fleet f in OwningPlayer.Fleets)
-        {
-            float fleet_morale = 0.0f;
-            foreach (Ship s in f.Ships)
-                fleet_morale += s.CrewMorale;
-            average_morale += fleet_morale / f.Ships.Count;
-        }
-
-        AverageMoraleText.text = (average_morale / OwningPlayer.Fleets.Count).ToString();
+        AverageMoraleText.text = (morale_sum / OwningPlayer.Fleets.Count).ToString();
     }
 
     /// <summary>
@@ -114,14 +109,13 @@ public class PlayerInfoManager : MonoBehaviour
     /// <param name="ship">Ship to be removed</param>
     public void RemoveShipFromList(Ship ship)
     {
-        for (int i = 0; i < PlayerInfoShipList.childCount; i++)
+        for (var i = 0; i < PlayerInfoShipList.childCount; i++)
         {
-            ShipStatBlock stat_block = PlayerInfoShipList.GetChild(i).GetComponent<ShipStatBlock>();
-            if (stat_block && stat_block.ReferenceShip == ship)
-            {
-                Destroy(stat_block.gameObject);
-                break;
-            }
+            var stat_block = PlayerInfoShipList.GetChild(i).GetComponent<ShipStatBlock>();
+            if (!stat_block || stat_block.ReferenceShip != ship) continue;
+
+            Destroy(stat_block.gameObject);
+            break;
         }
 
         ShipCountText.text = (--OwningPlayer.TotalShips).ToString();
@@ -137,7 +131,7 @@ public class PlayerInfoManager : MonoBehaviour
 
     }
 
-    IEnumerator WaitForPlayer()
+    private IEnumerator WaitForPlayer()
     {
         while (!PlayerScript.MyPlayer)
             yield return null;

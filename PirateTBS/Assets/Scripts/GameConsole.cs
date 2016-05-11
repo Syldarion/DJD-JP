@@ -249,7 +249,6 @@ public class GameConsole : MonoBehaviour
 
             string ship_cargo_str = string.Empty;
             ship_cargo_str += string.Format("Food - {0}\n\t", ship.Cargo.Food);
-            ship_cargo_str += string.Format("Gold - {0}\n\t", ship.Cargo.Gold);
             ship_cargo_str += string.Format("Goods - {0}\n\t", ship.Cargo.Goods);
             ship_cargo_str += string.Format("Sugar - {0}\n\t", ship.Cargo.Sugar);
             ship_cargo_str += string.Format("Spice - {0}\n\t", ship.Cargo.Spice);
@@ -268,7 +267,6 @@ public class GameConsole : MonoBehaviour
 
             string port_inventory_str = string.Empty;
             port_inventory_str += string.Format("Food - {0}\n\t", port.Market.Food);
-            port_inventory_str += string.Format("Gold - {0}\n\t", port.Market.Gold);
             port_inventory_str += string.Format("Goods - {0}\n\t", port.Market.Goods);
             port_inventory_str += string.Format("Sugar - {0}\n\t", port.Market.Sugar);
             port_inventory_str += string.Format("Spice - {0}\n\t", port.Market.Spice);

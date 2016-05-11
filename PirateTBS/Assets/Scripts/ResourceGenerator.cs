@@ -27,7 +27,7 @@ public class ResourceGenerator : MonoBehaviour
         ResourcesPerTurn[1] = Random.Range(5, 8);
         ResourcesPerTurn[2] = Random.Range(1, 2);
 
-        GeneratedResources = new Cargo(ResourcesPerTurn[0], 0, 0, ResourcesPerTurn[1], ResourcesPerTurn[2], 0);
+        GeneratedResources = new Cargo(ResourcesPerTurn[0], 0, ResourcesPerTurn[1], ResourcesPerTurn[2], 0);
 
         Cost = ResourcesPerTurn[0] + (ResourcesPerTurn[1] * 2) + (ResourcesPerTurn[2] * 10);
 

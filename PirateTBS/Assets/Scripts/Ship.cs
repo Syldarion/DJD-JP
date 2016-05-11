@@ -11,25 +11,22 @@ public struct Cargo
     public int Luxuries;
     public int Spice;
     public int Sugar;
-    public int Gold;
 
     /// <summary>
     /// Creates a new Cargo object
     /// </summary>
     /// <param name="food">1 food = 1/10 cargo</param>
-    /// <param name="gold">1 gold = 1/100 cargo</param>
     /// <param name="goods">1 goods = 1/10 cargo</param>
     /// <param name="sugar">1 sugar = 1/10 cargo</param>
     /// <param name="spice">1 spice = 1/10 cargo</param>
     /// <param name="luxuries">1 luxuries = 1 cargo</param>
-    public Cargo(int food = 0, int gold = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
+    public Cargo(int food = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
     {
         Food = food;
         Goods = goods;
         Luxuries = luxuries;
         Spice = spice;
         Sugar = sugar;
-        Gold = gold;
     }
 
     /// <summary>
@@ -43,76 +40,52 @@ public struct Cargo
         Luxuries += cargo.Luxuries;
         Spice += cargo.Spice;
         Sugar += cargo.Sugar;
-        Gold += cargo.Gold;
     }
 
-    /// <summary>
-    /// Transfer from another cargo to this one
-    /// </summary>
-    /// <param name="cargo">Cargo to transfer from</param>
-    /// <param name="food">Amount of food to transfer</param>
-    /// <param name="gold">Amount of gold to transfer</param>
-    /// <param name="goods">Amount of goods to transfer</param>
-    /// <param name="sugar">Amount of sugar to transfer</param>
-    /// <param name="spice">Amount of spice to tranfer</param>
-    /// <param name="luxuries">Amount of luxuries to transfer</param>
-    public void TransferCargo(Cargo cargo, int food = 0, int gold = 0, int goods = 0, int sugar = 0, int spice = 0, int luxuries = 0)
+    public int GetCargoAmount(string cargo_type)
     {
-        cargo.Food += Mathf.Clamp(food, 0, Food);
-        Food = Mathf.Clamp(Food, 0, Food - food);
-
-        cargo.Gold += Mathf.Clamp(gold, 0, Gold);
-        Gold = Mathf.Clamp(Gold, 0, Gold - gold);
-
-        cargo.Goods += Mathf.Clamp(goods, 0, Goods);
-        Goods = Mathf.Clamp(Goods, 0, Goods - goods);
-
-        cargo.Sugar += Mathf.Clamp(sugar, 0, Sugar);
-        Sugar = Mathf.Clamp(Sugar, 0, Sugar - sugar);
-
-        cargo.Spice += Mathf.Clamp(spice, 0, Spice);
-        Spice = Mathf.Clamp(Spice, 0, Spice - spice);
-
-        cargo.Luxuries += Mathf.Clamp(luxuries, 0, Luxuries);
-        Luxuries = Mathf.Clamp(Luxuries, 0, Luxuries - luxuries);
+        switch (cargo_type)
+        {
+            case "Food":
+                return Food;
+            case "Goods":
+                return Goods;
+            case "Sugar":
+                return Sugar;
+            case "Spice":
+                return Spice;
+            case "Luxuries":
+                return Luxuries;
+            default:
+                return 0;
+        }
     }
 
-    public void TransferTo(Cargo cargo, string cargo_type, int quantity)
+    public void TransferTo(ref Cargo cargo, string cargo_type, int quantity)
     {
-        int cargo_amount = (int)GetType().GetField(cargo_type).GetValue(this);
-        int other_cargo_amount = (int)GetType().GetField(cargo_type).GetValue(cargo);
-
-        int transfer_amount = Mathf.Clamp(quantity, 0, cargo_amount);
-
-        other_cargo_amount += transfer_amount;
-        cargo_amount -= transfer_amount;
-
         switch(cargo_type)
         {
             case "Food":
-                Food = cargo_amount;
-                cargo.Food = other_cargo_amount;
+                cargo.Food += Mathf.Clamp(quantity, 0, Food);
+                Food = Mathf.Clamp(Food, 0, Food - quantity);
                 break;
             case "Goods":
-                Goods = cargo_amount;
-                cargo.Goods = other_cargo_amount;
+                cargo.Goods += Mathf.Clamp(quantity, 0, Goods);
+                Goods = Mathf.Clamp(Goods, 0, Goods - quantity);
                 break;
             case "Sugar":
-                Sugar = cargo_amount;
-                cargo.Sugar = other_cargo_amount;
+                cargo.Sugar += Mathf.Clamp(quantity, 0, Sugar);
+                Sugar = Mathf.Clamp(Sugar, 0, Sugar - quantity);
                 break;
             case "Spice":
-                Spice = cargo_amount;
-                cargo.Spice = other_cargo_amount;
+                cargo.Spice += Mathf.Clamp(quantity, 0, Spice);
+                Spice = Mathf.Clamp(Spice, 0, Spice - quantity);
                 break;
             case "Luxuries":
-                Luxuries = cargo_amount;
-                cargo.Luxuries = other_cargo_amount;
+                cargo.Luxuries += Mathf.Clamp(quantity, 0, Luxuries);
+                Luxuries = Mathf.Clamp(Luxuries, 0, Luxuries - quantity);
                 break;
-            case "Gold":
             default:
-                Gold = cargo_amount;
-                cargo.Gold = other_cargo_amount;
                 break;
         }
     }
@@ -123,7 +96,7 @@ public struct Cargo
     /// <returns></returns>
     public double Size()
     {
-        return (Food * 0.1) + (Goods + 0.1) + Luxuries + (Spice + 0.1) + (Sugar * 0.1) + (Gold * 0.01);
+        return (Food * 0.1) + (Goods + 0.1) + Luxuries + (Spice + 0.1) + (Sugar * 0.1);
     }
 
     /// <summary>

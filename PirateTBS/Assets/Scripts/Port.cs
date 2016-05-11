@@ -11,6 +11,7 @@ public class Port : NetworkBehaviour
     public string PortName;                     //Name of port
     public Nationality PortNationality;         //Associated nation of port
     public HexTile SpawnTile;                   //Tile fleets from port are spawned on
+    [SyncVar] public int PortGold;
 
     [SyncVar]
     public Cargo Market;                        //Contents of port's marketplace
@@ -19,6 +20,11 @@ public class Port : NetworkBehaviour
 
     public GameObject FleetPrefab;              //Fleet prefab for spawning new fleets
     public GameObject ResourceGeneratorPrefab;  //Generator prefab for spawning new resource generators
+
+    public static int[] DefaultPortPrices = {10, 20, 30, 40, 80};
+    public static int[] PortPriceMods = {2, 4, 8, 10, 20};
+
+    public SyncListInt PortPrices = new SyncListInt();
 
     void Start()
     {
@@ -46,7 +52,14 @@ public class Port : NetworkBehaviour
             }
         }
 
-        Market = new Cargo(Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500));
+        Market = new Cargo(Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500), Random.Range(0, 500));
+
+        PortGold = Random.Range(5000, 20000);
+
+        PortPrices.Clear();
+
+        for (var i = 0; i < 5; i++)
+            PortPrices.Add(DefaultPortPrices[i] + Random.Range(-PortPriceMods[i], PortPriceMods[i]));
     }
 
     void GenerateResources()

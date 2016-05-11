@@ -128,7 +128,7 @@ public class CargoManager : MonoBehaviour
                 transfer_amount = (int)(transfer_amount + (remaining_space - temp_cargo.Size()) / Cargo.GetSizeReq(s));
             }
 
-            ShipA.Cargo.TransferTo(ShipB.Cargo, s, transfer_amount);
+            ShipA.Cargo.TransferTo(ref ShipB.Cargo, s, transfer_amount);
         }
 
         UpdateResourceList(ShipA, LefthandCargo);
@@ -152,7 +152,7 @@ public class CargoManager : MonoBehaviour
                 transfer_amount = (int)(transfer_amount + (remaining_space - temp_cargo.Size()) / Cargo.GetSizeReq(s));
             }
 
-            ShipB.Cargo.TransferTo(ShipA.Cargo, s, transfer_amount);
+            ShipB.Cargo.TransferTo(ref ShipA.Cargo, s, transfer_amount);
         }
 
         UpdateResourceList(ShipB, RighthandCargo);
