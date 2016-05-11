@@ -91,12 +91,12 @@ public class TechNode : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Tooltip.EnableTooltip(true);
-        Tooltip.UpdateTooltip(EffectText);
+        Tooltip.Instance.EnableTooltip(true);
+        Tooltip.Instance.UpdateTooltip(EffectText);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Tooltip.EnableTooltip(false);
+        Tooltip.Instance.EnableTooltip(false);
     }
 }

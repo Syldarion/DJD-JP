@@ -118,6 +118,8 @@
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\Port.cs" />
     <Compile Include="Assets\Scripts\PortShopManager.cs" />
+    <Compile Include="Assets\Scripts\ResourceButton.cs" />
+    <Compile Include="Assets\Scripts\ResourceGenerator.cs" />
     <Compile Include="Assets\Scripts\SelectionGroup.cs" />
     <Compile Include="Assets\Scripts\SettingsManager.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />

@@ -75,8 +75,8 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
     /// <param name="text">Text to show on tooltip</param>
     public void ActivateTooltip(string text)
     {
-        Tooltip.EnableTooltip(true);
-        Tooltip.UpdateTooltip(text);
+        Tooltip.Instance.EnableTooltip(true);
+        Tooltip.Instance.UpdateTooltip(text);
     }
 
     /// <summary>
@@ -84,6 +84,6 @@ public class ShipStatBlock : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void DeactivateTooltip()
     {
-        Tooltip.EnableTooltip(false);
+        Tooltip.Instance.EnableTooltip(false);
     }
 }

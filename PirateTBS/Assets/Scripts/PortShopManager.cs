@@ -16,12 +16,14 @@ public class PortShopManager : MonoBehaviour
     public Ship SelectedShip;
     public Dropdown ShipSelection;
     public ShipStatBlock StatBlockPrefab;
+    public Button ResourceButtonPrefab;
 
     public RectTransform ActivePanel;
     public RectTransform FleetResourceList;
     public RectTransform PortResourceList;
     public RectTransform FleetShipyardList;
     public RectTransform PortShipyardList;
+    public RectTransform ResourceList;
 
     public SelectionGroup ShipyardFleetSelection;
     public SelectionGroup ShipyardPortSelection;
@@ -53,6 +55,7 @@ public class PortShopManager : MonoBehaviour
         PopulatePortMarket();
         PopulateShipResources();
         PopulatePortShipyard();
+        PopulateResourceList();
     }
 
     public void CloseShop()
@@ -162,11 +165,23 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
+    public void PopulateResourceList()
+    {
+        foreach(ResourceGenerator generator in CurrentPort.Resources)
+        {
+            Button new_button = Instantiate(ResourceButtonPrefab);
+            new_button.transform.SetParent(ResourceList, false);
+            new_button.GetComponent<ResourceButton>().PopulateButton(generator);
+            new_button.onClick.AddListener(generator.Purchase);
+        }
+    }
+
     public void ClearShipyard()
     {
         var children = new List<GameObject>();
         foreach (Transform child in FleetShipyardList.transform) children.Add(child.gameObject);
         foreach (Transform child in PortShipyardList.transform) children.Add(child.gameObject);
+        foreach (Transform child in ResourceList.transform) children.Add(child.gameObject);
         foreach (GameObject go in children) Destroy(go);
     }
 

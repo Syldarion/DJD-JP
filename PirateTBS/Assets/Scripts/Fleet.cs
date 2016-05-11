@@ -346,13 +346,13 @@ public class Fleet : NetworkBehaviour
 
     void OnMouseEnter()
     {
-        Tooltip.EnableTooltip(true);
-        Tooltip.UpdateTooltip(name);
+        Tooltip.Instance.EnableTooltip(true);
+        Tooltip.Instance.UpdateTooltip(name);
     }
 
     void OnMouseExit()
     {
-        Tooltip.EnableTooltip(false);
+        Tooltip.Instance.EnableTooltip(false);
     }
 
     /// <summary>

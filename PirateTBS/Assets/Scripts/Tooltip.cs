@@ -35,7 +35,7 @@ public class Tooltip : MonoBehaviour
     /// Enables / Disables the tooltip
     /// </summary>
     /// <param name="enable">true enables, false disables</param>
-    public static void EnableTooltip(bool enable)
+    public void EnableTooltip(bool enable)
     {
         if(enable)
             PanelUtilities.ActivatePanel(Instance.GetComponent<CanvasGroup>());
@@ -49,7 +49,7 @@ public class Tooltip : MonoBehaviour
     /// Set the text of the tooltip
     /// </summary>
     /// <param name="tip">Tooltip text</param>
-    public static void UpdateTooltip(string tip)
+    public void UpdateTooltip(string tip)
     {
         Instance.GetComponentInChildren<Text>().text = tip;
     }

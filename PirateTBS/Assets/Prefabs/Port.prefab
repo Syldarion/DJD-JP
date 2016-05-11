@@ -124,7 +124,10 @@ MonoBehaviour:
   PortNationality: 0
   SpawnTile: {fileID: 0}
   Shipyard: {fileID: 0}
+  Resources: []
   FleetPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
+  ResourceGeneratorPrefab: {fileID: 193306, guid: 5533a92a1ce5cbf45b2ceb081d79aad6,
+    type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
