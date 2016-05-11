@@ -50,6 +50,8 @@ public class LoadingScreenManager : MonoBehaviour
         while(GetComponent<CanvasGroup>().alpha > 0)
         {
             GetComponent<CanvasGroup>().alpha -= Time.deltaTime;
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+            GetComponent<CanvasGroup>().interactable = false;
             yield return null;
         }
     }

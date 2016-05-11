@@ -11,11 +11,27 @@ public class InGameMenuController : MonoBehaviour
     public Text NetworkPingText;            //Reference to text displaying ping
 
     PlayerScript ReferencePlayer;           //Reference to player in control of this menu
+    GameSettingsManager ReferenceGameSettingsManager; //Reference to the Game Settings Manager
 
-	void Start()
+    public Text ResolutionText;
+    public Text CurrentAAText;
+    public Slider FullscreenSlider;
+
+    void Start()
     {
         Instance = this;
         StartCoroutine(WaitForPlayer());
+        ReferenceGameSettingsManager = GameObject.Find("GameSettingsManager").GetComponentInChildren<GameSettingsManager>();
+
+        if (ReferenceGameSettingsManager)
+        {
+            //ResolutionText.text = ReferenceGameSettingsManager.ResolutionText.text;
+            //CurrentAAText.text = ReferenceGameSettingsManager.CurrentAAText.text;
+            FullscreenSlider.value = ReferenceGameSettingsManager.FullscreenSlider.value;
+            ReferenceGameSettingsManager.ResolutionText = ResolutionText;
+            ReferenceGameSettingsManager.CurrentAAText = CurrentAAText;
+            ReferenceGameSettingsManager.FullscreenSlider = FullscreenSlider;
+        }
 	}
 	
 	void Update()
@@ -68,4 +84,29 @@ public class InGameMenuController : MonoBehaviour
 
         NetworkPingText.text = "0";
     }
-}
+
+    public void ApplyChanges()
+    {
+        ReferenceGameSettingsManager.ApplyChanges();
+    }
+    public void ModifyAA(int change)
+    {
+        ReferenceGameSettingsManager.ModifyAA(change);
+    }
+    public void ModifyResolution(int change)
+    {
+        ReferenceGameSettingsManager.ModifyResolution(change);
+    }
+    public void ModifyMasterVolume(float value)
+    {
+        ReferenceGameSettingsManager.ModifyMasterVolume(value);
+    }
+    public void ModifyMusicVolume(float value)
+    {
+        ReferenceGameSettingsManager.ModifyMusicVolume(value);
+    }
+    public void ModifyEffectsVolume(float value)
+    {
+        ReferenceGameSettingsManager.ModifyEffectsVolume(value);
+    }
+    }
