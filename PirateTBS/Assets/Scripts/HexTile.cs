@@ -118,7 +118,7 @@ public class HexTile : MonoBehaviour
     /// <returns>Hextile in the specified direction, if it exists</returns>
     public HexTile GetNeighbor(HexCoordinate direction)
     {
-        string hex_name = string.Format("{0},{1}", HexCoord.Q + direction.Q, HexCoord.R + direction.R);
+        string hex_name = string.Format("{0}/{1},{2}", transform.parent.name, HexCoord.Q + direction.Q, HexCoord.R + direction.R);
         if (GameObject.Find(hex_name))
             return GameObject.Find(hex_name).GetComponent<HexTile>();
         else

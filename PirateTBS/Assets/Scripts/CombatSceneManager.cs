@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 public class CombatSceneManager : MonoBehaviour
 {
-
     [HideInInspector]
     public static CombatSceneManager Instance;
 

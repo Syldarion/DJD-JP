@@ -56,7 +56,7 @@ public class GameSettingsManager : MonoBehaviour
 
     public Text ResolutionText;
     public Text CurrentAAText;
-    public Slider FullscreenSlider;
+    public Toggle FullscreenToggle;
 
     public AudioMixer MasterMixer;
 
@@ -93,7 +93,7 @@ public class GameSettingsManager : MonoBehaviour
 
 	void Start()
     {
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
 
         Settings = new Dictionary<string, int>();
         Changes = new Dictionary<string, int>();
@@ -157,9 +157,7 @@ public class GameSettingsManager : MonoBehaviour
 
         int user_wfs = Mathf.Clamp(Settings["Fullscreen"], 0, 1);
 
-        FullscreenSlider.value = user_wfs;
-
-
+        FullscreenToggle.isOn = user_wfs == 0 ? false : true;
 
         Screen.SetResolution(Settings["ResolutionWidth"], Settings["ResolutionHeight"], Settings["Fullscreen"] == 1);
         QualitySettings.antiAliasing = Settings["AALevel"];
@@ -202,9 +200,9 @@ public class GameSettingsManager : MonoBehaviour
         ChangeSetting("AALevel", AALevels[CurrentAAIndex]);
     }
 
-    public void ModifyFullscreen(int value)
+    public void ToggleFullscreen(bool fullscreen)
     {
-        ChangeSetting("Fullscreen", Mathf.Clamp(value, 0, 1));
+        ChangeSetting("Fullscreen", fullscreen ? 1 : 0);
     }
 
     public void ModifyMasterVolume(float value)

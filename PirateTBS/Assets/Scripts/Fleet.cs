@@ -212,7 +212,7 @@ public class Fleet : NetworkBehaviour
     [ClientRpc]
     void RpcUpdateFogRange()
     {
-        GetComponent<SphereCollider>().radius = FleetSpeed * 2.1f;
+        GetComponent<SphereCollider>().radius = FleetSpeed * 2.1f * 2.5f;
     }
 
     /// <summary>
@@ -289,12 +289,14 @@ public class Fleet : NetworkBehaviour
         foreach (HexTile dest_tile in MovementQueue)
         {
             Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
+            transform.LookAt(destination);
 
             Vector3 direction = (destination - transform.position) / 20.0f;
+            float step = direction.magnitude;
 
             for(int i = 0; i < 20; i++)
             {
-                transform.Translate(direction);
+                transform.Translate(Vector3.forward * step);
                 yield return new WaitForSeconds(0.01f);
             }
 

@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Assets\ConsolePro\ConsoleProRemoteServer.cs" />
     <Compile Include="Assets\Scripts\AudioLevelManager.cs" />
+    <Compile Include="Assets\Scripts\Cannonball.cs" />
     <Compile Include="Assets\Scripts\CargoManager.cs" />
     <Compile Include="Assets\Scripts\ChatFilter.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />

@@ -17,8 +17,8 @@ public class PanCamera : MonoBehaviour
 
     void Start()
     {
-        drag_speed = 200f;
-        zoom_speed = 100f;
+        drag_speed = 20f;
+        zoom_speed = 10f;
         translation = Vector3.zero;
 	}
 	
@@ -34,11 +34,11 @@ public class PanCamera : MonoBehaviour
         forward_ray = new Ray(transform.position, transform.forward);
         if (Physics.Raycast(forward_ray, out hit))
         {
-            if (hit.distance <= 500.0f && hit.distance >= 100.0f)
+            if (hit.distance <= 50.0f && hit.distance >= 10.0f)
                 translation += transform.forward * Input.GetAxis("Mouse ScrollWheel") * zoom_speed;
-            else if (hit.distance > 500.0f)
+            else if (hit.distance > 50.0f)
                 translation += transform.forward;
-            else if (hit.distance < 100.0f)
+            else if (hit.distance < 10.0f)
                 translation += -transform.forward;
 
             current_offset = transform.position - hit.transform.position;

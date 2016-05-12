@@ -12,6 +12,8 @@ public class InGameMenuController : MonoBehaviour
 
     PlayerScript ReferencePlayer;           //Reference to player in control of this menu
 
+    GameSettingsManager SettingsManager;
+
 	void Start()
     {
         Instance = this;
@@ -67,5 +69,12 @@ public class InGameMenuController : MonoBehaviour
         }
 
         NetworkPingText.text = "0";
+    }
+
+    public void CloseInGameMenu()
+    {
+        PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
+        if (PlayerScript.MyPlayer)
+            PlayerScript.MyPlayer.OpenUI = null;
     }
 }

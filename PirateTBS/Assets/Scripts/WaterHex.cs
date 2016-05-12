@@ -39,7 +39,10 @@ public class WaterHex : HexTile
         }
         else
         {
-            MovementManager.Instance.ClearQueue();
+            if (!CombatSceneManager.Instance)
+                MovementManager.Instance.ClearQueue();
+            else
+                CombatMovementManager.Instance.ClearQueue();
         }
     }
 

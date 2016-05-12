@@ -32,7 +32,9 @@ public class MainMenuPanelController : MonoBehaviour
                 StartCoroutine(FadeInPanel(new_panel));
         }
         else if (!FadingOutPanel)
+        {
             StartCoroutine(FadeOutPanel(ActivePanel));
+        }
     }
 
     /// <summary>

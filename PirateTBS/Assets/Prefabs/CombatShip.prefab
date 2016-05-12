@@ -14,6 +14,7 @@ GameObject:
   - 23: {fileID: 2389458}
   - 65: {fileID: 6502152}
   - 114: {fileID: 11431028}
+  - 54: {fileID: 5407492}
   m_Layer: 0
   m_Name: CombatShip
   m_TagString: Untagged
@@ -43,7 +44,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4ea3dcaca336b40489b08d5d2e5b7072, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -65,7 +66,22 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 163084}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 1899aadab7b78b240923db51c84f3552, type: 3}
+--- !u!54 &5407492
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163084}
+  serializedVersion: 2
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 94
+  m_CollisionDetection: 0
 --- !u!65 &6502152
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -76,7 +92,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &11402154
 MonoBehaviour:
@@ -158,8 +174,10 @@ MonoBehaviour:
   Class: 0
   Price: 0
   CurrentCrew: 0
+  LinkedShip: {fileID: 0}
   MovementQueue: []
   CurrentPosition: {fileID: 0}
+  CannonballPrefab: {fileID: 181194, guid: a8161e3ac7cb19b48abb036d555715bc, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

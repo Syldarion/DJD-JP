@@ -220,6 +220,13 @@ public class Ship : NetworkBehaviour
     {
 
 	}
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+
+        PlayerInfoManager.Instance.AddShipToList(this);
+    }
     
     /// <summary>
     /// Server-side function to set the ship class, which determines base stats

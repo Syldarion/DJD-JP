@@ -85,13 +85,24 @@ public class CombatHexGrid : MonoBehaviour
             new_ship.LinkedShip = player_fleet.Ships[i];
 
             new_ship.transform.SetParent(PlayerSpawnTiles[i].transform, false);
-            new_ship.transform.localScale = new Vector3(0.25f, 1.0f, 0.25f);
+            new_ship.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
+
+            new_ship.CurrentPosition = PlayerSpawnTiles[i];
 
             NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, player_fleet.connectionToClient);
         }
         for(int i = 0; i < enemy_fleet.Ships.Count; i++)
         {
+            CombatShip new_ship = Instantiate(CombatShipPrefab).GetComponent<CombatShip>();
+            new_ship.CopyShip(enemy_fleet.Ships[i]);
+            new_ship.LinkedShip = enemy_fleet.Ships[i];
 
+            new_ship.transform.SetParent(EnemySpawnTiles[i].transform, false);
+            new_ship.transform.localScale = new Vector3(0.1f, 1.0f, 0.1f);
+
+            new_ship.CurrentPosition = EnemySpawnTiles[i];
+
+            NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, enemy_fleet.connectionToClient);
         }
     }
 

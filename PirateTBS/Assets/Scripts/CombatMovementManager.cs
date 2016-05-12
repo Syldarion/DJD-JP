@@ -51,8 +51,18 @@ public class CombatMovementManager : MonoBehaviour
             ClearQueue();
             return;
         }
+        
+        WaterHex next_tile;
+        CombatShip tile_ship;
 
-        SelectedShip.MovementQueue = MovementQueue;
+        for (int i = 0; i < MovementQueue.Count; i++)
+        {
+            next_tile = MovementQueue[i];
+            tile_ship = next_tile.GetComponentInChildren<CombatShip>();
+
+            if (!tile_ship)
+                SelectedShip.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
+        }
 
         SelectedShip.CmdMoveShip();
         ClearQueue();
