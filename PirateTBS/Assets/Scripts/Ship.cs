@@ -162,7 +162,11 @@ public class Ship : NetworkBehaviour
     [SyncVar]
     public int HullHealth;                      //Current hull health
     [SyncVar]
+    public int MaxHullHealth;
+    [SyncVar]
     public int SailHealth;                      //Current sail health
+    [SyncVar]
+    public int MaxSailHealth;
     [SyncVar]
     public int CargoSpace;                      //Total cargo space
     [SyncVar]
@@ -413,7 +417,8 @@ public class Ship : NetworkBehaviour
     /// </summary>
     /// <param name="hdam">Hull damage</param>
     /// <param name="sdam">Sail damage</param>
-    public void DamageShip(int hdam, int sdam)
+    [Command]
+    public void CmdDamageShip(int hdam, int sdam)
     {
         HullHealth -= hdam;
         SailHealth -= sdam;
