@@ -155,6 +155,8 @@ public enum ShotType
 
 public class Ship : NetworkBehaviour
 {
+    PlayerScript OwningPlayer;
+
     [SyncVar(hook = "OnNameChanged")]
     public string Name;                         //Name of the ship
     [SyncVar]
@@ -174,9 +176,18 @@ public class Ship : NetworkBehaviour
     [SyncVar]
     public Cargo Cargo;                         //Reference to this ship's cargo
     [SyncVar]
+    public int Gold;
+    [SyncVar]
     public int DamageMod;                       //Damage modifier
     [SyncVar]
     public int ReloadSpeed;                     //Time in seconds it takes to reload cannons
+    [SyncVar]
+    public bool MoveActionTaken;                //Tracks if this ship has moved this turn
+    [SyncVar]
+    public bool CombatActionTaken;              //Tracks if this ship has been in combat this turn
+
+    public HexTile CurrentPosition;
+    public List<WaterHex> MovementQueue;
 
     public string ShipType;                     //Text representation of ship type
     public int MaxCannons;                      //Max cannon count
@@ -191,17 +202,20 @@ public class Ship : NetworkBehaviour
         if (!other)
             return;
 
-        Name = other.Name;
-        HullHealth = other.HullHealth;
-        SailHealth = other.SailHealth;
-        CargoSpace = other.CargoSpace;
-        Cannons = other.Cannons;
-        FullSpeed = other.FullSpeed;
-        CrewNeeded = other.CrewNeeded;
-        DodgeChance = other.DodgeChance;
-        Cargo = other.Cargo;
-        DamageMod = other.DamageMod;
-        ReloadSpeed = other.ReloadSpeed;
+        CmdCopyShip(
+            other.Name,
+            other.HullHealth,
+            other.SailHealth,
+            other.CargoSpace,
+            other.Cannons,
+            other.FullSpeed,
+            other.CrewNeeded,
+            other.DodgeChance,
+            other.Cargo,
+            other.DamageMod,
+            other.ReloadSpeed);
+
+
         ShipType = other.ShipType;
         MaxCannons = other.MaxCannons;
         Speed = other.Speed;
@@ -211,9 +225,25 @@ public class Ship : NetworkBehaviour
         CurrentCrew = other.CurrentCrew;
     }
 
+    [Command]
+    public void CmdCopyShip(string name, int hh, int sh, int cs, int can, int fs, int cn, int dc, Cargo car, int dm, int rs)
+    {
+        Name = name;
+        HullHealth = hh;
+        SailHealth = sh;
+        CargoSpace = cs;
+        Cannons = can;
+        FullSpeed = fs;
+        CrewNeeded = cn;
+        DodgeChance = dc;
+        Cargo = car;
+        DamageMod = dm;
+        ReloadSpeed = rs;
+    }
+
 	void Start()
     {
-        
+        MovementQueue = new List<WaterHex>();
 	}
 
     void Update()
@@ -226,13 +256,26 @@ public class Ship : NetworkBehaviour
         base.OnStartAuthority();
 
         PlayerInfoManager.Instance.AddShipToList(this);
+
+        Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
+        if (!PlayerScript.MyPlayer.Ships.Contains(this))
+            PlayerScript.MyPlayer.Ships.Add(this);
     }
-    
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        MoveActionTaken = false;
+        CombatActionTaken = false;
+
+        Cargo = new Cargo(500, 50, 0, 0, 0);
+    }
+
     /// <summary>
     /// Server-side function to set the ship class, which determines base stats
     /// </summary>
     /// <param name="new_class">Class to set ship class to</param>
-    [Server]
     public void SetClass(ShipClass new_class)
     {
         Class = new_class;
@@ -248,6 +291,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 5;
                 CrewNeeded = 6;
                 DodgeChance = 40;
+                Price = 50;
                 break;
             case ShipClass.Sloop:
                 HullHealth = 60;
@@ -257,6 +301,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 5;
                 CrewNeeded = 9;
                 DodgeChance = 35;
+                Price = 100;
                 break;
             case ShipClass.Barque:
                 HullHealth = 80;
@@ -266,6 +311,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 4;
                 CrewNeeded = 11;
                 DodgeChance = 30;
+                Price = 150;
                 break;
             case ShipClass.Brig:
                 HullHealth = 120;
@@ -275,6 +321,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 3;
                 CrewNeeded = 14;
                 DodgeChance = 25;
+                Price = 200;
                 break;
             case ShipClass.Merchantman:
                 HullHealth = 120;
@@ -284,6 +331,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 3;
                 CrewNeeded = 12;
                 DodgeChance = 25;
+                Price = 200;
                 break;
             case ShipClass.MerchantGalleon:
                 HullHealth = 200;
@@ -294,6 +342,7 @@ public class Ship : NetworkBehaviour
                 CrewNeeded = 19;
                 DodgeChance = 15;
                 ShipType = "Merchant Galleon";
+                Price = 500;
                 break;
             case ShipClass.CombatGalleon:
                 HullHealth = 250;
@@ -304,6 +353,7 @@ public class Ship : NetworkBehaviour
                 CrewNeeded = 31;
                 DodgeChance = 15;
                 ShipType = "Combat Galleon";
+                Price = 800;
                 break;
             case ShipClass.Frigate:
                 HullHealth = 300;
@@ -313,6 +363,7 @@ public class Ship : NetworkBehaviour
                 Speed = FullSpeed = 1;
                 CrewNeeded = 43;
                 DodgeChance = 10;
+                Price = 1500;
                 break;
         }
     }
@@ -418,7 +469,7 @@ public class Ship : NetworkBehaviour
         CrewMorale = Mathf.Clamp(CrewMorale + modifier, 0, 100);
         if (CrewMorale <= 30)
         {
-            GetComponentInParent<Fleet>().CmdRemoveShip(this.name);
+            //mutiny
         }
     }
 
@@ -430,5 +481,150 @@ public class Ship : NetworkBehaviour
     {
         GameConsole.Instance.GenericLog(Name);
         name = new_name;
+    }
+
+    /// <summary>
+    /// Server-side command to place newly spawned ship
+    /// </summary>
+    /// <param name="x">Q-coordinate of tile to spawn on</param>
+    /// <param name="y">R-coordinate of tile to spawn on</param>
+    [Command]
+    public void CmdSpawnOnTile(int x, int y)
+    {
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        transform.SetParent(new_tile.transform, false);
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        CurrentPosition = new_tile;
+
+        RpcSpawnOnTile(x, y);
+    }
+
+    /// <summary>
+    /// Client-side command to place newly spawned ship
+    /// </summary>
+    /// <param name="x">Q-coordinate of tile to spawn on</param>
+    /// <param name="y">R-coordinate of tile to spawn on</param>
+    [ClientRpc]
+    public void RpcSpawnOnTile(int x, int y)
+    {
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        transform.SetParent(new_tile.transform, false);
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+        CurrentPosition = new_tile;
+    }
+
+    /// <summary>
+    /// Server-side command to add tile to movement queue
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    [Command]
+    public void CmdQueueMove(int x, int y)
+    {
+        WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
+        if (new_tile)
+            MovementQueue.Add(new_tile);
+    }
+
+    /// <summary>
+    /// Server-side command to move ship along movement queue
+    /// </summary>
+    [Command]
+    public void CmdMoveShip()
+    {
+        if (MoveActionTaken)
+            return;
+
+        transform.SetParent(MovementQueue[MovementQueue.Count - 1].transform, true);
+        CurrentPosition = MovementQueue[MovementQueue.Count - 1];
+
+        RpcMoveShip(MovementQueue[MovementQueue.Count - 1].HexCoord.Q, MovementQueue[MovementQueue.Count - 1].HexCoord.R);
+
+        StopAllCoroutines();
+        StartCoroutine(SmoothMove());
+
+        MoveActionTaken = true;
+    }
+
+    /// <summary>
+    /// Smoothly moves ship along tiles in movement queue
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SmoothMove()
+    {
+        foreach (HexTile dest_tile in MovementQueue)
+        {
+            Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
+            transform.LookAt(destination);
+
+            Vector3 direction = (destination - transform.position) / 20.0f;
+            float step = direction.magnitude;
+
+            for (int i = 0; i < 20; i++)
+            {
+                transform.Translate(Vector3.forward * step);
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            transform.position = destination;
+
+            yield return null;
+        }
+
+        MovementQueue.Clear();
+
+        transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+    }
+
+    /// <summary>
+    /// Client-side command to move ship
+    /// </summary>
+    /// <param name="x">Q coordinate of tile</param>
+    /// <param name="y">R coordinate of tile</param>
+    [ClientRpc]
+    public void RpcMoveShip(int x, int y)
+    {
+        HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
+
+        transform.SetParent(new_tile.transform, true);
+        CurrentPosition = new_tile;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        WaterHex water_hex = other.GetComponent<WaterHex>();
+        LandHex land_hex = other.GetComponent<LandHex>();
+
+        if (water_hex && water_hex.Fog)
+            water_hex.RevealTile();
+
+        if (land_hex && !land_hex.Discovered)
+            land_hex.DiscoverTile();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        WaterHex water_hex = other.GetComponent<WaterHex>();
+
+        if (water_hex && !water_hex.Fog)
+            water_hex.HideTile();
+    }
+
+    void OnMouseDown()
+    {
+        MovementManager.Instance.SelectShip(this);
+    }
+
+    void OnMouseEnter()
+    {
+        Tooltip.Instance.EnableTooltip(true);
+        Tooltip.Instance.UpdateTooltip(name);
+    }
+
+    void OnMouseExit()
+    {
+        Tooltip.Instance.EnableTooltip(false);
     }
 }

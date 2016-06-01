@@ -12,20 +12,20 @@ public class PlayerScript : NetworkBehaviour
     public string Name;                             //Player username
 
     public Nation Nationality;                      //Player nationality
-    public int TotalGold;                           //Total gold across all fleets
-    public int TotalShips;                          //Total ships across all fleets
+    public int TotalGold;                           //Total gold across all ships
+    public int TotalShips;                          //Total ships across all ships
     public int TotalCrew;                           //Total crew across all ships
-    public List<Fleet> Fleets;                      //List of fleets controlled by player
+    public List<Ship> Ships;
 
     //english, spanish, dutch, french
     public int[] Reputation;                        //Array of reputation values with each nation
 
-    public GameObject FleetPrefab;                  //Prefab for instantiating fleets
+    public GameObject ShipPrefab;                  //Prefab for instantiating ships
 
-    public Port SpawnPort;                          //Reference to port to new fleet at
-    public Fleet ActiveFleet;                       //Player's currently active fleet
+    public Port SpawnPort;                          //Reference to port to new ship at
+    public Ship ActiveShip;                       //Player's currently active ship
 
-    public int NewFleetID;                          //Dev variable for creating unique names for new fleets
+    public int NewShipID;                          //Dev variable for creating unique names for new ships
 
     [SyncVar]
     public bool ReadyForNextTurn;                   //Flag to see if player is ready for next turn
@@ -55,6 +55,8 @@ public class PlayerScript : NetworkBehaviour
         base.OnStartAuthority();
 
         MyPlayer = this;
+
+        StartCoroutine(WaitForGrid());
     }
 
     public override void OnStartClient()
@@ -66,10 +68,10 @@ public class PlayerScript : NetworkBehaviour
         TotalGold = 0;
         TotalShips = 0;
         TotalCrew = 0;
-        Fleets = new List<Fleet>();
+        Ships = new List<Ship>();
         Reputation = new int[4] { 50, 50, 50, 50 };
 
-        NewFleetID = 0;
+        NewShipID = 0;
     }
 
     void Update()
@@ -79,8 +81,8 @@ public class PlayerScript : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (ActiveFleet != null)
-                ActiveFleet = null;
+            if (ActiveShip != null)
+                ActiveShip = null;
             else if(OpenUI)
             {
                 PanelUtilities.DeactivatePanel(OpenUI);
@@ -100,22 +102,13 @@ public class PlayerScript : NetworkBehaviour
         {
             Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
             SpawnPort = AllPorts[Random.Range(0, AllPorts.Length)];
-            CmdSpawnFleet(string.Format("{0}Fleet{1}", Name, ++NewFleetID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            ActiveFleet.CmdSpawnShip();
-        }
-        if (Input.GetKeyDown(KeyCode.P) && ActiveFleet)
-        {
-            CargoManager.Instance.PopulateShipList(ActiveFleet);
-            CargoManager.Instance.OpenCargoManager();
+            CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++NewShipID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.F))
             FeedbackManager.Instance.OpenFeedback();
 
-        if(Input.GetKey(KeyCode.T))
+        if(Input.GetKeyDown(KeyCode.T))
         {
             OpenUI = TechTree.Instance.GetComponent<CanvasGroup>();
             PanelUtilities.ActivatePanel(OpenUI);
@@ -163,24 +156,42 @@ public class PlayerScript : NetworkBehaviour
     }
 
     /// <summary>
-    /// Server-side command to spawn new fleet
+    /// Server-side command to spawn new ship
     /// </summary>
-    /// <param name="fleet_name">Name of new fleet</param>
-    /// <param name="x">Q coordinate of tile to spawn fleet on</param>
-    /// <param name="y">R coordinate of tile to spawn fleet on</param>
+    /// <param name="ship_name">Name of new ship</param>
+    /// <param name="x">Q coordinate of tile to spawn ship on</param>
+    /// <param name="y">R coordinate of tile to spawn ship on</param>
     [Command]
-    public void CmdSpawnFleet(string fleet_name, int x, int y)
+    public void CmdSpawnShip(string ship_name, int x, int y)
     {
-        Fleet new_fleet = Instantiate(FleetPrefab).GetComponent<Fleet>();
-        new_fleet.Name = fleet_name;
+        Ship new_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
+        new_ship.Name = ship_name;
+        new_ship.SetClass((ShipClass)Random.Range(0, 8));
+
+        if (Ships.Count == 0)
+            new_ship.Gold = 1000;
 
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
-
-        Fleets.Add(new_fleet);
-
-        NetworkServer.SpawnWithClientAuthority(new_fleet.gameObject, gameObject);
         
-        new_fleet.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
+        AddShip(new_ship);
+
+        NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, gameObject);
+        
+        new_ship.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
+    }
+
+    public void AddShip(Ship new_ship)
+    {
+        Ships.Add(new_ship);
+        PlayerInfoManager.Instance.AddShipToList(new_ship);
+        PlayerInfoManager.Instance.UpdateAllStats();
+    }
+
+    public void RemoveShip(Ship ship_to_remove)
+    {
+        Ships.Remove(ship_to_remove);
+        PlayerInfoManager.Instance.RemoveShipFromList(ship_to_remove);
+        PlayerInfoManager.Instance.UpdateAllStats();
     }
 
     /// <summary>
@@ -254,5 +265,24 @@ public class PlayerScript : NetworkBehaviour
     {
         if(this == MyPlayer)
             TurnManager.Instance.ActionButtonText.text = text;
+    }
+
+    IEnumerator WaitForGrid()
+    {
+        while (!HexGrid.Instance)
+            yield return null;
+        while (!HexGrid.Instance.DoneGenerating)
+            yield return null;
+
+        SpawnInitialShip();
+    }
+
+    void SpawnInitialShip()
+    {
+        Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
+        SpawnPort = AllPorts[Random.Range(0, AllPorts.Length)];
+        CmdSpawnShip(NameGenerator.Instance.GetShipName(),
+            SpawnPort.SpawnTile.HexCoord.Q,
+            SpawnPort.SpawnTile.HexCoord.R);
     }
 }

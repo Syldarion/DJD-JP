@@ -49,13 +49,8 @@ public class TechTree : MonoBehaviour
         switch(split[0])
         {
             case "Ship":
-                foreach (Fleet f in PlayerScript.MyPlayer.Fleets)
-                    foreach (Ship s in f.Ships)
-                        s.CmdUpdateStat(rest);
-                break;
-            case "Fleet":
-                foreach (Fleet f in PlayerScript.MyPlayer.Fleets)
-                    f.CmdUpdateStat(rest);
+                foreach (Ship s in PlayerScript.MyPlayer.Ships)
+                    s.CmdUpdateStat(rest);
                 break;
             case "Player":
                 PlayerScript.MyPlayer.CmdUpdateStat(rest);

@@ -8,7 +8,6 @@ public class MovementManager : MonoBehaviour
     public static MovementManager Instance;
 
     public PlayerScript ReferencePlayer;            //Reference to player this script manages movement for
-    public FleetManager FleetManager;               //Reference to existing fleet manager
 
     public List<WaterHex> MovementQueue;            //List of water tiles to move along
 
@@ -43,60 +42,57 @@ public class MovementManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Select a new active fleet for player
+    /// Select a new active ship for player
     /// </summary>
-    /// <param name="selected_fleet">Fleet to select</param>
-    public void SelectFleet(Fleet selected_fleet)
+    /// <param name="selected_ship">Ship to select</param>
+    public void SelectShip(Ship selected_ship)
     {
-        if (ReferencePlayer.Fleets.Contains(selected_fleet))
-            ReferencePlayer.ActiveFleet = selected_fleet;
+        if (ReferencePlayer.Ships.Contains(selected_ship))
+            ReferencePlayer.ActiveShip = selected_ship;
     }
 
     /// <summary>
-    /// Move active fleet if it can move along the given path
+    /// Move active ship if it can move along the given path
     /// </summary>
-    public void MoveFleet()
+    public void MoveShip()
     {
-        if(!ReferencePlayer.ActiveFleet)
+        if(!ReferencePlayer.ActiveShip)
         {
             ClearQueue();
             return;
         }
 
-        if (!HexGrid.MovementHex(ReferencePlayer.ActiveFleet.CurrentPosition, 1).Contains(MovementQueue[0]))
+        if (!HexGrid.MovementHex(ReferencePlayer.ActiveShip.CurrentPosition, 1).Contains(MovementQueue[0]))
         {
             ClearQueue();
             return;
         }
 
-        int remaining_moves = ReferencePlayer.ActiveFleet.FleetSpeed;
+        int remaining_moves = ReferencePlayer.ActiveShip.Speed;
         WaterHex next_tile;
-        Fleet tile_fleet;
+        Ship tile_ship;
 
         for(int i = 0; i < MovementQueue.Count && i < remaining_moves; i++)
         {
             next_tile = MovementQueue[i];
-            tile_fleet = next_tile.GetComponentInChildren<Fleet>();
+            tile_ship = next_tile.GetComponentInChildren<Ship>();
 
-            if (!tile_fleet)
-                ReferencePlayer.ActiveFleet.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
+            if (!tile_ship)
+                ReferencePlayer.ActiveShip.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
             else
             {
-                if (ReferencePlayer.Fleets.Contains(tile_fleet))
+                if (ReferencePlayer.Ships.Contains(tile_ship))
                 {
-                    FleetManager.PopulateFleetManager(ReferencePlayer.ActiveFleet, tile_fleet);
-                    remaining_moves = 0;
+                    //i dunno
                 }
                 else
                 {
-                    CombatManager.Instance.PopulateFleetLists(ReferencePlayer.ActiveFleet, tile_fleet);
-                    CombatManager.Instance.OpenCombatPanel();
-                    remaining_moves = 0;
+                    //do combat
                 }
             }
         }
 
-        ReferencePlayer.ActiveFleet.CmdMoveFleet();
+        ReferencePlayer.ActiveShip.CmdMoveShip();
         ClearQueue();
     }
 

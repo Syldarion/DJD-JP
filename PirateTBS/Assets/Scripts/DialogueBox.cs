@@ -14,12 +14,16 @@ public class DialogueBox : MonoBehaviour
     public Button OptionButtonPrefab;                   //Reference to the prefab for instantiating option buttons
 
     List<Button> options;                               //List of options in the dialogue box
+    List<RectTransform> panels;
     RectTransform current_option_panel;                 //Reference to the current option panel
 
 	void Start()
     {
         DialogueOpen = false;
         options = new List<Button>();
+        panels = new List<RectTransform>();
+
+        CurrentDialogue = this;
 	}
 	
 	void Update()
@@ -45,6 +49,12 @@ public class DialogueBox : MonoBehaviour
         DialogueOpen = false;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
+
+        foreach (Button b in options) Destroy(b.gameObject);
+        foreach (RectTransform rt in panels) Destroy(rt.gameObject);
+
+        options.Clear();
+        panels.Clear();
     }
 
     /// <summary>
@@ -54,14 +64,24 @@ public class DialogueBox : MonoBehaviour
     /// <param name="duration">Duration of the dialog box [0 = infinite]</param>
     public void NewDialogue(string message, float duration = 0.0f)
     {
-        if(DialogueOpen)
-            CurrentDialogue.CloseDialogue();
+        CurrentDialogue = this;
 
         OpenDialogue();
         DialogueMessage.text = message;
 
         if (duration > 0.0f)
-            Destroy(this.gameObject, duration);
+            StartCoroutine(TimedDialogue(duration));
+    }
+
+    IEnumerator TimedDialogue(float time)
+    {
+        while(time > 0.0f)
+        {
+            time -= Time.deltaTime;
+            yield return null;
+        }
+
+        CloseDialogue();
     }
 
     /// <summary>
@@ -75,6 +95,8 @@ public class DialogueBox : MonoBehaviour
         {
             current_option_panel = Instantiate(OptionPanelPrefab).GetComponent<RectTransform>();
             current_option_panel.SetParent(transform, false);
+            current_option_panel.gameObject.SetActive(true);
+            panels.Add(current_option_panel);
         }
 
         Button new_button = Instantiate(OptionButtonPrefab).GetComponent<Button>();
@@ -82,6 +104,8 @@ public class DialogueBox : MonoBehaviour
 
         new_button.GetComponentInChildren<Text>().text = option_text;
         new_button.onClick.AddListener(option_action);
+
+        new_button.gameObject.SetActive(true);
 
         options.Add(new_button);
     }

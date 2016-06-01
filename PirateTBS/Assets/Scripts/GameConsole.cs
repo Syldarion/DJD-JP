@@ -25,15 +25,13 @@ public class GameConsole : MonoBehaviour
         HelpText = new Dictionary<string, string>();
 
         RegisterCommand("Help", Help);
-        RegisterCommand("ListFleets", ListFleets);
         RegisterCommand("ListShips", ListShips);
         RegisterCommand("ListPorts", ListPorts);
         RegisterCommand("ListInventory", ListInventory);
         RegisterCommand("ModifyStat", ModifyStat);
 
         HelpText.Add("Help", "Usage: Help <command>");
-        HelpText.Add("ListFleets", "Usage: ListFleets");
-        HelpText.Add("ListShips", "Usage: ListShips <fleet>");
+        HelpText.Add("ListShips", "Usage: ListShips");
         HelpText.Add("ListPorts", "Usage: ListPorts");
         HelpText.Add("ListInventory", "Usage: ListInventory <container>");
         HelpText.Add("ModifyStat", "Usage: ModifyStat <object_type>,<object_name>,<modification_string>");
@@ -169,44 +167,12 @@ public class GameConsole : MonoBehaviour
     }
 
     /// <summary>
-    /// Command to list all fleets in-game
+    /// Command to list all ships in-game
     /// </summary>
     /// <param name="input">User input, not used</param>
-    void ListFleets(string input)
-    {
-        Fleet[] fleets = FindObjectsOfType<Fleet>();
-
-        string fleet_str = string.Empty;
-        foreach (Fleet f in fleets)
-            fleet_str += string.Format("{0}\n\t", f.name);
-
-        AddToLog(fleet_str);
-    }
-
-    /// <summary>
-    /// List all ships in a fleet
-    /// </summary>
-    /// <param name="input">User input containing fleet name</param>
     void ListShips(string input)
     {
-        string[] tokens = input.Split(' ', '\t');
-        if(tokens.Length < 1)
-        {
-            AddToLog("Missing fleet arg");
-            return;
-        }
-        Fleet fleet = GameObject.Find(tokens[0]).GetComponent<Fleet>();
-        if(!fleet)
-        {
-            AddToLog("Invalid fleet name (arg 1)");
-            return;
-        }
-
-        List<Ship> ships = new List<Ship>();
-
-        for (int i = 0; i < fleet.transform.childCount; i++)
-            if (fleet.transform.GetChild(i).GetComponent<Ship>())
-                ships.Add(fleet.transform.GetChild(i).GetComponent<Ship>());
+        Ship[] ships = FindObjectsOfType<Ship>();
 
         string ship_str = string.Empty;
         foreach (Ship s in ships)
@@ -221,10 +187,10 @@ public class GameConsole : MonoBehaviour
     /// <param name="input">User input, not used</param>
     void ListPorts(string input)
     {
-        Port[] fleets = FindObjectsOfType<Port>();
+        Port[] ports = FindObjectsOfType<Port>();
 
         string port_str = string.Empty;
-        foreach (Port p in fleets)
+        foreach (Port p in ports)
             port_str += string.Format("{0}\n\t", p.name);
 
         AddToLog(port_str);
@@ -281,7 +247,7 @@ public class GameConsole : MonoBehaviour
     /// <summary>
     /// Modifies the stats of a given object
     /// </summary>
-    /// <param name="input">User input, containing object type [player, ship, fleet], object name, and modification string</param>
+    /// <param name="input">User input, containing object type [player, ship], object name, and modification string</param>
     void ModifyStat(string input)
     {
         string[] args = input.Split(',');
@@ -296,15 +262,6 @@ public class GameConsole : MonoBehaviour
                     break;
                 }
                 ship.CmdUpdateStat(args[2]);
-                break;
-            case "Fleet":
-                Fleet fleet = GameObject.Find(args[1]).GetComponent<Fleet>();
-                if(!fleet)
-                {
-                    AddToLog("Fleet not found");
-                    break;
-                }
-                fleet.CmdUpdateStat(args[2]);
                 break;
             case "Player":
                 PlayerScript player = GameObject.Find(args[1]).GetComponent<PlayerScript>();

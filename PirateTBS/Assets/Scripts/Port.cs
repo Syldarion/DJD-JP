@@ -10,15 +10,15 @@ public class Port : NetworkBehaviour
     [SyncVar]
     public string PortName;                     //Name of port
     public Nationality PortNationality;         //Associated nation of port
-    public HexTile SpawnTile;                   //Tile fleets from port are spawned on
+    public HexTile SpawnTile;                   //Tile ships from port are spawned on
     [SyncVar] public int PortGold;
 
     [SyncVar]
     public Cargo Market;                        //Contents of port's marketplace
-    public Fleet Shipyard;                      //Contents of port's shipyard
+    public List<Ship> Shipyard;                      //Contents of port's shipyard
     public List<ResourceGenerator> Resources;   //List of resource generators belonging to the port
 
-    public GameObject FleetPrefab;              //Fleet prefab for spawning new fleets
+    public GameObject ShipPrefab;              //Ship prefab for spawning new ships
     public GameObject ResourceGeneratorPrefab;  //Generator prefab for spawning new resource generators
 
     public static int[] DefaultPortPrices = {10, 20, 30, 40, 80};
@@ -26,9 +26,32 @@ public class Port : NetworkBehaviour
 
     public SyncListInt PortPrices = new SyncListInt();
 
+    public int GoldForPlayer;
+
     void Start()
     {
+        
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
         GenerateResources();
+
+        GoldForPlayer = 0;
+
+        Shipyard = new List<Ship>();
+        for (int i = 0; i < 4; i++)
+        {
+            GameObject new_obj = new GameObject();
+            new_obj.AddComponent(typeof(Ship));
+            Ship new_ship = new_obj.GetComponent<Ship>();
+            new_ship.SetClass((ShipClass)Random.Range(0, 8));
+            new_obj.name = new_ship.Name = NameGenerator.Instance.GetShipName();
+
+            Shipyard.Add(new_ship);
+        }
     }
 
     void Update()
@@ -98,36 +121,6 @@ public class Port : NetworkBehaviour
             port_index = Random.Range(0, 4);
 
         PortName = name = NameGenerator.Instance.GetPortName(port_index);
-
-        Shipyard = Instantiate(FleetPrefab).GetComponent<Fleet>();
-        Shipyard.Name = string.Format("{0}Shipyard", PortName);
-        Shipyard.transform.position = new Vector3(0.0f, 0.0f, 10000.0f);
-
-        NetworkServer.Spawn(Shipyard.gameObject);
-
-        RpcSetShipyard(Shipyard.Name);
-    }
-
-    /// <summary>
-    /// Client-side call to set shipyard
-    /// </summary>
-    /// <param name="name">Name of shipyard to attach to port</param>
-    [ClientRpc]
-    void RpcSetShipyard(string name)
-    {
-        StartCoroutine(WaitForShipyard(name));
-    }
-
-    /// <summary>
-    /// Waits for shipyard to be spawned
-    /// </summary>
-    /// <param name="name">Name of shipyard to wait for</param>
-    /// <returns></returns>
-    IEnumerator WaitForShipyard(string name)
-    {
-        while (!GameObject.Find(name))
-            yield return null;
-        Shipyard = GameObject.Find(name).GetComponent<Fleet>();
     }
     
     /// <summary>
@@ -146,9 +139,8 @@ public class Port : NetworkBehaviour
 
     void OnMouseDown()
     {
-        Fleet current_fleet = PlayerScript.MyPlayer.ActiveFleet;
         PortShopManager.Instance.CurrentPort = this;
-        PortShopManager.Instance.OpenShop(current_fleet);
+        PortShopManager.Instance.OpenShop(PlayerScript.MyPlayer.ActiveShip);
     }
 
     void OnMouseEnter()

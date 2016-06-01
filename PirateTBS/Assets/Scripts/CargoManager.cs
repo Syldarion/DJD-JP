@@ -51,30 +51,6 @@ public class CargoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Populates dropdowns with ships
-    /// </summary>
-    /// <param name="fleet">Fleet to grab ships from</param>
-    public void PopulateShipList(Fleet fleet)
-    {
-        if(fleet.Ships.Count < 2)
-        {
-            CloseCargoManager();
-            return;
-        }
-
-        LefthandShips.options.Clear();
-        RighthandShips.options.Clear();
-
-        foreach(Ship s in fleet.Ships)
-        {
-            LefthandShips.options.Add(new Dropdown.OptionData(s.Name));
-            RighthandShips.options.Add(new Dropdown.OptionData(s.name));
-        }
-
-        PopulateCargoList(fleet.Ships[0], fleet.Ships[1]);
-    }
-
-    /// <summary>
     /// Populates cargo lists
     /// </summary>
     /// <param name="ship_a">Left-hand ship</param>

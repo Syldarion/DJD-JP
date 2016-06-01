@@ -40,17 +40,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060257e4c85ec2744afcd06cd560f52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIOpen: 0
+  OpenUI: {fileID: 0}
   Name: 
   TotalGold: 0
   TotalShips: 0
   TotalCrew: 0
-  Fleets: []
+  Ships: []
   Reputation: 
-  FleetPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
+  ShipPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
   SpawnPort: {fileID: 0}
-  ActiveFleet: {fileID: 0}
-  NewFleetID: 0
+  ActiveShip: {fileID: 0}
+  NewShipID: 0
+  ReadyForNextTurn: 0
+  ResourceCostMod: 0
+  ShipCostMod: 0
+  ResourceGenMod: 0
+  MoraleMod: 0
+  ReputationMod: 0
 --- !u!114 &11495708
 MonoBehaviour:
   m_ObjectHideFlags: 1

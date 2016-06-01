@@ -53,8 +53,8 @@ public class TurnManager : NetworkBehaviour
             PlayerScript player = go.GetComponent<PlayerScript>();
             if (player)
             {
-                foreach (Fleet f in player.Fleets)
-                    f.MoveActionTaken = f.CombatActionTaken = false;
+                foreach (Ship s in player.Ships)
+                    s.MoveActionTaken = s.CombatActionTaken = false;
             }
         }
 
@@ -79,11 +79,11 @@ public class TurnManager : NetworkBehaviour
     [Client]
     public void EndTurn()
     {
-        foreach(Fleet f in PlayerScript.MyPlayer.Fleets)
+        foreach(Ship s in PlayerScript.MyPlayer.Ships)
         {
-            if(!f.MoveActionTaken)
+            if(!s.MoveActionTaken)
             {
-                Camera.main.GetComponent<PanCamera>().CenterOnTarget(f.transform);
+                Camera.main.GetComponent<PanCamera>().CenterOnTarget(s.transform);
                 StartCoroutine(UnitWaitingForCommand());
                 return;
             }

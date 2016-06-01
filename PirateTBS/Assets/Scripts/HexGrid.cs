@@ -25,9 +25,13 @@ public class HexGrid : NetworkBehaviour
 
     public bool server_side = false;            //Is this grid on the server?
 
+    [SyncVar]
+    public bool DoneGenerating;
+
 	void Start()
     {
         Instance = this;
+        DoneGenerating = false;
 
         Ports = new List<Port>();
 
@@ -51,6 +55,7 @@ public class HexGrid : NetworkBehaviour
         base.OnStartServer();
 
         server_side = true;
+        DoneGenerating = false;
     }
 
     void Update()
@@ -251,6 +256,8 @@ public class HexGrid : NetworkBehaviour
 
         LoadingScreenManager.Instance.SetMessage("Done!");
         LoadingScreenManager.Instance.SetProgress(100.0f);
+
+        DoneGenerating = true;
     }
 
     /// <summary>

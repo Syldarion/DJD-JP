@@ -1,31 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class PortShopManager : MonoBehaviour
 {
     [HideInInspector] public static PortShopManager Instance;
 
     public Port CurrentPort;
-    public Fleet DockedFleet;
-    public Ship SelectedShip;
+    public Ship DockedShip;
 
     public RectTransform ActivePanel;
-    public RectTransform FleetResourceList;
-    public RectTransform FleetShipyardList;
+    public RectTransform ShipResourceList;
     public RectTransform PortResourceList;
+    public Button ShipyardBuyButtonPrefab;
+    public Text DockedShipPriceText;
     public RectTransform PortShipyardList;
     public Button ResourceButtonPrefab;
     public RectTransform ResourceTileList;
-    public Dropdown ShipSelection;
     public Text[] ResourcePriceTexts;
-    public Text[] FleetGoldTexts;
+    public Text[] ShipGoldTexts;
     public Text[] PortGoldTexts;
-    public SelectionGroup ShipyardFleetSelection;
-    public SelectionGroup ShipyardPortSelection;
-
-    public ShipStatBlock StatBlockPrefab;
+    public Button CollectGoldButton;
 
     void Start()
     {
@@ -36,24 +35,27 @@ public class PortShopManager : MonoBehaviour
     {
     }
 
-    public void OpenShop(Fleet fleet_to_dock)
+    public void OpenShop(Ship ship_to_dock)
     {
-        if (fleet_to_dock.Ships.Count < 1)
+        if (ship_to_dock == null)
             return;
 
         PlayerScript.MyPlayer.OpenUI = GetComponent<CanvasGroup>();
 
         PanelUtilities.ActivatePanel(GetComponent<CanvasGroup>());
 
-        DockedFleet = fleet_to_dock;
-        SelectedShip = DockedFleet.Ships[0];
+        DockedShip = ship_to_dock;
 
-        PopulateShipDropdown();
+        if (CurrentPort.GoldForPlayer > 0)
+        {
+            CollectGoldButton.gameObject.SetActive(true);
+            CollectGoldButton.GetComponentInChildren<Text>().text = string.Format("Collect {0} Gold", CurrentPort.GoldForPlayer);
+        }
+
         PopulatePortMarket();
         PopulateShipResources();
         PopulateResourcePrices();
-        PopulatePortShipyard();
-        PopulatePlayerShipyard(fleet_to_dock);
+        PopulateShipyard();
         PopulateResourceList();
         UpdateGoldText();
     }
@@ -63,6 +65,8 @@ public class PortShopManager : MonoBehaviour
         PlayerScript.MyPlayer.OpenUI = null;
 
         PanelUtilities.DeactivatePanel(GetComponent<CanvasGroup>());
+
+        CollectGoldButton.gameObject.SetActive(false);
 
         ClearPortManager();
     }
@@ -79,26 +83,6 @@ public class PortShopManager : MonoBehaviour
         PanelUtilities.ActivatePanel(ActivePanel.GetComponent<CanvasGroup>());
     }
 
-    public void OnShipDropdownChange(int new_value)
-    {
-        foreach (var player_fleet_ship in DockedFleet.Ships.Where(player_fleet_ship => player_fleet_ship.Name == ShipSelection.options[new_value].text))
-            SelectedShip = player_fleet_ship.GetComponent<Ship>();
-
-        PopulateShipResources();
-    }
-
-    /// <summary>
-    ///     Populates the ship list
-    /// </summary>
-    public void PopulateShipDropdown()
-    {
-        ShipSelection.ClearOptions();
-
-        var dropdown_options = DockedFleet.Ships.Select(player_fleet_ships => new Dropdown.OptionData(player_fleet_ships.name)).ToList();
-
-        ShipSelection.AddOptions(dropdown_options);
-    }
-
     /// <summary>
     ///     Populates ship side of market
     /// </summary>
@@ -107,12 +91,12 @@ public class PortShopManager : MonoBehaviour
         string[] resource_types = {"Food", "Goods", "Sugar", "Spice", "Luxuries"};
         foreach (var s in resource_types)
         {
-            var value = SelectedShip.Cargo.GetCargoAmount(s);
+            var value = DockedShip.Cargo.GetCargoAmount(s);
 
-            FleetResourceList.FindChild(string.Format("{0}/Text", s)).GetComponent<Text>().text =
+            ShipResourceList.FindChild(string.Format("{0}/Text", s)).GetComponent<Text>().text =
                 string.Format("{0}\n{1}", s, value);
-            FleetResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().UpdateValue(0);
-            FleetResourceList.FindChild(string.Format("{0}/Quantity", s))
+            ShipResourceList.FindChild(string.Format("{0}/Quantity", s)).GetComponent<NumericUpDown>().UpdateValue(0);
+            ShipResourceList.FindChild(string.Format("{0}/Quantity", s))
                 .GetComponent<NumericUpDown>()
                 .SetMaxValue(value);
         }
@@ -137,33 +121,11 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    ///     Populates the ship list the player has available to sell
-    /// </summary>
-    /// <param name="fleet">Fleet to populate the list with</param>
-    public void PopulatePlayerShipyard(Fleet fleet)
+    public void PopulateResourcePrices()
     {
-        foreach (Transform child in FleetShipyardList.transform) Destroy(child.gameObject);
-
-        foreach (var player_ship in fleet.Ships)
+        for (var i = 0; i < ResourcePriceTexts.Length; i++)
         {
-            var player_ship_stat_block = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
-
-            player_ship_stat_block.PopulateStatBlock(player_ship);
-            player_ship_stat_block.transform.SetParent(FleetShipyardList.transform, false);
-        }
-    }
-
-    public void PopulatePortShipyard()
-    {
-        foreach (Transform child in PortShipyardList.transform) Destroy(child.gameObject);
-
-        foreach (var forsale in CurrentPort.Shipyard.Ships)
-        {
-            var port_ship_stat_block = Instantiate(StatBlockPrefab).GetComponent<ShipStatBlock>();
-
-            port_ship_stat_block.PopulateStatBlock(forsale);
-            port_ship_stat_block.transform.SetParent(FleetShipyardList.transform, false);
+            ResourcePriceTexts[i].text = CurrentPort.PortPrices[i].ToString();
         }
     }
 
@@ -180,18 +142,26 @@ public class PortShopManager : MonoBehaviour
         }
     }
 
-    public void PopulateResourcePrices()
+    public void PopulateShipyard()
     {
-        for(var i = 0; i < ResourcePriceTexts.Length; i++)
+        DockedShipPriceText.text = string.Format("Sell Docked Ship ({0})", DockedShip.Price);
+
+        foreach(Ship s in CurrentPort.Shipyard)
         {
-            ResourcePriceTexts[i].text = CurrentPort.PortPrices[i].ToString();
+            Button new_button = Instantiate(ShipyardBuyButtonPrefab);
+            new_button.transform.SetParent(PortShipyardList, false);
+
+            new_button.onClick.AddListener(() => BuyShip(s));
+
+            new_button.GetComponentInChildren<Text>().text =
+                string.Format("Buy {0} ({1})\n{2}\n{3} Hull / {4} Sail / {5} Cannons",
+                s.Name, s.Price, s.ShipType, s.HullHealth, s.SailHealth, s.Cannons);
         }
     }
 
     public void ClearPortManager()
     {
-        var children = (from Transform child in FleetShipyardList.transform select child.gameObject).ToList();
-        children.AddRange(from Transform child in PortShipyardList.transform select child.gameObject);
+        var children = (from Transform child in PortShipyardList.transform select child.gameObject).ToList();
         children.AddRange(from Transform child in ResourceTileList.transform select child.gameObject);
         foreach (var go in children) Destroy(go);
     }
@@ -203,14 +173,14 @@ public class PortShopManager : MonoBehaviour
         for(var i = 0; i < resource_types.Length; i++)
         {
             var sell_amount =
-                FleetResourceList.FindChild(string.Format("{0}/Quantity", resource_types[i])).GetComponent<NumericUpDown>().Value;
+                ShipResourceList.FindChild(string.Format("{0}/Quantity", resource_types[i])).GetComponent<NumericUpDown>().Value;
 
             var transaction_price = sell_amount * CurrentPort.PortPrices[i];
 
             if (CurrentPort.PortGold < transaction_price) continue;
 
-            SelectedShip.Cargo.TransferTo(ref CurrentPort.Market, resource_types[i], sell_amount);
-            DockedFleet.FleetGold += transaction_price;
+            DockedShip.Cargo.TransferTo(ref CurrentPort.Market, resource_types[i], sell_amount);
+            DockedShip.Gold += transaction_price;
             CurrentPort.PortGold -= transaction_price;
         }
 
@@ -230,10 +200,10 @@ public class PortShopManager : MonoBehaviour
 
             var transaction_price = buy_amount * CurrentPort.PortPrices[i];
 
-            if (DockedFleet.FleetGold < transaction_price) continue;
+            if (DockedShip.Gold < transaction_price) continue;
 
-            CurrentPort.Market.TransferTo(ref SelectedShip.Cargo, resource_types[i], buy_amount);
-            DockedFleet.FleetGold -= transaction_price;
+            CurrentPort.Market.TransferTo(ref DockedShip.Cargo, resource_types[i], buy_amount);
+            DockedShip.Gold -= transaction_price;
             CurrentPort.PortGold += transaction_price;
         }
 
@@ -242,65 +212,80 @@ public class PortShopManager : MonoBehaviour
         UpdateGoldText();
     }
     
-    public void BuyShip()
+    public void BuyShip(Ship ship_to_sell)
     {
-        foreach (var ship in ShipyardPortSelection.SelectedObjects)
-        {
-            var ship_price = ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        if (DockedShip.Gold < ship_to_sell.Price) return;
 
-            if (DockedFleet.FleetGold < ship_price) continue;
+        StartCoroutine(WaitForBoughtShip(PlayerScript.MyPlayer.Ships.Count, ship_to_sell));
+        PlayerScript.MyPlayer.CmdSpawnShip(ship_to_sell.Name, CurrentPort.SpawnTile.HexCoord.Q, CurrentPort.SpawnTile.HexCoord.R);
 
-            DockedFleet.CmdAddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
-            CurrentPort.Shipyard.CmdRemoveShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+        DockedShip.Gold -= ship_to_sell.Price;
 
-            DockedFleet.FleetGold -= ship_price;
-            CurrentPort.PortGold += ship_price;
-        }
-
-        PopulatePlayerShipyard(DockedFleet);
-        PopulatePortShipyard();
         UpdateGoldText();
     }
 
+    IEnumerator WaitForBoughtShip(int old_count, Ship copy_ship)
+    {
+        while (PlayerScript.MyPlayer.Ships.Count <= old_count)
+            yield return null;
+
+        PlayerScript.MyPlayer.Ships[old_count].CopyShip(copy_ship);
+    }
+
+    public void ConfirmSellShip()
+    {
+        if (PlayerScript.MyPlayer.Ships.Count > 1)
+        {
+            DialogueBox.CurrentDialogue.NewDialogue("Are you sure you want to sell your docked ship?");
+            DialogueBox.CurrentDialogue.AddOption("Yes", () => { SellShip(); DialogueBox.CurrentDialogue.CloseDialogue(); });
+            DialogueBox.CurrentDialogue.AddOption("No", () => DialogueBox.CurrentDialogue.CloseDialogue());
+        }
+        else
+            DialogueBox.CurrentDialogue.NewDialogue("You cannot sell your last ship.", 1.0f);
+    }
 
     public void SellShip()
     {
-        foreach (var ship in ShipyardFleetSelection.SelectedObjects)
-        {
-            var ship_price = ship.GetComponent<ShipStatBlock>().ReferenceShip.Price;
+        int resource_value = 0;
+        resource_value += DockedShip.Cargo.Food * CurrentPort.PortPrices[0];
+        resource_value += DockedShip.Cargo.Goods * CurrentPort.PortPrices[1];
+        resource_value += DockedShip.Cargo.Sugar * CurrentPort.PortPrices[2];
+        resource_value += DockedShip.Cargo.Spice * CurrentPort.PortPrices[3];
+        resource_value += DockedShip.Cargo.Luxuries * CurrentPort.PortPrices[4];
 
-            if (CurrentPort.PortGold < ship_price) continue;
+        CurrentPort.GoldForPlayer += DockedShip.Price + DockedShip.Gold + resource_value;
+        CloseShop();
 
-            DockedFleet.CmdRemoveShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
-            CurrentPort.Shipyard.CmdAddShip(ship.GetComponent<ShipStatBlock>().ReferenceShip.name);
+        PlayerScript.MyPlayer.RemoveShip(DockedShip);
 
-            DockedFleet.FleetGold += ship_price;
-            CurrentPort.PortGold -= ship_price;
-        }
+        NetworkServer.Destroy(DockedShip.gameObject);
+    }
 
-        PopulatePlayerShipyard(DockedFleet);
-        PopulatePortShipyard();
+    public void CollectGold()
+    {
+        DockedShip.Gold += CurrentPort.GoldForPlayer;
+        CurrentPort.GoldForPlayer = 0;
+        CollectGoldButton.gameObject.SetActive(false);
+
         UpdateGoldText();
     }
 
     public void HireCrew()
     {
+
     }
 
     public void Tavern(int gold_to_spend)
     {
         var bar_tab = 0;
 
-        var all_crew = DockedFleet.Ships.Sum(ship => ship.CurrentCrew);
+        var all_crew = DockedShip.CurrentCrew;
 
         bar_tab = all_crew*gold_to_spend;
 
         if (bar_tab < PlayerScript.MyPlayer.TotalGold)
         {
-            foreach (var ship in DockedFleet.Ships)
-            {
-                ship.CrewMorale += ship.CurrentCrew*gold_to_spend;
-            }
+            DockedShip.CrewMorale += DockedShip.CurrentCrew * gold_to_spend;
         }
 
         PopulatePortMarket();
@@ -309,8 +294,8 @@ public class PortShopManager : MonoBehaviour
 
     public void UpdateGoldText()
     {
-        foreach (var text in FleetGoldTexts)
-            text.text = DockedFleet.FleetGold.ToString();
+        foreach (var text in ShipGoldTexts)
+            text.text = DockedShip.Gold.ToString();
         foreach (var text in PortGoldTexts)
             text.text = CurrentPort.PortGold.ToString();
     }

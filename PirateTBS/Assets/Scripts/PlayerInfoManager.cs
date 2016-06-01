@@ -49,6 +49,13 @@ public class PlayerInfoManager : MonoBehaviour
         Initialize();
     }
 
+    public void UpdateAllStats()
+    {
+        UpdateShipCount();
+        UpdateGoldCount();
+        UpdateAverageMoraleLevel();
+    }
+
     /// <summary>
     /// Change the displayed captain name in player info
     /// </summary>
@@ -60,12 +67,7 @@ public class PlayerInfoManager : MonoBehaviour
 
     public void UpdateShipCount()
     {
-        OwningPlayer.TotalShips = 0;
-
-        foreach (var fleet in OwningPlayer.Fleets)
-            OwningPlayer.TotalShips += fleet.Ships.Count;
-
-        ShipCountText.text = OwningPlayer.TotalShips.ToString();
+        ShipCountText.text = OwningPlayer.Ships.Count.ToString();
     }
 
     /// <summary>
@@ -75,19 +77,15 @@ public class PlayerInfoManager : MonoBehaviour
     {
         OwningPlayer.TotalGold = 0;
 
-        foreach (var fleet in OwningPlayer.Fleets)
-            OwningPlayer.TotalGold += fleet.FleetGold;
+        foreach (var ship in OwningPlayer.Ships)
+            OwningPlayer.TotalGold += ship.Gold;
 
         GoldCountText.text = OwningPlayer.TotalGold.ToString();
     }
 
     public void UpdateAverageMoraleLevel()
     {
-        var morale_sum = (from fleet in OwningPlayer.Fleets let fleet_morale = 
-                          fleet.Ships.Aggregate(0.0f, (current, s) => current + s.CrewMorale)
-                          select fleet_morale/fleet.Ships.Count).Sum();
 
-        AverageMoraleText.text = (morale_sum / OwningPlayer.Fleets.Count).ToString();
     }
 
     /// <summary>
