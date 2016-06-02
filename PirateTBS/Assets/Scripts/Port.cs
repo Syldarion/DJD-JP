@@ -37,6 +37,14 @@ public class Port : NetworkBehaviour
     {
         base.OnStartClient();
 
+        StartCoroutine(WaitForParentTile());
+    }
+
+    IEnumerator WaitForParentTile()
+    {
+        while (transform.parent == null || transform.parent.GetComponent<LandHex>() == null)
+            yield return null;
+
         GenerateResources();
 
         GoldForPlayer = 0;

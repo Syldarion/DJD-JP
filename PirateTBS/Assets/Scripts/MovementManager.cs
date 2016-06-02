@@ -83,11 +83,12 @@ public class MovementManager : MonoBehaviour
             {
                 if (ReferencePlayer.Ships.Contains(tile_ship))
                 {
-                    //i dunno
+                    //open cargo manager
                 }
                 else
                 {
-                    //do combat
+                    CombatManager.Instance.OpenCombatPanel();
+                    CombatManager.Instance.StartCombat(ReferencePlayer.ActiveShip, tile_ship);
                 }
             }
         }
