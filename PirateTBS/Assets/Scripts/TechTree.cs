@@ -22,7 +22,7 @@ public class TechTree : MonoBehaviour
         Instance = this;
         Nodes = new List<TechNode>();
 
-        ModifyingTree = false;
+        ModifyingTree = true;
 	}
 	
 	void Update()

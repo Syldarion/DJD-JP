@@ -270,6 +270,19 @@ public class PortShopManager : MonoBehaviour
         UpdateGoldText();
     }
 
+    public void CollectResources()
+    {
+        foreach (ResourceGenerator generator in CurrentPort.Resources)
+        {
+            if (generator.Owner == PlayerScript.MyPlayer)
+            {
+                generator.GeneratedResources.TransferTo(ref DockedShip.Cargo, "Food", generator.GeneratedResources.Food);
+                generator.GeneratedResources.TransferTo(ref DockedShip.Cargo, "Sugar", generator.GeneratedResources.Sugar);
+                generator.GeneratedResources.TransferTo(ref DockedShip.Cargo, "Spice", generator.GeneratedResources.Spice);
+            }
+        }
+    }
+
     public void HireCrew()
     {
 

@@ -47,7 +47,7 @@ MonoBehaviour:
   TotalCrew: 0
   Ships: []
   Reputation: 
-  ShipPrefab: {fileID: 181660, guid: aea18fef0ecff3841864d78ba53edef8, type: 2}
+  ShipPrefab: {fileID: 181660, guid: c12b2693e6555cb4ca37037047d157d3, type: 2}
   SpawnPort: {fileID: 0}
   ActiveShip: {fileID: 0}
   NewShipID: 0

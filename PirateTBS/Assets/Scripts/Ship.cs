@@ -171,7 +171,7 @@ public class Ship : NetworkBehaviour
     public int CargoSpace;                      //Total cargo space
     [SyncVar]
     public int Cannons;                         //Current cannon count
-    [SyncVar]
+    [SyncVar(hook = "OnFullSpeedChanged")]
     public int FullSpeed;                       //Max speed of ship
     [SyncVar]
     public int CrewNeeded;                      //Crew members needed for ideal ship performance
@@ -206,6 +206,11 @@ public class Ship : NetworkBehaviour
 
     public HexTile CurrentPosition;
     public List<WaterHex> MovementQueue;
+
+    public void OnFullSpeedChanged(int new_speed)
+    {
+        Speed = new_speed;
+    }
 
     public void CopyShip(Ship other)
     {
@@ -430,21 +435,6 @@ public class Ship : NetworkBehaviour
     }
     
     /// <summary>
-    /// Apply damage to ship
-    /// </summary>
-    /// <param name="hdam">Hull damage</param>
-    /// <param name="sdam">Sail damage</param>
-    [Command]
-    public void CmdDamageShip(int hdam, int sdam)
-    {
-        HullHealth -= hdam;
-        SailHealth -= sdam;
-
-        if (HullHealth <= 0) CmdSinkShip();
-        Speed = (int)(FullSpeed * (SailHealth / 100.0f));
-    }
-    
-    /// <summary>
     /// Renames the ship
     /// </summary>
     /// <param name="new_name">New ship name</param>
@@ -635,11 +625,13 @@ public class Ship : NetworkBehaviour
                 {
                     //open cargo manager
                 }
-                else
+                else if(!PlayerScript.MyPlayer.ActiveShip.CombatActionTaken)
                 {
                     CombatManager.Instance.OpenCombatPanel();
                     CombatManager.Instance.StartCombat(this, tile_ship);
                 }
+
+                ClearMovementQueue();
             }
             else
             {

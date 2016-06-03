@@ -43,7 +43,10 @@ public class ResourceGenerator : MonoBehaviour
 
     public void Purchase()
     {
+        if (PortShopManager.Instance.DockedShip.Gold < Cost) return;
 
+        PortShopManager.Instance.DockedShip.Gold -= Cost;
+        Owner = PlayerScript.MyPlayer;
     }
 
     public override string ToString()

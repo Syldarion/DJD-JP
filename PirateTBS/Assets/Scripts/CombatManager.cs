@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 
-public class CombatManager : MonoBehaviour
+public class CombatManager : NetworkBehaviour
 {
     [HideInInspector]
     public static CombatManager Instance;
@@ -123,9 +123,9 @@ public class CombatManager : MonoBehaviour
     public void UpdatePlayerDamage()
     {
         PlayerShipPanel.FindChild("ShipInfo/ProjectedHullDamage").GetComponent<Text>().text =
-            string.Format("Projected Hull Damage - {0}", PlayerShip.Cannons * ShotHullDamage * ((float)EnemyShip.DodgeChance / 100.0f));
+            string.Format("Projected Hull Damage - {0}", Mathf.Ceil(PlayerShip.Cannons * ShotHullDamage * ((float)EnemyShip.DodgeChance / 100.0f)));
         PlayerShipPanel.FindChild("ShipInfo/ProjectedSailDamage").GetComponent<Text>().text =
-            string.Format("Projected Sail Damage - {0}", PlayerShip.Cannons * ShotSailDamage * ((float)EnemyShip.DodgeChance / 100.0f));
+            string.Format("Projected Sail Damage - {0}", Mathf.Ceil(PlayerShip.Cannons * ShotSailDamage * ((float)EnemyShip.DodgeChance / 100.0f)));
     }
 
     public void ConfirmCombat()
@@ -138,6 +138,13 @@ public class CombatManager : MonoBehaviour
     public void ResolveCombat()
     {
         CmdResolveCombat();
+        StartCoroutine(WaitForCombatResults());
+    }
+
+    public IEnumerator WaitForCombatResults()
+    {
+        yield return new WaitForSeconds(3.0f);
+        CloseCombatPanel();
     }
 
     [Command]
@@ -190,17 +197,19 @@ public class CombatManager : MonoBehaviour
             }
             enemy_shots_remaining--;
         }
-
-        PlayerShip.HullHealth -= enemy_total_hull_damage;
-        PlayerShip.SailHealth -= enemy_total_sail_damage;
-
-        EnemyShip.HullHealth -= player_total_hull_damage;
-        EnemyShip.SailHealth -= player_total_sail_damage;
+        
+        PlayerShip.HullHealth = Mathf.Clamp(PlayerShip.HullHealth - enemy_total_hull_damage, 0, PlayerShip.MaxHullHealth);
+        PlayerShip.SailHealth = Mathf.Clamp(PlayerShip.SailHealth - enemy_total_sail_damage, 0, PlayerShip.MaxSailHealth);
+        
+        EnemyShip.HullHealth = Mathf.Clamp(EnemyShip.HullHealth - player_total_hull_damage, 0, EnemyShip.MaxHullHealth);
+        EnemyShip.SailHealth = Mathf.Clamp(EnemyShip.SailHealth - player_total_sail_damage, 0, EnemyShip.MaxSailHealth);
 
         if (PlayerShip.HullHealth <= 0) PlayerShip.RpcSinkShip();
         else PlayerShip.Speed = (int)(PlayerShip.FullSpeed * (PlayerShip.SailHealth / 100.0f));
         if (EnemyShip.HullHealth <= 0) PlayerShip.RpcSinkShip();
         else EnemyShip.Speed = (int)(EnemyShip.FullSpeed * (EnemyShip.SailHealth / 100.0f));
+
+        PlayerShip.CombatActionTaken = true;
 
         RpcResolveCombat();
     }
@@ -208,6 +217,7 @@ public class CombatManager : MonoBehaviour
     [ClientRpc]
     public void RpcResolveCombat()
     {
-        
+        UpdatePlayerPanel();
+        UpdateEnemyPanel();
     }
 }

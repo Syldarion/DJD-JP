@@ -60,8 +60,10 @@ public class GameSettingsManager : MonoBehaviour
 
     public AudioMixer MasterMixer;
 
-    Resolution[] Resolutions = new Resolution[9]
+    Resolution[] Resolutions =
     {
+        new Resolution(800, 600),
+        new Resolution(1024, 768),
         new Resolution(1280, 720),  //16:9
         new Resolution(1366, 768),  //16:9
         new Resolution(1600, 900),  //16:9
@@ -74,7 +76,7 @@ public class GameSettingsManager : MonoBehaviour
     };
     int CurrentResolutionIndex = 0;
 
-    int[] AALevels = new int[4] { 0, 2, 4, 8 };
+    int[] AALevels = { 0, 2, 4, 8 };
     int CurrentAAIndex = 0;
 
     Dictionary<string, int> Settings;
@@ -86,9 +88,9 @@ public class GameSettingsManager : MonoBehaviour
         "ResolutionHeight 720",
         "AALevel 0",
         "Fullscreen 0",
-        "MasterVolume 100",
-        "MusicVolume 100",
-        "EffectVolume 100"
+        "MasterVolume 0",
+        "MusicVolume 0",
+        "EffectVolume 0"
     };
 
 	void Start()
@@ -185,7 +187,7 @@ public class GameSettingsManager : MonoBehaviour
 
     public void ModifyResolution(int change)
     {
-        CurrentResolutionIndex = Mathf.Clamp(CurrentResolutionIndex + change, 0, Resolutions.Length);
+        CurrentResolutionIndex = Mathf.Clamp(CurrentResolutionIndex + change, 0, Resolutions.Length - 1);
         ResolutionText.text = Resolutions[CurrentResolutionIndex].ToString();
 
         ChangeSetting("ResolutionWidth", Resolutions[CurrentResolutionIndex].Width);

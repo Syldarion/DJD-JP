@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using System.Linq;
 
 public class TurnManager : NetworkBehaviour
 {
@@ -74,6 +75,11 @@ public class TurnManager : NetworkBehaviour
 
         foreach (Ship s in PlayerScript.MyPlayer.Ships)
             s.MoveActionTaken = s.CombatActionTaken = false;
+
+        foreach (ResourceGenerator generator in HexGrid.Ports.SelectMany(port => port.Resources.Where(generator => generator.Owner == PlayerScript.MyPlayer)))
+        {
+            generator.OnTurnEnd();
+        }
     }
 
     /// <summary>

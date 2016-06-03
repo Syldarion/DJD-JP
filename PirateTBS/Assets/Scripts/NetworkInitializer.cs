@@ -44,6 +44,8 @@ public class NetworkInitializer : MonoBehaviour
     /// <param name="address">IP address to parse</param>
     public void SetIPAddress(string address)
     {
+        if (address == "localhost") address = "127.0.0.1";
+
         IPAddress = System.Net.IPAddress.Parse(address).ToString();
     }
 
