@@ -29,21 +29,27 @@ public class WaterHex : HexTile
         if (PlayerScript.MyPlayer.OpenUI)
             return;
 
-        if (Input.GetMouseButton(0))
+        //Movement related
+        if (!PlayerScript.MyPlayer.ActiveShip)
+            return;
+        if (Input.GetMouseButton(0) && 
+            PlayerScript.MyPlayer.ActiveShip.MovementQueue.Count < PlayerScript.MyPlayer.ActiveShip.Speed && 
+            !PlayerScript.MyPlayer.ActiveShip.MoveActionTaken)
         {
-            MovementManager.Instance.MovementQueue.Add(this);
+            PlayerScript.MyPlayer.ActiveShip.CmdQueueMove(this.HexCoord.Q, this.HexCoord.R);
             GetComponent<MeshRenderer>().sharedMaterial = HighlightMaterial;
-        }
-        else
-        {
-            MovementManager.Instance.ClearQueue();
         }
     }
 
     void OnMouseDown()
     {
-        MovementManager.Instance.MovementQueue.Add(this);
-        GetComponent<MeshRenderer>().sharedMaterial = HighlightMaterial;
+        if (PlayerScript.MyPlayer.ActiveShip && 
+            PlayerScript.MyPlayer.ActiveShip.MovementQueue.Count < PlayerScript.MyPlayer.ActiveShip.Speed && 
+            !PlayerScript.MyPlayer.ActiveShip.MoveActionTaken)
+        {
+            PlayerScript.MyPlayer.ActiveShip.CmdQueueMove(this.HexCoord.Q, this.HexCoord.R);
+            GetComponent<MeshRenderer>().sharedMaterial = HighlightMaterial;
+        }
     }
 
     void OnMouseUp()
@@ -51,7 +57,11 @@ public class WaterHex : HexTile
         if (PlayerScript.MyPlayer.OpenUI)
             return;
 
-        MovementManager.Instance.MoveShip();
+        if (PlayerScript.MyPlayer.ActiveShip)
+        {
+            if (PlayerScript.MyPlayer.ActiveShip.MovementQueue.Count > 0)
+                PlayerScript.MyPlayer.ActiveShip.CmdMoveShip();
+        }
 
         if (Time.time - double_click_start < 0.3f)
         {

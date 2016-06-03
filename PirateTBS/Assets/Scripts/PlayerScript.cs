@@ -102,7 +102,7 @@ public class PlayerScript : NetworkBehaviour
         {
             Port[] AllPorts = GameObject.FindObjectsOfType<Port>();
             SpawnPort = AllPorts[Random.Range(0, AllPorts.Length)];
-            CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++NewShipID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R);
+            CmdSpawnShip(string.Format("{0}Ship{1}", Name, ++NewShipID), SpawnPort.SpawnTile.HexCoord.Q, SpawnPort.SpawnTile.HexCoord.R, 1000);
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.F))
@@ -162,19 +162,16 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="x">Q coordinate of tile to spawn ship on</param>
     /// <param name="y">R coordinate of tile to spawn ship on</param>
     [Command]
-    public void CmdSpawnShip(string ship_name, int x, int y)
+    public void CmdSpawnShip(string ship_name, int x, int y, int gold)
     {
         Ship new_ship = Instantiate(ShipPrefab).GetComponent<Ship>();
         new_ship.Name = ship_name;
         new_ship.SetClass((ShipClass)Random.Range(0, 8));
 
-        if (Ships.Count == 0)
-            new_ship.Gold = 1000;
+        new_ship.Gold = gold;
 
         HexTile new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<HexTile>();
         
-        AddShip(new_ship);
-
         NetworkServer.SpawnWithClientAuthority(new_ship.gameObject, gameObject);
         
         new_ship.CmdSpawnOnTile(new_tile.HexCoord.Q, new_tile.HexCoord.R);
@@ -283,6 +280,7 @@ public class PlayerScript : NetworkBehaviour
         SpawnPort = AllPorts[Random.Range(0, AllPorts.Length)];
         CmdSpawnShip(NameGenerator.Instance.GetShipName(),
             SpawnPort.SpawnTile.HexCoord.Q,
-            SpawnPort.SpawnTile.HexCoord.R);
+            SpawnPort.SpawnTile.HexCoord.R,
+            1000);
     }
 }

@@ -189,17 +189,23 @@ public class Ship : NetworkBehaviour
     public bool MoveActionTaken;                //Tracks if this ship has moved this turn
     [SyncVar]
     public bool CombatActionTaken;              //Tracks if this ship has been in combat this turn
+    [SyncVar]
+    public string ShipType;                     //Text representation of ship type
+    [SyncVar]
+    public int MaxCannons;                      //Max cannon count
+    [SyncVar]
+    public int Speed;                           //Current ship speed
+    [SyncVar]
+    public int CrewMorale;                      //Current morale level of crew
+    [SyncVar]
+    public ShipClass Class;                     //Class of ship
+    [SyncVar]
+    public int Price;                           //Price of ship, used at port shipyards
+    [SyncVar]
+    public int CurrentCrew;                     //Current crew count
 
     public HexTile CurrentPosition;
     public List<WaterHex> MovementQueue;
-
-    public string ShipType;                     //Text representation of ship type
-    public int MaxCannons;                      //Max cannon count
-    public int Speed;                           //Current ship speed
-    public int CrewMorale;                      //Current morale level of crew
-    public ShipClass Class;                     //Class of ship
-    public int Price;                           //Price of ship, used at port shipyards
-    public int CurrentCrew;                     //Current crew count
 
     public void CopyShip(Ship other)
     {
@@ -209,7 +215,9 @@ public class Ship : NetworkBehaviour
         CmdCopyShip(
             other.Name,
             other.HullHealth,
+            other.MaxHullHealth,
             other.SailHealth,
+            other.MaxSailHealth,
             other.CargoSpace,
             other.Cannons,
             other.FullSpeed,
@@ -217,24 +225,26 @@ public class Ship : NetworkBehaviour
             other.DodgeChance,
             other.Cargo,
             other.DamageMod,
-            other.ReloadSpeed);
-
-
-        ShipType = other.ShipType;
-        MaxCannons = other.MaxCannons;
-        Speed = other.Speed;
-        CrewMorale = other.CrewMorale;
-        Class = other.Class;
-        Price = other.Price;
-        CurrentCrew = other.CurrentCrew;
+            other.ReloadSpeed,
+            other.ShipType,
+            other.MaxCannons,
+            other.Speed,
+            other.CrewMorale,
+            other.Class,
+            other.Price,
+            other.CurrentCrew);
     }
 
     [Command]
-    public void CmdCopyShip(string name, int hh, int sh, int cs, int can, int fs, int cn, int dc, Cargo car, int dm, int rs)
+    public void CmdCopyShip(string name, int hh, int mhh, int sh, int msh, 
+        int cs, int can, int fs, int cn, int dc, Cargo car, int dm, int rs,
+        string st, int mc, int s, int cm, ShipClass c, int p, int cc)
     {
         Name = name;
         HullHealth = hh;
+        MaxHullHealth = mhh;
         SailHealth = sh;
+        MaxSailHealth = msh;
         CargoSpace = cs;
         Cannons = can;
         FullSpeed = fs;
@@ -243,6 +253,13 @@ public class Ship : NetworkBehaviour
         Cargo = car;
         DamageMod = dm;
         ReloadSpeed = rs;
+        ShipType = st;
+        MaxCannons = mc;
+        Speed = s;
+        CrewMorale = cm;
+        Class = c;
+        Price = p;
+        CurrentCrew = cc;
     }
 
 	void Start()
@@ -259,7 +276,7 @@ public class Ship : NetworkBehaviour
     {
         base.OnStartAuthority();
 
-        PlayerInfoManager.Instance.AddShipToList(this);
+        PlayerScript.MyPlayer.AddShip(this);
 
         Camera.main.GetComponent<PanCamera>().CenterOnTarget(this.transform);
         if (!PlayerScript.MyPlayer.Ships.Contains(this))
@@ -288,8 +305,8 @@ public class Ship : NetworkBehaviour
         switch(new_class)
         {
             case ShipClass.Pinnace:
-                HullHealth = 50;
-                SailHealth = 50;
+                HullHealth = MaxHullHealth = 50;
+                SailHealth = MaxSailHealth = 50;
                 CargoSpace = 15;
                 Cannons = MaxCannons = 4;
                 Speed = FullSpeed = 5;
@@ -298,8 +315,8 @@ public class Ship : NetworkBehaviour
                 Price = 50;
                 break;
             case ShipClass.Sloop:
-                HullHealth = 60;
-                SailHealth = 70;
+                HullHealth = MaxHullHealth = 60;
+                SailHealth = MaxSailHealth = 70;
                 CargoSpace = 35;
                 Cannons = MaxCannons = 6;
                 Speed = FullSpeed = 5;
@@ -308,8 +325,8 @@ public class Ship : NetworkBehaviour
                 Price = 100;
                 break;
             case ShipClass.Barque:
-                HullHealth = 80;
-                SailHealth = 80;
+                HullHealth = MaxHullHealth = 80;
+                SailHealth = MaxSailHealth = 80;
                 CargoSpace = 45;
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 4;
@@ -318,8 +335,8 @@ public class Ship : NetworkBehaviour
                 Price = 150;
                 break;
             case ShipClass.Brig:
-                HullHealth = 120;
-                SailHealth = 100;
+                HullHealth = MaxHullHealth = 120;
+                SailHealth = MaxSailHealth = 100;
                 CargoSpace = 100;
                 Cannons = MaxCannons = 10;
                 Speed = FullSpeed = 3;
@@ -328,8 +345,8 @@ public class Ship : NetworkBehaviour
                 Price = 200;
                 break;
             case ShipClass.Merchantman:
-                HullHealth = 120;
-                SailHealth = 100;
+                HullHealth = MaxHullHealth = 120;
+                SailHealth = MaxSailHealth = 100;
                 CargoSpace = 150;
                 Cannons = MaxCannons = 8;
                 Speed = FullSpeed = 3;
@@ -338,8 +355,8 @@ public class Ship : NetworkBehaviour
                 Price = 200;
                 break;
             case ShipClass.MerchantGalleon:
-                HullHealth = 200;
-                SailHealth = 200;
+                HullHealth = MaxHullHealth = 200;
+                SailHealth = MaxSailHealth = 200;
                 CargoSpace = 450;
                 Cannons = MaxCannons = 12;
                 Speed = FullSpeed = 2;
@@ -349,8 +366,8 @@ public class Ship : NetworkBehaviour
                 Price = 500;
                 break;
             case ShipClass.CombatGalleon:
-                HullHealth = 250;
-                SailHealth = 250;
+                HullHealth = MaxHullHealth = 250;
+                SailHealth = MaxSailHealth = 250;
                 CargoSpace = 400;
                 Cannons = MaxCannons = 24;
                 Speed = FullSpeed = 2;
@@ -360,8 +377,8 @@ public class Ship : NetworkBehaviour
                 Price = 800;
                 break;
             case ShipClass.Frigate:
-                HullHealth = 300;
-                SailHealth = 300;
+                HullHealth = MaxHullHealth = 300;
+                SailHealth = MaxSailHealth = 300;
                 CargoSpace = 600;
                 Cannons = MaxCannons = 32;
                 Speed = FullSpeed = 1;
@@ -459,10 +476,15 @@ public class Ship : NetworkBehaviour
     /// <summary>
     /// Server-side command to destroy this ship
     /// </summary>
-    [Command]
-    public void CmdSinkShip()
+    [ClientRpc]
+    public void RpcSinkShip()
     {
-        Network.Destroy(this.gameObject);
+        //Network.Destroy(this.gameObject);
+
+        if (PlayerScript.MyPlayer.Ships.Contains(this))
+            PlayerScript.MyPlayer.RemoveShip(this);
+
+        Destroy(gameObject);   
     }
     
     /// <summary>
@@ -525,7 +547,7 @@ public class Ship : NetworkBehaviour
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    [Command]
+    //[Command]
     public void CmdQueueMove(int x, int y)
     {
         WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
@@ -536,21 +558,65 @@ public class Ship : NetworkBehaviour
     /// <summary>
     /// Server-side command to move ship along movement queue
     /// </summary>
-    [Command]
+    //[Command]
     public void CmdMoveShip()
     {
-        if (MoveActionTaken)
+        Debug.Log(string.Format("{0} tiles in movement queue for {1}.", MovementQueue.Count, Name));
+
+        if (MoveActionTaken || MovementQueue.Count <= 0)
             return;
 
-        transform.SetParent(MovementQueue[MovementQueue.Count - 1].transform, true);
-        CurrentPosition = MovementQueue[MovementQueue.Count - 1];
+        if (!HexGrid.MovementHex(CurrentPosition, 1).Contains(MovementQueue[0]))
+        {
+            ClearMovementQueue();
+            return;
+        }
 
-        RpcMoveShip(MovementQueue[MovementQueue.Count - 1].HexCoord.Q, MovementQueue[MovementQueue.Count - 1].HexCoord.R);
+        //transform.SetParent(MovementQueue[MovementQueue.Count - 1].transform, true);
+        //CurrentPosition = MovementQueue[MovementQueue.Count - 1];
 
-        StopAllCoroutines();
+        WaterHex final = MovementQueue[MovementQueue.Count - 1];
+        
+        CmdUpdatePosition(final.HexCoord.Q, final.HexCoord.R);
+
+        //RpcMoveShip(MovementQueue[MovementQueue.Count - 1].HexCoord.Q, MovementQueue[MovementQueue.Count - 1].HexCoord.R);
+
+        //StopAllCoroutines();
         StartCoroutine(SmoothMove());
 
         MoveActionTaken = true;
+    }
+
+    [Command]
+    public void CmdUpdatePosition(int x, int y)
+    {
+        WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
+        transform.SetParent(new_tile.transform, true);
+        CurrentPosition = new_tile;
+
+        RpcUpdatePosition(x, y);
+    }
+
+    [ClientRpc]
+    public void RpcUpdatePosition(int x, int y)
+    {
+        WaterHex new_tile = GameObject.Find(string.Format("Grid/{0},{1}", x, y)).GetComponent<WaterHex>();
+        transform.SetParent(new_tile.transform, true);
+        CurrentPosition = new_tile;
+    }
+
+    public void ClearMovementQueue()
+    {
+        foreach (WaterHex hex in MovementQueue)
+        {
+            if (hex.Discovered)
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.CloudMaterial;
+            else if (hex.Fog)
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.FogMaterial;
+            else
+                hex.GetComponent<MeshRenderer>().sharedMaterial = hex.DefaultMaterial;
+        }
+        MovementQueue.Clear();
     }
 
     /// <summary>
@@ -561,24 +627,41 @@ public class Ship : NetworkBehaviour
     {
         foreach (HexTile dest_tile in MovementQueue)
         {
-            Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
-            transform.LookAt(destination);
+            Ship tile_ship = dest_tile.GetComponentInChildren<Ship>();
 
-            Vector3 direction = (destination - transform.position) / 20.0f;
-            float step = direction.magnitude;
-
-            for (int i = 0; i < 20; i++)
+            if (tile_ship && tile_ship != this)
             {
-                transform.Translate(Vector3.forward * step);
-                yield return new WaitForSeconds(0.01f);
+                if (PlayerScript.MyPlayer.Ships.Contains(tile_ship))
+                {
+                    //open cargo manager
+                }
+                else
+                {
+                    CombatManager.Instance.OpenCombatPanel();
+                    CombatManager.Instance.StartCombat(this, tile_ship);
+                }
             }
+            else
+            {
+                Vector3 destination = dest_tile.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
+                transform.LookAt(destination);
 
-            transform.position = destination;
+                Vector3 direction = (destination - transform.position) / 20.0f;
+                float step = direction.magnitude;
+
+                for (int i = 0; i < 20; i++)
+                {
+                    transform.Translate(Vector3.forward * step);
+                    yield return new WaitForSeconds(0.01f);
+                }
+
+                transform.position = destination;
+            }
 
             yield return null;
         }
 
-        MovementQueue.Clear();
+        ClearMovementQueue();
 
         transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
     }
@@ -619,7 +702,8 @@ public class Ship : NetworkBehaviour
 
     void OnMouseDown()
     {
-        MovementManager.Instance.SelectShip(this);
+        if (PlayerScript.MyPlayer.Ships.Contains(this))
+            PlayerScript.MyPlayer.ActiveShip = this;
     }
 
     void OnMouseEnter()

@@ -7,16 +7,10 @@ public class MovementManager : MonoBehaviour
     [HideInInspector]
     public static MovementManager Instance;
 
-    public PlayerScript ReferencePlayer;            //Reference to player this script manages movement for
-
-    public List<WaterHex> MovementQueue;            //List of water tiles to move along
-
 	void Start()
     {
         Instance = this;
         StartCoroutine(WaitForPlayer());
-
-        MovementQueue = new List<WaterHex>();
 	}
 	
 	void Update()
@@ -29,7 +23,7 @@ public class MovementManager : MonoBehaviour
     /// </summary>
     public void ClearQueue()
     {
-        foreach (WaterHex hex in MovementQueue)
+        foreach (WaterHex hex in PlayerScript.MyPlayer.ActiveShip.MovementQueue)
         {
             if (hex.Discovered)
                 hex.GetComponent<MeshRenderer>().sharedMaterial = hex.CloudMaterial;
@@ -38,7 +32,7 @@ public class MovementManager : MonoBehaviour
             else
                 hex.GetComponent<MeshRenderer>().sharedMaterial = hex.DefaultMaterial;
         }
-        MovementQueue.Clear();
+        PlayerScript.MyPlayer.ActiveShip.MovementQueue.Clear();
     }
 
     /// <summary>
@@ -47,8 +41,8 @@ public class MovementManager : MonoBehaviour
     /// <param name="selected_ship">Ship to select</param>
     public void SelectShip(Ship selected_ship)
     {
-        if (ReferencePlayer.Ships.Contains(selected_ship))
-            ReferencePlayer.ActiveShip = selected_ship;
+        if (PlayerScript.MyPlayer.Ships.Contains(selected_ship))
+            PlayerScript.MyPlayer.ActiveShip = selected_ship;
     }
 
     /// <summary>
@@ -56,44 +50,44 @@ public class MovementManager : MonoBehaviour
     /// </summary>
     public void MoveShip()
     {
-        if(!ReferencePlayer.ActiveShip)
+        if(!PlayerScript.MyPlayer.ActiveShip)
         {
             ClearQueue();
             return;
         }
 
-        if (!HexGrid.MovementHex(ReferencePlayer.ActiveShip.CurrentPosition, 1).Contains(MovementQueue[0]))
+        if (!HexGrid.MovementHex(PlayerScript.MyPlayer.ActiveShip.CurrentPosition, 1).Contains(PlayerScript.MyPlayer.ActiveShip.MovementQueue[0]))
         {
             ClearQueue();
             return;
         }
 
-        int remaining_moves = ReferencePlayer.ActiveShip.Speed;
+        int remaining_moves = PlayerScript.MyPlayer.ActiveShip.Speed;
         WaterHex next_tile;
         Ship tile_ship;
 
-        for(int i = 0; i < MovementQueue.Count && i < remaining_moves; i++)
+        for(int i = 0; i < PlayerScript.MyPlayer.ActiveShip.MovementQueue.Count && i < remaining_moves; i++)
         {
-            next_tile = MovementQueue[i];
+            next_tile = PlayerScript.MyPlayer.ActiveShip.MovementQueue[i];
             tile_ship = next_tile.GetComponentInChildren<Ship>();
 
             if (!tile_ship)
-                ReferencePlayer.ActiveShip.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
+                PlayerScript.MyPlayer.ActiveShip.CmdQueueMove(next_tile.HexCoord.Q, next_tile.HexCoord.R);
             else
             {
-                if (ReferencePlayer.Ships.Contains(tile_ship))
+                if (PlayerScript.MyPlayer.Ships.Contains(tile_ship))
                 {
                     //open cargo manager
                 }
                 else
                 {
                     CombatManager.Instance.OpenCombatPanel();
-                    CombatManager.Instance.StartCombat(ReferencePlayer.ActiveShip, tile_ship);
+                    CombatManager.Instance.StartCombat(PlayerScript.MyPlayer.ActiveShip, tile_ship);
                 }
             }
         }
 
-        ReferencePlayer.ActiveShip.CmdMoveShip();
+        PlayerScript.MyPlayer.ActiveShip.CmdMoveShip();
         ClearQueue();
     }
 
@@ -105,6 +99,5 @@ public class MovementManager : MonoBehaviour
     {
         while (!PlayerScript.MyPlayer)
             yield return null;
-        ReferencePlayer = PlayerScript.MyPlayer;
     }
 }

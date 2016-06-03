@@ -217,7 +217,7 @@ public class PortShopManager : MonoBehaviour
         if (DockedShip.Gold < ship_to_sell.Price) return;
 
         StartCoroutine(WaitForBoughtShip(PlayerScript.MyPlayer.Ships.Count, ship_to_sell));
-        PlayerScript.MyPlayer.CmdSpawnShip(ship_to_sell.Name, CurrentPort.SpawnTile.HexCoord.Q, CurrentPort.SpawnTile.HexCoord.R);
+        PlayerScript.MyPlayer.CmdSpawnShip(ship_to_sell.Name, CurrentPort.SpawnTile.HexCoord.Q, CurrentPort.SpawnTile.HexCoord.R, 0);
 
         DockedShip.Gold -= ship_to_sell.Price;
 

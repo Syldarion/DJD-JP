@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -18,8 +19,8 @@ public class CombatManager : MonoBehaviour
     public Ship EnemyShip;
 
     public ShotType SelectedShotType;
-    public int ProjectedHullDamage;
-    public int ProjectedSailDamage;
+    public int ShotHullDamage;
+    public int ShotSailDamage;
 
     void Start()
     {
@@ -66,18 +67,18 @@ public class CombatManager : MonoBehaviour
             case 0:
             default:
                 SelectedShotType = ShotType.Normal;
-                ProjectedHullDamage = 2;
-                ProjectedSailDamage = 2;
+                ShotHullDamage = 2;
+                ShotSailDamage = 2;
                 break;
             case 1:
                 SelectedShotType = ShotType.Cluster;
-                ProjectedHullDamage = 3;
-                ProjectedSailDamage = 1;
+                ShotHullDamage = 3;
+                ShotSailDamage = 1;
                 break;
             case 2:
                 SelectedShotType = ShotType.Chain;
-                ProjectedHullDamage = 1;
-                ProjectedSailDamage = 3;
+                ShotHullDamage = 1;
+                ShotSailDamage = 3;
                 break;
         }
 
@@ -122,9 +123,9 @@ public class CombatManager : MonoBehaviour
     public void UpdatePlayerDamage()
     {
         PlayerShipPanel.FindChild("ShipInfo/ProjectedHullDamage").GetComponent<Text>().text =
-            string.Format("Projected Hull Damage - {0}", PlayerShip.Cannons * ProjectedHullDamage * ((float)EnemyShip.DodgeChance / 100.0f));
+            string.Format("Projected Hull Damage - {0}", PlayerShip.Cannons * ShotHullDamage * ((float)EnemyShip.DodgeChance / 100.0f));
         PlayerShipPanel.FindChild("ShipInfo/ProjectedSailDamage").GetComponent<Text>().text =
-            string.Format("Projected Sail Damage - {0}", PlayerShip.Cannons * ProjectedSailDamage * ((float)EnemyShip.DodgeChance / 100.0f));
+            string.Format("Projected Sail Damage - {0}", PlayerShip.Cannons * ShotSailDamage * ((float)EnemyShip.DodgeChance / 100.0f));
     }
 
     public void ConfirmCombat()
@@ -135,6 +136,77 @@ public class CombatManager : MonoBehaviour
     }
 
     public void ResolveCombat()
+    {
+        CmdResolveCombat();
+    }
+
+    [Command]
+    public void CmdResolveCombat()
+    {
+        int player_shots_remaining = PlayerShip.Cannons;
+        int enemy_shots_remaining = EnemyShip.Cannons;
+        int enemy_shot_sail_damage;
+        int enemy_shot_hull_damage;
+
+        int player_total_sail_damage = 0;
+        int player_total_hull_damage = 0;
+        int enemy_total_sail_damage = 0;
+        int enemy_total_hull_damage = 0;
+
+        ShotType enemy_shot_type = (ShotType)Random.Range(0, 3);
+        switch(enemy_shot_type)
+        {
+            case ShotType.Chain:
+                enemy_shot_sail_damage = 3;
+                enemy_shot_hull_damage = 1;
+                break;
+            case ShotType.Cluster:
+                enemy_shot_sail_damage = 1;
+                enemy_shot_hull_damage = 3;
+                break;
+            case ShotType.Normal:
+            default:
+                enemy_shot_sail_damage = 2;
+                enemy_shot_hull_damage = 2;
+                break;
+        }
+
+        while(player_shots_remaining > 0)
+        {
+            if(Random.Range(0, 100) > EnemyShip.DodgeChance)
+            {
+                player_total_sail_damage += ShotSailDamage;
+                player_total_hull_damage += ShotHullDamage;
+            }
+            player_shots_remaining--;
+        }
+
+        while(enemy_shots_remaining > 0)
+        {
+            if(Random.Range(0, 100) > PlayerShip.DodgeChance)
+            {
+                enemy_total_sail_damage += enemy_shot_sail_damage;
+                enemy_total_hull_damage += enemy_shot_hull_damage;
+            }
+            enemy_shots_remaining--;
+        }
+
+        PlayerShip.HullHealth -= enemy_total_hull_damage;
+        PlayerShip.SailHealth -= enemy_total_sail_damage;
+
+        EnemyShip.HullHealth -= player_total_hull_damage;
+        EnemyShip.SailHealth -= player_total_sail_damage;
+
+        if (PlayerShip.HullHealth <= 0) PlayerShip.RpcSinkShip();
+        else PlayerShip.Speed = (int)(PlayerShip.FullSpeed * (PlayerShip.SailHealth / 100.0f));
+        if (EnemyShip.HullHealth <= 0) PlayerShip.RpcSinkShip();
+        else EnemyShip.Speed = (int)(EnemyShip.FullSpeed * (EnemyShip.SailHealth / 100.0f));
+
+        RpcResolveCombat();
+    }
+
+    [ClientRpc]
+    public void RpcResolveCombat()
     {
         
     }

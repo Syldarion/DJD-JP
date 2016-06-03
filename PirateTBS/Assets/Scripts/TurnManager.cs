@@ -71,6 +71,9 @@ public class TurnManager : NetworkBehaviour
     {
         CurrentTurnText.text = string.Format("Turn {0}", current_turn);
         PlayerScript.MyPlayer.CmdNotReadyForNextTurn();
+
+        foreach (Ship s in PlayerScript.MyPlayer.Ships)
+            s.MoveActionTaken = s.CombatActionTaken = false;
     }
 
     /// <summary>
